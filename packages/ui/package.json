@@ -1,0 +1,44 @@
+{
+  "name": "@cervantes/ui",
+  "version": "1.0.0",
+  "description": "",
+  "sideEffects": false,
+  "main": "./dist/commonjs/index.js",
+  "engines": {
+    "node": "21"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "npx tshy --watch",
+    "prepare": "npx tshy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tshy": "^1.8.1"
+  },
+  "tshy": {
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    }
+  },
+  "types": "./dist/commonjs/index.d.ts",
+  "type": "module"
+}
