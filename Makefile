@@ -13,7 +13,7 @@ prepare: clean ## develop the application
 
 clean: ## Remove all artefactories
 	@rm -Rf apps/editor/{public,dist} \
-					packages/{domain,ui}/{dist,node_modules,.tshy-build}
+					packages/{domain,ui,literals}/{dist,node_modules,.tshy-build}
 
 phoenix: clean ## Soft clean node_modules
 	rm -Rf node_modules package-lock.json &&\
