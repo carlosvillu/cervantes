@@ -5,6 +5,7 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
 dev: clean ## develop the application
+		npx -y ultra-runner --r --build
 		npx -y ultra-runner --raw --recursive dev
 
 prepare: clean ## develop the application

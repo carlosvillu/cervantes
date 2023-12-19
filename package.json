@@ -5,7 +5,8 @@
   "workspaces": [
     "apps/**",
     "packages/domain",
-    "packages/ui"
+    "packages/ui",
+    "packages/literals"
   ],
   "engines": {
     "node": "21"

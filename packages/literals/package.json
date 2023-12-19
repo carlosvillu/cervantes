@@ -1,5 +1,5 @@
 {
-  "name": "@cervantes/ui",
+  "name": "@cervantes/literals",
   "version": "1.0.0",
   "description": "",
   "sideEffects": false,
@@ -44,11 +44,7 @@
     }
   },
   "type": "module",
-  "dependencies": {
-    "@cervantes/ui": "^1.0.0",
-    "@headlessui/react": "^0.0.0-insiders.01a34cb",
-    "@heroicons/react": "^2.1.1"
-  },
+  "dependencies": {},
   "main": "./dist/commonjs/index.js",
   "types": "./dist/commonjs/index.d.ts"
 }
