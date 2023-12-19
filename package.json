@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "apps/**",
-    "packages/**"
+    "packages/domain",
+    "packages/ui"
   ],
   "engines": {
     "node": "21"

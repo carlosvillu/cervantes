@@ -7,6 +7,8 @@ import {
   RouterProvider
 } from 'react-router-dom'
 
+import './index.css'
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" lazy={async () => import('./pages/Root')}>
