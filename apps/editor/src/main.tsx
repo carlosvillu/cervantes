@@ -7,13 +7,22 @@ import {
   RouterProvider
 } from 'react-router-dom'
 
+import {Component as ErrorPage} from './pages/Error'
+
 import './index.css'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" lazy={async () => import('./pages/Root')}>
-      <Route index lazy={async () => import('./pages/Index')} />
-    </Route>
+    <>
+      <Route path="/sign-in" lazy={async () => import('./pages/SignIn')} />
+      <Route
+        path="/"
+        lazy={async () => import('./pages/Root')}
+        errorElement={<ErrorPage />}
+      >
+        <Route index lazy={async () => import('./pages/Index')} />
+      </Route>
+    </>
   )
 )
 
