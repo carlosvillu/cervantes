@@ -40,3 +40,8 @@ EXPOSE 3001
 
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD make dev
+
+
+FROM flashspys/nginx-static as prod-editor
+
+COPY --from=builder /usr/src/app/apps/editor/dist /static

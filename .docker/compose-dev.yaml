@@ -34,6 +34,19 @@ services:
     ports:
       - 3001:3001
 
+
+  redis:
+    image: redis/redis-stack-server:latest
+    restart: always
+    volumes:
+      - redis_data:/data
+    ports:
+      - '6379:6379'
+    command: 'redis-server --save 60 1 --loglevel warning --protected-mode no'
+
+volumes:
+  redis_data:
+
 networks:
   net:
 

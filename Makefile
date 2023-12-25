@@ -6,6 +6,7 @@ SHELL := /bin/sh
 
 export DEBUG ?= cervantes*
 FILTER ?= +apps/editor
+BUILD ?=
 
 dev: ## develop the application
 		npx ultra-runner --recursive --filter $(FILTER) dev
@@ -14,9 +15,8 @@ build_dev: clean ## build and then start de env
 		npx ultra-runner --recursive --build
 		make dev
 
-
-prepare: clean ## develop the application
-		npx -y ultra-runner --raw --recursive prepare
+compose_dev: ## Start the env to develop using docker compose (BUILD=--build make compose_dev) to force a build
+	docker-compose -f ./.docker/compose-dev.yaml -p cervantes up $(BUILD)
 
 clean: ## Remove all artefactories
 	rm -Rf apps/**/{public,dist,build,node_modules,package-lock.json} \

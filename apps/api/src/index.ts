@@ -14,10 +14,6 @@ app.use(bearerToken())
 app.use(express.json())
 app.use(healthCheckMiddleware()(app))
 
-app.get('/', (req, res) => {
-  res.send('Hola')
-})
-
 const server = app.listen(+PORT!, HOST!, () => log('app Listen in:', `http://${HOST!}:${PORT!}`)) // eslint-disable-line 
 
 const httpTerminator = createHttpTerminator({server})
