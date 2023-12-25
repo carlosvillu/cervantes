@@ -56,11 +56,7 @@ export function Layout({children}: ILayoutProps) {
       */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog
-            as="div"
-            className="relative z-50 lg:hidden"
-            onClose={setSidebarOpen}
-          >
+          <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -94,16 +90,9 @@ export function Layout({children}: ILayoutProps) {
                     leaveTo="opacity-0"
                   >
                     <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                      <button
-                        type="button"
-                        className="-m-2.5 p-2.5"
-                        onClick={() => setSidebarOpen(false)}
-                      >
+                      <button type="button" className="-m-2.5 p-2.5" onClick={() => setSidebarOpen(false)}>
                         <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon
-                          className="h-6 w-6 text-white"
-                          aria-hidden="true"
-                        />
+                        <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
                       </button>
                     </div>
                   </Transition.Child>
@@ -133,9 +122,7 @@ export function Layout({children}: ILayoutProps) {
                                 >
                                   <item.icon
                                     className={classNames(
-                                      item.current
-                                        ? 'text-indigo-600'
-                                        : 'text-gray-400 group-hover:text-indigo-600',
+                                      item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
                                       'h-6 w-6 shrink-0'
                                     )}
                                     aria-hidden="true"
@@ -147,9 +134,7 @@ export function Layout({children}: ILayoutProps) {
                           </ul>
                         </li>
                         <li>
-                          <div className="text-xs font-semibold leading-6 text-gray-400">
-                            Your teams
-                          </div>
+                          <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
                           <ul role="list" className="-mx-2 mt-2 space-y-1">
                             {teams.map(team => (
                               <li key={team.name}>
@@ -227,9 +212,7 @@ export function Layout({children}: ILayoutProps) {
                         >
                           <item.icon
                             className={classNames(
-                              item.current
-                                ? 'text-indigo-600'
-                                : 'text-gray-400 group-hover:text-indigo-600',
+                              item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
                               'h-6 w-6 shrink-0'
                             )}
                             aria-hidden="true"
@@ -241,9 +224,7 @@ export function Layout({children}: ILayoutProps) {
                   </ul>
                 </li>
                 <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400">
-                    Your teams
-                  </div>
+                  <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
                     {teams.map(team => (
                       <li key={team.name}>
@@ -291,20 +272,13 @@ export function Layout({children}: ILayoutProps) {
 
         <div className="lg:pl-72">
           <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-            <button
-              type="button"
-              className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-              onClick={() => setSidebarOpen(true)}
-            >
+            <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
               <span className="sr-only">Open sidebar</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
 
             {/* Separator */}
-            <div
-              className="h-6 w-px bg-gray-200 lg:hidden"
-              aria-hidden="true"
-            />
+            <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
 
             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
               <form className="relative flex flex-1" action="#" method="GET">
@@ -324,19 +298,13 @@ export function Layout({children}: ILayoutProps) {
                 />
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
-                <button
-                  type="button"
-                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
-                >
+                <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
 
                 {/* Separator */}
-                <div
-                  className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200"
-                  aria-hidden="true"
-                />
+                <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative">
@@ -348,16 +316,10 @@ export function Layout({children}: ILayoutProps) {
                       alt=""
                     />
                     <span className="hidden lg:flex lg:items-center">
-                      <span
-                        className="ml-4 text-sm font-semibold leading-6 text-gray-900"
-                        aria-hidden="true"
-                      >
+                      <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
                         Tom Cook
                       </span>
-                      <ChevronDownIcon
-                        className="ml-2 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
+                      <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
                   </Menu.Button>
                   <Transition
@@ -376,7 +338,7 @@ export function Layout({children}: ILayoutProps) {
                             <a
                               href={item.href}
                               className={classNames(
-                                active ? 'bg-gray-50' : '',
+                                active !== undefined ? 'bg-gray-50' : '',
                                 'block px-3 py-1 text-sm leading-6 text-gray-900'
                               )}
                             >

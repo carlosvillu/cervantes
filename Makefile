@@ -1,23 +1,30 @@
 .PHONY: lib
 OWNER=Carlos Villuendas<carlosvillu@gmail.com>
 
-SHELL := /bin/bash
+SHELL := /bin/sh
 .DEFAULT_GOAL := help
 
-dev: clean ## develop the application
-		npx -y ultra-runner --r --build
-		npx -y ultra-runner --raw --recursive dev
+export DEBUG ?= cervantes*
+FILTER ?= +apps/editor
+
+dev: ## develop the application
+		npx ultra-runner --recursive --filter $(FILTER) dev
+
+build_dev: clean ## build and then start de env
+		npx ultra-runner --recursive --build
+		make dev
+
 
 prepare: clean ## develop the application
 		npx -y ultra-runner --raw --recursive prepare
 
 clean: ## Remove all artefactories
-	@rm -Rf apps/editor/{public,dist} \
-					packages/{domain,ui,literals}/{dist,node_modules,.tshy-build}
+	rm -Rf apps/**/{public,dist,build,node_modules,package-lock.json} \
+					packages/**/{dist,node_modules,.tshy-build}
 
 phoenix: clean ## Soft clean node_modules
 	rm -Rf node_modules package-lock.json &&\
-		npm i --no-fund --no-audit --ignore-scripts
+		npm i --no-fund --no-audit
 
 help: ## show help
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

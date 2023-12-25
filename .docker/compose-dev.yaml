@@ -1,0 +1,43 @@
+services:
+  api:
+    restart: always
+    build:
+      dockerfile: ${PWD}/.docker/Dockerfile
+      context: ${PWD}
+      target: dev-api
+    ports:
+      - 3000:3000
+      - 9000:9000
+    volumes:
+      - ${PWD}/apps/api/src:/usr/src/app/apps/api/src
+      - ${PWD}/packages/domain/src:/usr/src/app/packages/domain/src
+      - ${PWD}/packages/literals/src:/usr/src/app/packages/literals/src
+      - ${PWD}/packages/ui/src:/usr/src/app/packages/ui/src
+    environment:
+      PORT: 3000
+      FILTER: +apps/api
+
+  editor:
+    restart: always
+    build:
+      dockerfile: ${PWD}/.docker/Dockerfile
+      context: ${PWD}
+      target: dev-editor
+    volumes:
+      - ${PWD}/apps/editor/src:/usr/src/app/apps/editor/src
+      - ${PWD}/packages/domain/src:/usr/src/app/packages/domain/src
+      - ${PWD}/packages/literals/src:/usr/src/app/packages/literals/src
+      - ${PWD}/packages/ui/src:/usr/src/app/packages/ui/src
+    environment:
+      PORT: 3001
+      FILTER: +apps/editor
+    ports:
+      - 3001:3001
+
+networks:
+  net:
+
+
+
+
+

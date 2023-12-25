@@ -7,7 +7,7 @@
     "node": "21"
   },
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite --host --port 3001",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "__prepare": "npm run build"
