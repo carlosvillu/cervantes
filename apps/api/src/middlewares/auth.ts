@@ -1,24 +1,29 @@
-import debug from 'debug'
-import jwt from 'jsonwebtoken'
+/* eslint @typescript-eslint/no-misused-promises: 0 */
 
-import {findUserByID} from '../../models/user'
+import debug from 'debug'
+import type {RequestHandler} from 'express'
+import jwt from 'jsonwebtoken'
 
 const log = debug('cervantes:api:middlewares:auth')
 
-const {ACCESS_TOKEN_PRIVATE_KEY} = process.env
+interface Payload {
+  userID: string
+  token: string
+  createdAt: Date
+}
 
-async function auth(req, res, next) {
+const {ACCESS_TOKEN_PRIVATE_KEY = ''} = process.env
+
+const auth: RequestHandler = async (req, res, next) => {
   try {
     const accessToken = req.token
     log('Auth', accessToken)
-    if (accessToken === undefined)
-      return res.status(401).json({error: true, message: '401 Unauthorized'})
+    if (accessToken === undefined) return res.status(401).json({error: true, message: '401 Unauthorized'})
 
     jwt.verify(accessToken, ACCESS_TOKEN_PRIVATE_KEY, async (err, data) => {
-      if (err !== undefined)
-        return res.status(403).json({error: true, message: '403 Forbidden'})
+      if (err !== undefined) return res.status(403).json({error: true, message: '403 Forbidden'})
 
-      const user = await findUserByID(data.userID)
+      const user = await findUserByID((data as Payload).userID)
       req.user = user
       next()
     })

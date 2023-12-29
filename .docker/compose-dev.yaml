@@ -1,6 +1,8 @@
 services:
   api:
     restart: always
+    env_file:
+      - ${PWD}/apps/api/.env.development
     build:
       dockerfile: ${PWD}/.docker/Dockerfile
       context: ${PWD}
@@ -13,9 +15,18 @@ services:
       - ${PWD}/packages/domain/src:/usr/src/app/packages/domain/src
       - ${PWD}/packages/literals/src:/usr/src/app/packages/literals/src
       - ${PWD}/packages/ui/src:/usr/src/app/packages/ui/src
+      - ${PWD}/packages/domain/dist:/usr/src/app/packages/domain/dist
+      - ${PWD}/packages/literals/dist:/usr/src/app/packages/literals/dist
+      - ${PWD}/packages/ui/dist:/usr/src/app/packages/ui/dist
     environment:
       PORT: 3000
       FILTER: +apps/api
+    networks:
+      - net
+    develop:
+      watch:
+        - path: /usr/src/app/packages/domain/dist
+          action: sync+restart
 
   editor:
     restart: always
@@ -28,6 +39,9 @@ services:
       - ${PWD}/packages/domain/src:/usr/src/app/packages/domain/src
       - ${PWD}/packages/literals/src:/usr/src/app/packages/literals/src
       - ${PWD}/packages/ui/src:/usr/src/app/packages/ui/src
+      - ${PWD}/packages/domain/dist:/usr/src/app/packages/domain/dist
+      - ${PWD}/packages/literals/dist:/usr/src/app/packages/literals/dist
+      - ${PWD}/packages/ui/dist:/usr/src/app/packages/ui/dist
     environment:
       PORT: 3001
       FILTER: +apps/editor
@@ -42,7 +56,8 @@ services:
       - redis_data:/data
     ports:
       - '6379:6379'
-    command: 'redis-server --save 60 1 --loglevel warning --protected-mode no'
+    networks:
+      - net
 
 volumes:
   redis_data:

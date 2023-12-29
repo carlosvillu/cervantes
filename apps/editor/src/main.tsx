@@ -2,9 +2,20 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from 'react-router-dom'
 
+import debug from 'debug'
+
 import {Component as ErrorPage} from './pages/Error'
 
 import './index.css'
+
+const log = debug('cervantes:editor:entrypoint')
+
+log(`
+================================================
+🌏 Stage: ${import.meta.env.VITE_STAGE ?? 'UNKOWN'}
+🌏 ENV: ${import.meta.env.VITE_NODE_ENV ?? 'UNKOWN'}
+================================================
+`)
 
 const router = createBrowserRouter(
   createRoutesFromElements(

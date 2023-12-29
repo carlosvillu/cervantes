@@ -4,12 +4,11 @@ OWNER=Carlos Villuendas<carlosvillu@gmail.com>
 SHELL := /bin/sh
 .DEFAULT_GOAL := help
 
-export DEBUG ?= cervantes*
-FILTER ?= +apps/editor
+export DEBUG ?= cervantes:*
 BUILD ?=
 
 dev: ## develop the application
-		npx ultra-runner --recursive --filter $(FILTER) dev
+		npx ultra-runner --raw --recursive dev
 
 build_dev: clean ## build and then start de env
 		npx ultra-runner --recursive --build

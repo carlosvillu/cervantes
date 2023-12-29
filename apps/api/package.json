@@ -10,13 +10,12 @@
   },
   "scripts": {
     "start": "node --env-file=.env.production --import tsx ./src/index.ts",
-    "dev": "nodemon --watch src/** --ext ts,json -x \"node --inspect=0.0.0.0:9000 --env-file=.env.development --import tsx ./src/index.ts\""
+    "dev": "node --inspect=0.0.0.0:9000 --env-file=.env.development --import tsx --watch ./src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cervantes/domain": "^1.0.0",
     "@crdtech/express-health-check-middleware": "^0.1.5",
     "bcrypt": "^5.1.1",
     "debug": "^4.3.4",
@@ -24,7 +23,11 @@
     "express-async-errors": "^3.1.1",
     "express-bearer-token": "^2.4.0",
     "http-terminator": "^3.2.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "redis": "4.6.6",
+    "redis-om": "^0.4.3",
+    "ulid": "^2.3.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@tsconfig/node21": "^21.0.0",

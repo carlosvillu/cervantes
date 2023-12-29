@@ -1,6 +1,10 @@
 import {json, Outlet, useLoaderData} from 'react-router-dom'
 
-import {Layout} from '@cervantes/ui'
+import debug from 'debug'
+
+import {Layout} from '../../ui'
+
+const log = debug('cervantes:editor:pages:Root')
 
 export function loader() {
   return json({hola: 'name'})
@@ -8,7 +12,7 @@ export function loader() {
 
 export function Component() {
   const data = useLoaderData()
-  console.log(data)
+  log('%j', data)
   return (
     <Layout>
       <Outlet />
