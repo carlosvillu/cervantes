@@ -1,24 +1,22 @@
 /* eslint @typescript-eslint/no-misused-promises:0, @typescript-eslint/no-non-null-assertion:0 */
 
 import debug from 'debug'
-import {NextFunction, Request, Response, Router} from 'express'
-import {z} from 'zod'
+import {Response, Router} from 'express'
 
 import {validate} from '../../middlewares/validate.js'
-import {loginBodySchema, signupBodySchema} from './schemas.js'
+import {
+  loginBodySchema,
+  refreshTokenBodySchema,
+  RequestLogin,
+  RequestRefresh,
+  RequestSignup,
+  signupBodySchema
+} from './schemas.js'
 
 const log = debug('cervantes:api:routes:auth')
 
-interface RequestSignup extends Request {
-  body: z.infer<typeof signupBodySchema>['body']
-}
-
-interface RequestLogin extends Request {
-  body: z.infer<typeof loginBodySchema>['body']
-}
-
 export const router = Router()
-router.post('/signup', validate(signupBodySchema), async (req: RequestSignup, res: Response, next: NextFunction) => {
+router.post('/signup', validate(signupBodySchema), async (req: RequestSignup, res: Response) => {
   log(`Creating user for email ${req.body.email}`)
 
   const user = await req._domain.FindOneUserUseCase.execute({email: req.body.email})
@@ -33,7 +31,7 @@ router.post('/signup', validate(signupBodySchema), async (req: RequestSignup, re
   res.status(201).json({error: false, message: 'Account created sucessfully'})
 })
 
-router.post('/login', validate(loginBodySchema), async (req: RequestLogin, res: Response, next: NextFunction) => {
+router.post('/login', validate(loginBodySchema), async (req: RequestLogin, res: Response) => {
   log(`Login User with email ${req.body.email}`)
 
   const user = await req._domain.FindOneUserUseCase.execute({email: req.body.email})
@@ -55,4 +53,23 @@ router.post('/login', validate(loginBodySchema), async (req: RequestLogin, res: 
   const tokens = await req._domain.CreateTokenAuthUseCase.execute({id: user.id!})
   log(`User with email ${req.body.email} Successfully Logined`)
   res.status(200).json(tokens.toJSON())
+})
+
+router.post('/refresh', validate(refreshTokenBodySchema), async (req: RequestRefresh, res: Response) => {
+  log(`Verifying Refresh Token ${req.body.refresh}`)
+  const authTokens = await req._domain.VerifyRefreshTokenAuthUseCase.execute({refresh: req.body.refresh})
+
+  if (authTokens.isEmpty()) return res.status(400).json({error: true, message: 'Invalid Refresh Token'})
+
+  log(`New Access y Refresh tokens created`)
+  res.status(200).json(authTokens.toJSON())
+})
+
+router.delete('/refresh', validate(refreshTokenBodySchema), async (req: RequestRefresh, res: Response) => {
+  log(`Removing Refresh Token ${req.body.refresh}`)
+  const authTokens = await req._domain.RemoveUserTokenAuthUseCase.execute({refresh: req.body.refresh})
+
+  if (!authTokens.isEmpty()) return res.status(400).json({error: true, message: 'Invalid Refresh Token'})
+
+  res.status(200).json({error: false, message: 'Logged Out Sucessfully'})
 })

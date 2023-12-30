@@ -7,6 +7,8 @@ import {Config} from './_config/index.js'
 /** AUTH */
 import type {AuthTokens} from './auth/Models/AuthTokens.js'
 import type {CreateTokenAuthUseCaseInput} from './auth/UseCases/CreateTokenAuthUseCase.js'
+import type {VerifyRefreshTokenAuthUseCaseInput} from './auth/UseCases/VerifyRefreshTokenAuthUseCase.js'
+import type {RemoveUserTokenAuthUseCaseInput} from './auth/UseCases/RemoveUserTokenAuthUseCase.js'
 
 /** User */
 import type {FindOneUserUseCaseInput} from './user/UseCases/FindOneUserUseCase.js'
@@ -34,6 +36,8 @@ export class Domain {
 
   /** AUTH */
   get CreateTokenAuthUseCase() {return this.#getter<CreateTokenAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/CreateTokenAuthUseCase.js'), 'CreateTokenAuthUseCase')} // eslint-disable-line 
+  get VerifyRefreshTokenAuthUseCase() {return this.#getter<VerifyRefreshTokenAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/VerifyRefreshTokenAuthUseCase.js'), 'VerifyRefreshTokenAuthUseCase')} // eslint-disable-line 
+  get RemoveUserTokenAuthUseCase() {return this.#getter<RemoveUserTokenAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/RemoveUserTokenAuthUseCase.js'), 'RemoveUserTokenAuthUseCase')} // eslint-disable-line 
 
   /** User */
   get FindOneUserUseCase() {return this.#getter<FindOneUserUseCaseInput, User>(async () => import('./user/UseCases/FindOneUserUseCase.js'), 'FindOneUserUseCase')} // eslint-disable-line 

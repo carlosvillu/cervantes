@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-non-null-assertion:0 */
 // import debug from 'debug'
 // const log = debug('cervantes:domain:auth:RedisAuthRepository')
 import jwt from 'jsonwebtoken'
@@ -36,22 +37,25 @@ export class RedisAuthRepository implements AuthRepository {
     })
 
     const userToken = await this.findOneByUserID(id)
-    if (!userToken.isEmpty()) await this.remove(userToken)
+    if (!userToken.isEmpty()) await this.removeByUserToken(userToken)
 
     await this.create(id.value, refresh)
 
     return AuthTokens.create({access, refresh})
   }
 
-  async verifyRefreshToken(token: Token): Promise<boolean> {
+  async verifyRefreshToken(token: Token): Promise<AuthTokens> {
     const userToken = await this.findOneByToken(token)
 
-    if (userToken.isEmpty()) return false
+    if (userToken.isEmpty()) return AuthTokens.empty()
 
     return new Promise(resolve => {
-      jwt.verify(token.value, REFRESH_TOKEN_PRIVATE_KEY, err => {
-        if (err != null) resolve(false)
-        resolve(true)
+      jwt.verify(token.value, REFRESH_TOKEN_PRIVATE_KEY, (err, tokenDetails) => {
+        if (err != null) resolve(AuthTokens.empty())
+        const {id} = tokenDetails as {id: string}
+
+        const access = jwt.sign({id}, process.env.ACCESS_TOKEN_PRIVATE_KEY, {expiresIn: '14m'})
+        resolve(AuthTokens.create({access, refresh: token.value}))
       })
     })
   }
@@ -64,8 +68,7 @@ export class RedisAuthRepository implements AuthRepository {
       .equals(token.value)
       .return.first()) as TokenRecord
 
-    if (tokenRecord === null || tokenRecord === undefined)
-      throw new Error(`[RedisAuthRepository#remove] Record to remove NO FOUND`)
+    if (tokenRecord === null || tokenRecord === undefined) return UserToken.empty()
 
     return UserToken.create({userID: tokenRecord.userID, token: tokenRecord.token, createdAt: tokenRecord.createdAt})
   }
@@ -83,7 +86,7 @@ export class RedisAuthRepository implements AuthRepository {
     return UserToken.create({userID: tokenRecord.userID, token: tokenRecord.token, createdAt: tokenRecord.createdAt})
   }
 
-  async remove(userToken: UserToken): Promise<void> {
+  async removeByUserToken(userToken: UserToken): Promise<void> {
     await this.#createIndex()
     if (userToken.userID === undefined) throw new Error(`[RedisAuthRepository#remove] UserID mandatory`)
     const tokenRecord = (await this.#tokenRepository
@@ -95,6 +98,19 @@ export class RedisAuthRepository implements AuthRepository {
     if (tokenRecord === null || tokenRecord === undefined)
       throw new Error(`[RedisAuthRepository#remove] Record to remove NO FOUND`)
     await this.#tokenRepository?.remove(tokenRecord[EntityId] as string)
+  }
+
+  async removeByRefreshToken(token: Token): Promise<AuthTokens> {
+    await this.#createIndex()
+    const tokenRecord = (await this.#tokenRepository
+      ?.search()
+      .where('token')
+      .equals(token.value)
+      .return.first()) as TokenRecord
+
+    if (tokenRecord === null || tokenRecord === undefined) return AuthTokens.empty()
+    await this.#tokenRepository?.remove(tokenRecord[EntityId] as string)
+    return AuthTokens.empty()
   }
 
   async findOneByUserID(id: ID): Promise<UserToken> {

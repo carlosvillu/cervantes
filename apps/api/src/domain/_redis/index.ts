@@ -13,7 +13,6 @@ export class Redis {
   }
 
   async createAndConnectClient() {
-    log('Trying to create a new client')
     if (redisClient !== undefined) return Promise.resolve(redisClient)
 
     let res: Function, rej: Function
