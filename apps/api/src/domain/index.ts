@@ -14,9 +14,10 @@ import type {RemoveUserTokenAuthUseCaseInput} from './auth/UseCases/RemoveUserTo
 import type {FindOneUserUseCaseInput} from './user/UseCases/FindOneUserUseCase.js'
 import type {CreateUserUseCaseInput} from './user/UseCases/CreateUserUseCase.js'
 import type {VerifyEmailAndPasswordUserUseCaseInput} from './user/UseCases/VerifyEmailAndPasswordUserUseCase.js'
+import type {FindByIDUserUseCaseInput} from './user/UseCases/FindByIDUserUseCase.js'
 import type {User} from './user/Models/User.js'
 
-const log = debug('cervantes:domain:entrypoint')
+const log = debug('cervantes:api:domain:entrypoint')
 
 export class Domain {
   #config: Config
@@ -40,6 +41,7 @@ export class Domain {
   get RemoveUserTokenAuthUseCase() {return this.#getter<RemoveUserTokenAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/RemoveUserTokenAuthUseCase.js'), 'RemoveUserTokenAuthUseCase')} // eslint-disable-line 
 
   /** User */
+  get FindByIDUserUseCase() {return this.#getter<FindByIDUserUseCaseInput, User>(async () => import('./user/UseCases/FindByIDUserUseCase.js'), 'FindByIDUserUseCase')} // eslint-disable-line 
   get FindOneUserUseCase() {return this.#getter<FindOneUserUseCaseInput, User>(async () => import('./user/UseCases/FindOneUserUseCase.js'), 'FindOneUserUseCase')} // eslint-disable-line 
   get CreateUserUseCase() {return this.#getter<CreateUserUseCaseInput, User>(async () => import('./user/UseCases/CreateUserUseCase.js'), 'CreateUserUseCase')} // eslint-disable-line 
   get VerifyEmailAndPasswordUserUseCase() {return this.#getter<VerifyEmailAndPasswordUserUseCaseInput, User>(async () => import('./user/UseCases/VerifyEmailAndPasswordUserUseCase.js'), 'VerifyEmailAndPasswordUserUseCase')} // eslint-disable-line 

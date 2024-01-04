@@ -6,6 +6,7 @@ import {EntityId, Repository} from 'redis-om'
 import {Config} from '../../../_config/index.js'
 import {Redis} from '../../../_redis/index.js'
 import {Email} from '../../Models/Email.js'
+import {ID} from '../../Models/ID.js'
 import {Password} from '../../Models/Password.js'
 import {PlainPassword} from '../../Models/PlainPassword.js'
 import {User} from '../../Models/User.js'
@@ -21,6 +22,20 @@ export class RedisUserRepository implements UserRepository {
   }
 
   constructor(private readonly config: Config) {}
+
+  async findByID(id: ID): Promise<User> {
+    await this.#createIndex()
+    const userRecord = (await this.#userRepository?.fetch(id.value)) as UserRecord
+
+    if (userRecord === null || userRecord === undefined) return User.empty()
+
+    return User.create({
+      id: userRecord[EntityId] as string,
+      email: userRecord.email,
+      username: userRecord.username,
+      password: userRecord.password
+    }).cleanUpSensitive()
+  }
 
   async findOneByEmail(email: Email): Promise<User> {
     await this.#createIndex()

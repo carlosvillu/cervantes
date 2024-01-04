@@ -5,6 +5,7 @@ import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} fr
 import debug from 'debug'
 
 import {Component as ErrorPage} from './pages/Error'
+import {EditorContext} from './context'
 
 import './index.css'
 
@@ -21,6 +22,8 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/sign-in" lazy={async () => import('./pages/SignIn')} />
+      <Route path="/sign-up" lazy={async () => import('./pages/SignUp')} />
+      <Route path="/sign-out" lazy={async () => import('./pages/SignOut')} />
       <Route path="/" lazy={async () => import('./pages/Root')} errorElement={<ErrorPage />}>
         <Route index lazy={async () => import('./pages/Index')} />
       </Route>
@@ -31,6 +34,8 @@ const router = createBrowserRouter(
 // eslint-disable-next-line
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <EditorContext>
+      <RouterProvider router={router} />
+    </EditorContext>
   </React.StrictMode>
 )

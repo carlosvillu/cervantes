@@ -1,4 +1,5 @@
-import {Fragment, ReactChild, useState} from 'react'
+import {FC, Fragment, ReactChild, useState} from 'react'
+import {Link} from 'react-router-dom'
 
 import {Dialog, Menu, Transition} from '@headlessui/react'
 import {ChevronDownIcon, MagnifyingGlassIcon} from '@heroicons/react/20/solid'
@@ -15,6 +16,8 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline'
 
+import type {UserJSONType} from '../../domain/user/Models/User'
+
 const navigation = [
   {name: 'Dashboard', href: '#', icon: HomeIcon, current: true},
   {name: 'Team', href: '#', icon: UsersIcon, current: false},
@@ -29,8 +32,8 @@ const teams = [
   {id: 3, name: 'Workcation', href: '#', initial: 'W', current: false}
 ]
 const userNavigation = [
-  {name: 'Your profile', href: '#'},
-  {name: 'Sign out', href: '#'}
+  // {name: 'Your profile', href: '#'},
+  {name: 'Sign out', href: '/sign-out'}
 ]
 
 function classNames(...classes: string[]) {
@@ -39,21 +42,14 @@ function classNames(...classes: string[]) {
 
 export interface ILayoutProps {
   children: ReactChild
+  user: UserJSONType
 }
 
-export function Layout({children}: ILayoutProps) {
+export const Layout: FC<ILayoutProps> = ({children, user}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -310,14 +306,14 @@ export function Layout({children}: ILayoutProps) {
                 <Menu as="div" className="relative">
                   <Menu.Button className="-m-1.5 flex items-center p-1.5">
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-500">
+                      <span className="text-sm font-medium leading-none text-white">
+                        {user.username.toUpperCase().slice(0, 2)}
+                      </span>
+                    </span>
                     <span className="hidden lg:flex lg:items-center">
                       <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                        Tom Cook
+                        {user.username}
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
@@ -335,15 +331,15 @@ export function Layout({children}: ILayoutProps) {
                       {userNavigation.map(item => (
                         <Menu.Item key={item.name}>
                           {({active}) => (
-                            <a
-                              href={item.href}
+                            <Link
+                              to={item.href}
                               className={classNames(
                                 active !== undefined ? 'bg-gray-50' : '',
                                 'block px-3 py-1 text-sm leading-6 text-gray-900'
                               )}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                       ))}

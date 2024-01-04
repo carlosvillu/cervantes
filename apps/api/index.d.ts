@@ -1,4 +1,5 @@
 import type {Domain} from './src/domain/index.js'
+import {User} from './src/domain/user/Models/User.ts'
 
 export {}
 
@@ -22,7 +23,7 @@ declare global {
 declare global {
   namespace Express {
     export interface Request {
-      user: unknown
+      user: User
       _domain: Domain
     }
   }
