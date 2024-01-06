@@ -1,7 +1,7 @@
 import type {AnyZodObject} from 'zod'
 
 export interface RequestFetcher {
-  body: {[k: string]: string | undefined}
+  body: {[k: string]: string | number | undefined}
 }
 
 export type ResponseFetcher<O> = [undefined, O] | [Response, undefined]

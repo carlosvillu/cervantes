@@ -1,19 +1,17 @@
 import {type FC, useState} from 'react'
-import {
-  ActionFunctionArgs,
-  Form,
-  Link,
-  LoaderFunctionArgs,
-  redirect,
-  useActionData,
-  useRouteError
-} from 'react-router-dom'
+import {ActionFunctionArgs, Form, Link, LoaderFunctionArgs, redirect, useActionData} from 'react-router-dom'
 
 import debug from 'debug'
 
 const log = debug('cervantes:editor:pages:SignIn')
 
-export const loader = ({request}: LoaderFunctionArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
+  const currentUser = await window.domain.CurrentUserUseCase.execute()
+  if (!currentUser.isEmpty()) {
+    log('There is an user already on the Page.')
+    return redirect('/')
+  }
+
   return null
 }
 

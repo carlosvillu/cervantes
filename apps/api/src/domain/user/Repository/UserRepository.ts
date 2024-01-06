@@ -1,5 +1,5 @@
+import {ID} from '../../_kernel/ID.js'
 import {Email} from '../Models/Email.js'
-import {ID} from '../Models/ID.js'
 import {PlainPassword} from '../Models/PlainPassword.js'
 import {User} from '../Models/User.js'
 

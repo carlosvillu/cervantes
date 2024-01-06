@@ -1,5 +1,5 @@
+import type {ID} from '../../_kernel/ID.js'
 import type {AuthTokens} from '../Models/AuthTokens.js'
-import type {ID} from '../Models/ID.js'
 import type {Token} from '../Models/Token.js'
 import type {UserToken} from '../Models/UserToken.js'
 

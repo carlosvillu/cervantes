@@ -1,7 +1,7 @@
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
+import {ID} from '../../_kernel/ID.js'
 import type {AuthTokens} from '../Models/AuthTokens.js'
-import {ID} from '../Models/ID.js'
 import type {AuthRepository} from '../Repositories/AuthRepository.js'
 import {RedisAuthRepository} from '../Repositories/RedisAuthRepository/index.js'
 

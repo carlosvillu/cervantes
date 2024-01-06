@@ -1,5 +1,5 @@
+import {ID} from '../../_kernel/ID'
 import {Email} from '../Models/Email'
-import {ID} from '../Models/ID'
 import {PlainPassword} from '../Models/PlainPassword'
 import {User} from '../Models/User'
 import {Username} from '../Models/Username'

@@ -1,7 +1,7 @@
 import {z} from 'zod'
 
+import {ID} from '../../_kernel/ID'
 import {Email} from './Email'
-import {ID} from './ID'
 import {PlainPassword} from './PlainPassword'
 import {Username} from './Username'
 
@@ -11,7 +11,7 @@ const UserValidations = z.object({
   username: z.instanceof(Username, {message: 'Username is required'}),
   password: z.instanceof(PlainPassword, {message: 'Password is required'})
 })
-export interface UserJSONType {
+export interface UserJSON {
   id: string
   email: string
   username: string

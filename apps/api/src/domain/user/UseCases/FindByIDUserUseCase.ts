@@ -1,6 +1,6 @@
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
-import {ID} from '../Models/ID.js'
+import {ID} from '../../_kernel/ID.js'
 import {User} from '../Models/User.js'
 import {RedisUserRepository} from '../Repository/RedisUserRepository/index.js'
 import {UserRepository} from '../Repository/UserRepository.js'
