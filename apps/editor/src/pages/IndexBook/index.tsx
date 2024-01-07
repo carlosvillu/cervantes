@@ -61,7 +61,12 @@ export const Component: FC<{}> = () => {
     <div>
       {createdFailed ? <Notification status="error" title="Error creating the chapter" /> : null}
       <OverlayWide open={openOverlay} onClose={force => setOpenOVerlay(force ?? !openOverlay)}>
-        <FormNewChapter />
+        <FormNewChapter
+          onClickCancel={() => {
+            ;(document.getElementById('form-new-chapter') as HTMLFormElement).reset()
+            setOpenOVerlay(false)
+          }}
+        />
       </OverlayWide>
       <div className="px-4 sm:px-0">
         <h3 className="text-base font-semibold leading-7 text-gray-900">{capitalizaFirstLetter(book.title)}</h3>

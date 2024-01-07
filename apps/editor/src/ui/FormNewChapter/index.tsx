@@ -1,18 +1,17 @@
 import {FC} from 'react'
-import {Form, useLoaderData, useNavigate} from 'react-router-dom'
+import {Form, useLoaderData} from 'react-router-dom'
 
 import {ulid} from 'ulid'
 
 import type {BookJSON} from '../../domain/book/Models/Book'
 import type {UserJSON} from '../../domain/user/Models/User'
 
-export const FormNewChapter: FC<{}> = () => {
+export const FormNewChapter: FC<{onClickCancel: () => void}> = ({onClickCancel}) => {
   const {book, user} = useLoaderData() as {book: BookJSON; user: UserJSON}
-  const navigate = useNavigate()
 
   return (
     <>
-      <Form method="post" action={`/book/${book.id as string}?index`}>
+      <Form id="form-new-chapter" method="post" action={`/book/${book.id as string}?index`}>
         <input id="id" name="id" type="hidden" value={ulid()} />
         <input id="intent" name="intent" type="hidden" value="new-chapter" />
         <input id="userID" name="userID" type="hidden" value={user.id} />
@@ -63,7 +62,11 @@ export const FormNewChapter: FC<{}> = () => {
         </div>
 
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button type="button" className="text-sm font-semibold leading-6 text-gray-900" onClick={() => navigate(-1)}>
+          <button
+            type="button"
+            className="text-sm font-semibold leading-6 text-gray-900"
+            onClick={() => onClickCancel()}
+          >
             Cancel
           </button>
           <button

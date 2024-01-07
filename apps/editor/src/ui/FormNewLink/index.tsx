@@ -1,5 +1,5 @@
 import {FC, useState} from 'react'
-import {Form, useLoaderData, useNavigate} from 'react-router-dom'
+import {Form, useLoaderData} from 'react-router-dom'
 
 import {ulid} from 'ulid'
 
@@ -11,7 +11,7 @@ import {capitalizaFirstLetter} from '../../js/string'
 import {ComboBoxSimple} from '../ComboBoxSimple'
 import {Item, SelectMenuSimpleCustom} from '../SelectMenuSimpleCustom'
 
-export const FormNewLink: FC<{}> = () => {
+export const FormNewLink: FC<{onClickCancel: () => void}> = ({onClickCancel}) => {
   const kinds = Link.Kinds.map(kind => {
     return {id: kind, name: capitalizaFirstLetter(kind)}
   }) as Item[]
@@ -23,11 +23,14 @@ export const FormNewLink: FC<{}> = () => {
     chapters: ChapterJSON[]
   }
   const [kindID, setKindID] = useState<string | number>(Link.Kinds[0])
-  const navigate = useNavigate()
 
   return (
     <>
-      <Form method="post" action={`/book/${book.id as string}/chapter/${chapter.id as string}?index`}>
+      <Form
+        id="form-new-link"
+        method="post"
+        action={`/book/${book.id as string}/chapter/${chapter.id as string}?index`}
+      >
         <input id="id" name="id" type="hidden" value={ulid()} />
         <input id="intent" name="intent" type="hidden" value="new-link" />
         <input id="userID" name="userID" type="hidden" value={user.id} />
@@ -84,7 +87,11 @@ export const FormNewLink: FC<{}> = () => {
         </div>
 
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button type="button" className="text-sm font-semibold leading-6 text-gray-900" onClick={() => navigate(-1)}>
+          <button
+            type="button"
+            className="text-sm font-semibold leading-6 text-gray-900"
+            onClick={() => onClickCancel()}
+          >
             Cancel
           </button>
           <button

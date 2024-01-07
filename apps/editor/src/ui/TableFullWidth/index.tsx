@@ -2,6 +2,11 @@ import {FC} from 'react'
 
 import {capitalizaFirstLetter} from '../../js/string'
 
+const kindActionsCLX = {
+  info: 'text-indigo-600 hover:text-indigo-900',
+  alert: 'text-red-600 hover:text-red-900'
+}
+
 export const TableFullWidth: FC<{
   title: string
   subtitle: string
@@ -11,7 +16,7 @@ export const TableFullWidth: FC<{
   actionButtonText: string
   onClickActionButton: () => void
   rowAction: string
-  rowActionColor: string
+  kindAction: 'info' | 'alert'
 }> = ({
   title,
   subtitle,
@@ -19,7 +24,7 @@ export const TableFullWidth: FC<{
   actionButton = false,
   rowAction,
   rows,
-  rowActionColor,
+  kindAction,
   actionButtonText,
   onClickActionButton
 }) => {
@@ -82,7 +87,7 @@ export const TableFullWidth: FC<{
                         </td>
                       ))}
                       <td className="relative text-ellipsis py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 lg:pr-8">
-                        <a href={urlAction} className={`text-${rowActionColor}-600 hover:text-${rowActionColor}-900`}>
+                        <a href={urlAction} className={kindActionsCLX[kindAction]}>
                           {rowAction}
                         </a>
                       </td>

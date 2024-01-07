@@ -66,7 +66,12 @@ export const Component: FC<{}> = () => {
     <div>
       {createdFailed ? <Notification status="error" title="Error creating the chapter" /> : null}
       <OverlayWide open={openOverlay} onClose={force => setOpenOVerlay(force ?? !openOverlay)}>
-        <FormNewLink />
+        <FormNewLink
+          onClickCancel={() => {
+            ;(document.getElementById('form-new-link') as HTMLFormElement).reset()
+            setOpenOVerlay(false)
+          }}
+        />
       </OverlayWide>
       <div className="px-4 sm:px-0">
         <h3 className="text-base font-semibold leading-7 text-gray-900">{capitalizaFirstLetter(chapter.title)}</h3>
@@ -107,7 +112,7 @@ export const Component: FC<{}> = () => {
               ])}
               onClickActionButton={() => setOpenOVerlay(true)}
               rowAction="delete"
-              rowActionColor="red"
+              kindAction="alert"
             />
           </div>
         </dl>
