@@ -1,16 +1,29 @@
-import {json, Outlet, useLoaderData} from 'react-router-dom'
+import {json, Outlet, redirect, useLoaderData} from 'react-router-dom'
 
-import {Layout} from '@cervantes/ui'
+import debug from 'debug'
 
-export function loader() {
-  return json({hola: 'name'})
+import type {Books} from '../../domain/book/Models/Books'
+import type {User} from '../../domain/user/Models/User'
+import {Layout} from '../../ui'
+
+const log = debug('cervantes:editor:pages:Root')
+
+export const loader = async () => {
+  const currentUser = await window.domain.CurrentUserUseCase.execute()
+  const books = await window.domain.GetAllBookUseCase.execute()
+
+  log('Logined user => %o', currentUser)
+
+  if (currentUser.isEmpty()) return redirect('/sign-in')
+
+  return json({user: currentUser, books})
 }
 
 export function Component() {
-  const data = useLoaderData()
-  console.log(data)
+  const {user, books} = useLoaderData() as {user: User; books: Books}
+
   return (
-    <Layout>
+    <Layout user={user} books={books}>
       <Outlet />
     </Layout>
   )

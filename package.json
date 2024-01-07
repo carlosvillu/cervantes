@@ -4,10 +4,7 @@
   "private": true,
   "workspaces": [
     "apps/editor",
-    "apps/api",
-    "packages/domain",
-    "packages/literals",
-    "packages/ui"
+    "apps/api"
   ],
   "engines": {
     "node": "21"
@@ -21,6 +18,17 @@
   "eslintConfig": {
     "extends": [
       "./node_modules/@s-ui/lint/eslintrc.js"
+    ],
+    "overrides": [
+        {
+          "files": ["**/*.+(ts|tsx)"],
+          "rules": {
+            "@typescript-eslint/strict-boolean-expressions": 0,
+            "@typescript-eslint/no-non-null-assertion": 0,
+            "@typescript-eslint/restrict-plus-operands": 0,
+            "@typescript-eslint/no-misused-promises": 0
+          }
+        }
     ]
   },
   "prettier": "./node_modules/@s-ui/lint/.prettierrc.js",
@@ -29,8 +37,10 @@
   },
   "devDependencies": {
     "@s-ui/lint": "typescript",
+    "@types/bcrypt": "^5.0.2",
     "@types/chai": "^4.3.11",
     "@types/chai-dom": "^1.11.3",
+    "@types/jsonwebtoken": "^9.0.5",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.10.4",
     "@types/react": "^18.2.45",

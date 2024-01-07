@@ -31,6 +31,9 @@ FROM builder as dev-api
 
 EXPOSE 3000
 
+ENV NODE_ENV=development
+ENV STAGE=development
+
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD make dev
 
@@ -38,10 +41,15 @@ FROM builder as dev-editor
 
 EXPOSE 3001
 
+ENV NODE_ENV=development
+
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD make dev
 
 
 FROM flashspys/nginx-static as prod-editor
+
+ENV NODE_ENV=production
+ENV STAGE=production
 
 COPY --from=builder /usr/src/app/apps/editor/dist /static

@@ -4,3 +4,6 @@ dist
 public
 .ultra.cache.json
 .vim
+.env.development
+.env
+.env.*
