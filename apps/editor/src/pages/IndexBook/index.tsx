@@ -105,7 +105,14 @@ export const Component: FC<{}> = () => {
                             </span>
                           </span>
                           <div className="min-w-0 flex-auto">
-                            <p className="text-sm font-semibold leading-6 text-gray-900">{chapter.title}</p>
+                            <p className="text-sm font-semibold leading-6 text-gray-900">
+                              <Link
+                                to={`/book/${book.id as string}/chapter/${chapter.id as string}`}
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
+                              >
+                                {chapter.title}
+                              </Link>
+                            </p>
                             <p className="mt-1 truncate text-xs leading-5 text-gray-500">{chapter.summary}</p>
                           </div>
                         </div>

@@ -19,15 +19,16 @@ export const Component: FC<{}> = () => {
   const navigate = useNavigate()
   const tabs = [
     {to: `/book/${bookID}/chapter/${chapterID}`, title: 'Info'},
-    {to: `/book/${bookID}/chapter/${chapterID}/editor`, title: 'Editor'},
-    {to: `/book/${bookID}/chapter/${chapterID}/map`, title: 'Map'}
+    {to: `/book/${bookID}/chapter/${chapterID}/editor`, title: 'Editor'}
   ]
 
   return (
     <>
       <div className="relative border-b border-gray-200 pb-5 sm:pb-0">
         <div className="md:flex md:items-center md:justify-between">
-          <h3 className="text-base font-semibold leading-6 text-gray-900">{capitalizaFirstLetter(chapter.title)}</h3>
+          <h3 className="text-base font-semibold leading-6 text-gray-900" hidden>
+            {capitalizaFirstLetter(chapter.title)}
+          </h3>
           {/* TODO: Buttons Hidden!!! */}
           <div className="hidden mt-3 flex md:absolute md:right-0 md:top-3 md:mt-0">
             <button

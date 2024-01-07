@@ -4,24 +4,23 @@ import {z} from 'zod'
 export const createBodySchema = z.object({
   body: z.object({
     id: z.string({required_error: 'ID is required'}),
-    bookID: z.string({required_error: 'bookID is required'}),
-    title: z.string({required_error: 'Title required'}),
-    summary: z.string({required_error: 'Summary required'})
+    from: z.string({required_error: 'from is required'}),
+    to: z.string({required_error: 'to is required'}),
+    kind: z.string({required_error: 'kind is required'}),
+    body: z.string({required_error: 'body is required'}),
+    bookID: z.string({required_error: 'bookID is required'})
   })
 })
 
 export const findByIDBodySchema = z.object({
-  query: z.object({
-    bookID: z.string({required_error: 'bookID is required'})
-  }),
   params: z.object({
-    chapterID: z.string({required_error: 'chapterID is required'})
+    linkID: z.string({required_error: 'linkID is required'})
   })
 })
 
 export const findAllBodySchema = z.object({
   query: z.object({
-    bookID: z.string({required_error: 'bookID is required'})
+    from: z.string({required_error: 'from is required'})
   })
 })
 
@@ -31,7 +30,6 @@ export interface RequestCreate extends Request {
 
 export interface RequestFindByID extends Request {
   params: z.infer<typeof findByIDBodySchema>['params']
-  query: z.infer<typeof findByIDBodySchema>['query']
 }
 
 export interface RequestFindAll extends Request {

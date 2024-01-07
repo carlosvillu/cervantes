@@ -18,18 +18,25 @@ import type {FindByIDUserUseCaseInput} from './user/UseCases/FindByIDUserUseCase
 import type {User} from './user/Models/User.js'
 
 /** Book */
-import {CreateBookUseCaseInput} from './book/UseCases/CreateBookUseCase.js'
-import {Book} from './book/Models/Book.js'
-import {GetAllBookUseCaseInput} from './book/UseCases/GetAllBookUseCase.js'
-import {Books} from './book/Models/Books.js'
-import {FindByIDBookUseCaseInput} from './book/UseCases/FindByIDBookUseCase.js'
+import type {CreateBookUseCaseInput} from './book/UseCases/CreateBookUseCase.js'
+import type {Book} from './book/Models/Book.js'
+import type {GetAllBookUseCaseInput} from './book/UseCases/GetAllBookUseCase.js'
+import type {Books} from './book/Models/Books.js'
+import type {FindByIDBookUseCaseInput} from './book/UseCases/FindByIDBookUseCase.js'
 
 /** Chapter */
-import {FindByIDChapterUseCaseInput} from './chapter/UseCases/FindByIDChapterUseCase.js'
-import {GetAllChapterUseCaseInput} from './chapter/UseCases/GetAllChapterUseCase.js'
-import {CreateChapterUseCaseInput} from './chapter/UseCases/CreateChapterUseCase.js'
-import {Chapter} from './chapter/Models/Chapter.js'
-import {Chapters} from './chapter/Models/Chapters.js'
+import type {FindByIDChapterUseCaseInput} from './chapter/UseCases/FindByIDChapterUseCase.js'
+import type {GetAllChapterUseCaseInput} from './chapter/UseCases/GetAllChapterUseCase.js'
+import type {CreateChapterUseCaseInput} from './chapter/UseCases/CreateChapterUseCase.js'
+import type {Chapter} from './chapter/Models/Chapter.js'
+import type {Chapters} from './chapter/Models/Chapters.js'
+
+/** Link */
+import type {Link} from './link/Models/Link.js'
+import type {Links} from './link/Models/Links.js'
+import type {FindByIDLinkUseCaseInput} from './link/UseCases/FindByIDLinkUseCase.js'
+import type {CreateLinkUseCaseInput} from './link/UseCases/CreateLinkUseCase.js'
+import type {GetAllLinkUseCaseInput} from './link/UseCases/GetAllLinkUseCase.js'
 
 const log = debug('cervantes:api:domain:entrypoint')
 
@@ -69,6 +76,11 @@ export class Domain {
   get FindByIDChapterUseCase() {return this.#getter<FindByIDChapterUseCaseInput, Chapters>(async () => import('./chapter/UseCases/FindByIDChapterUseCase.js'), 'FindByIDChapterUseCase')} // eslint-disable-line 
   get GetAllChapterUseCase() {return this.#getter<GetAllChapterUseCaseInput, Chapters>(async () => import('./chapter/UseCases/GetAllChapterUseCase.js'), 'GetAllChapterUseCase')} // eslint-disable-line 
   get CreateChapterUseCase() {return this.#getter<CreateChapterUseCaseInput, Chapter>(async () => import('./chapter/UseCases/CreateChapterUseCase.js'), 'CreateChapterUseCase')} // eslint-disable-line 
+
+  /** Link */
+  get FindByIDLinkUseCase() {return this.#getter<FindByIDLinkUseCaseInput, Link>(async () => import('./link/UseCases/FindByIDLinkUseCase.js'), 'FindByIDLinkUseCase')} // eslint-disable-line 
+  get CreateLinkUseCase() {return this.#getter<CreateLinkUseCaseInput, Link>(async () => import('./link/UseCases/CreateLinkUseCase.js'), 'CreateLinkUseCase')} // eslint-disable-line 
+  get GetAllLinkUseCase() {return this.#getter<GetAllLinkUseCaseInput, Links>(async () => import('./link/UseCases/GetAllLinkUseCase.js'), 'GetAllLinkUseCase')} // eslint-disable-line 
 
   #getter<I, O>(loader: Function, name: string) {
     return {

@@ -20,7 +20,7 @@ export interface ChapterJSON {
   bookID: string
   title: string
   summary: string
-  createdAt: string
+  createdAt: number
 }
 
 export class Chapter {

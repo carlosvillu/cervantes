@@ -3,7 +3,7 @@ import {Response, Router} from 'express'
 
 import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
-import {createBodySchema, findByIDBodySchema, RequestCreate, RequestFindByID} from './schemas.js'
+import {createBodySchema, findByIDBodySchema, RequestCreate, RequestFindAll, RequestFindByID} from './schemas.js'
 
 const log = debug('cervantes:api:routes:user')
 
@@ -18,7 +18,7 @@ router.post('/', auth(), validate(createBodySchema), async (req: RequestCreate, 
   return res.status(201).json(chapter.toJSON())
 })
 
-router.get('/', auth(), async (req: RequestFindByID, res: Response) => {
+router.get('/', auth(), async (req: RequestFindAll, res: Response) => {
   log(`Geting all chapters for user ${req.user.id!}`)
 
   const chapters = await req._domain.GetAllChapterUseCase.execute({bookID: req.query.bookID, userID: req.user.id!})

@@ -12,6 +12,7 @@ import {domain} from './middlewares/domain.js'
 import {router as authRouter} from './routes/auth/index.js'
 import {router as bookRouter} from './routes/book/index.js'
 import {router as chapterRouter} from './routes/chapter/index.js'
+import {router as linkRouter} from './routes/link/index.js'
 import {router as userRouter} from './routes/user/index.js'
 
 const {PORT, HOST} = process.env
@@ -46,6 +47,7 @@ app.use('/auth', authRouter)
 app.use('/user', userRouter)
 app.use('/book', bookRouter)
 app.use('/chapter', chapterRouter)
+app.use('/link', linkRouter)
 
 const server = app.listen(+PORT!, HOST!, () => log('app Listen in:', `http://${HOST!}:${PORT!}`)) // eslint-disable-line 
 

@@ -12,7 +12,7 @@ export const FormNewChapter: FC<{}> = () => {
 
   return (
     <>
-      <Form method="post" action={`/book/${book.id as string}`}>
+      <Form method="post" action={`/book/${book.id as string}?index`}>
         <input id="id" name="id" type="hidden" value={ulid()} />
         <input id="intent" name="intent" type="hidden" value="new-chapter" />
         <input id="userID" name="userID" type="hidden" value={user.id} />
