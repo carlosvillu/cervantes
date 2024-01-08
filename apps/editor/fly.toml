@@ -7,7 +7,7 @@ app = "cervantes-editor"
 primary_region = "mad"
 
 [http_service]
-  internal_port = 8080
+  internal_port = 8043
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true

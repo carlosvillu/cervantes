@@ -37,14 +37,8 @@ ENTRYPOINT ["/sbin/tini", "--"]
 
 CMD ["npm", "run", "start"]
 
-FROM node:${NODE_VERSION}-alpine as editor
+FROM pierrezemb/gostatic as editor
 
-RUN npm i -g serve
+EXPOSE 8043
 
-EXPOSE 3000
-
-COPY --from=builder /usr/src/app/apps/editor/dist /web
-
-WORKDIR /web
-
-CMD ["npx", "serve", ".", "-l", "8080", "-s"]
+COPY --from=builder /usr/src/app/apps/editor/dist/ /srv/http/
