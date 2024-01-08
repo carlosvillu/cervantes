@@ -21,10 +21,10 @@ export type CreateUserUseCaseInput = z.infer<typeof CreateUserUseCaseValidations
 
 export class CreateUserUseCase implements UseCase<CreateUserUseCaseInput, User> {
   static create({config}: {config: Config}) {
-    return new CreateUserUseCase(config, HTTPUserRepository.create(config))
+    return new CreateUserUseCase(HTTPUserRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: UserRepository) {}
+  constructor(private readonly repository: UserRepository) {}
 
   async execute({email, password, username, id}: CreateUserUseCaseInput): Promise<User> {
     return this.repository.create(

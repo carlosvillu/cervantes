@@ -6,10 +6,10 @@ import type {UserRepository} from '../Repositories/UserRepository.js'
 
 export class CurrentUserUseCase implements UseCase<void, User> {
   static create({config}: {config: Config}) {
-    return new CurrentUserUseCase(config, HTTPUserRepository.create(config))
+    return new CurrentUserUseCase(HTTPUserRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: UserRepository) {}
+  constructor(private readonly repository: UserRepository) {}
 
   async execute(): Promise<User> {
     return this.repository.current()

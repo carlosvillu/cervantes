@@ -12,10 +12,10 @@ export interface FindByIDLinkUseCaseInput {
 
 export class FindByIDLinkUseCase implements UseCase<FindByIDLinkUseCaseInput, Link> {
   static create({config}: {config: Config}) {
-    return new FindByIDLinkUseCase(config, HTTPLinkRepository.create(config))
+    return new FindByIDLinkUseCase(HTTPLinkRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: LinkRepository) {}
+  constructor(private readonly repository: LinkRepository) {}
 
   async execute({id}: FindByIDLinkUseCaseInput): Promise<Link> {
     return this.repository.findByID(ID.create({value: id}))

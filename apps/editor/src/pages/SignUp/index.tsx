@@ -1,10 +1,7 @@
 import {type FC, useState} from 'react'
 import {ActionFunctionArgs, Form, Link, redirect, useActionData} from 'react-router-dom'
 
-import debug from 'debug'
 import {ulid} from 'ulid'
-
-const log = debug('cervantes:editor:pages:SignUp')
 
 export const action = async ({request}: ActionFunctionArgs) => {
   const {id, username, email, password} = Object.fromEntries(await request.formData()) as {

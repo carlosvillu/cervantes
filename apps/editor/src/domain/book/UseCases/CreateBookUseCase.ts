@@ -17,10 +17,10 @@ export interface CreateBookUseCaseInput {
 
 export class CreateBookUseCase implements UseCase<CreateBookUseCaseInput, Book> {
   static create({config}: {config: Config}) {
-    return new CreateBookUseCase(config, HTTPBookRepository.create(config))
+    return new CreateBookUseCase(HTTPBookRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: BookRepository) {}
+  constructor(private readonly repository: BookRepository) {}
 
   async execute({title, userID, summary, id}: CreateBookUseCaseInput): Promise<Book> {
     return this.repository.create(

@@ -11,10 +11,10 @@ export interface GetAllLinkUseCaseInput {
 
 export class GetAllLinkUseCase implements UseCase<GetAllLinkUseCaseInput, Links> {
   static create({config}: {config: Config}) {
-    return new GetAllLinkUseCase(config, HTTPLinkRepository.create(config))
+    return new GetAllLinkUseCase(HTTPLinkRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: LinkRepository) {}
+  constructor(private readonly repository: LinkRepository) {}
 
   async execute({from}: GetAllLinkUseCaseInput): Promise<Links> {
     return this.repository.findAll(ID.create({value: from}))

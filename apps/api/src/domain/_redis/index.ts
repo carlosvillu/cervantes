@@ -4,7 +4,7 @@ import {createClient} from 'redis'
 
 const log = debug('cervantes:api:domain:redis')
 
-const {REDIS_USER, REDIS_PORT, REDIS_HOST, REDIS_PASSWORD} = process.env
+const {REDIS_USER, REDIS_PORT, REDIS_HOST, REDIS_PASSWORD, REDIS_PROTOCOL} = process.env
 let redisClient: RedisClientType
 
 export class Redis {
@@ -20,7 +20,7 @@ export class Redis {
     log(`Creating a new Redis Client redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`)
 
     const redis = createClient({
-      url: `redis://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`
+      url: `${REDIS_PROTOCOL}://${REDIS_USER}:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`
     })
       .on('error', error => {
         log('Connection failed', error)

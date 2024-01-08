@@ -6,10 +6,10 @@ import {HTTPBookRepository} from '../Repository/HTTPBookRepository.js'
 
 export class GetAllBookUseCase implements UseCase<void, Books> {
   static create({config}: {config: Config}) {
-    return new GetAllBookUseCase(config, HTTPBookRepository.create(config))
+    return new GetAllBookUseCase(HTTPBookRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: BookRepository) {}
+  constructor(private readonly repository: BookRepository) {}
 
   async execute(): Promise<Books> {
     return this.repository.findAll()

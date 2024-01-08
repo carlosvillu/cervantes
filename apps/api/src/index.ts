@@ -35,7 +35,8 @@ app.use(domain)
 
 // CORS
 app.use(function (req, res, next) {
-  if (req.header('origin')?.includes('localhost')) {
+  log(req.header('origin'))
+  if (req.header('origin')?.includes('localhost') || req.header('origin')?.includes('cervantes-editor.fly.dev')) { // eslint-disable-line 
     res.setHeader('Access-Control-Allow-Origin', req.get('origin')!)
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type, Authorization')
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')

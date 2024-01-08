@@ -12,10 +12,10 @@ export interface FindByIDChapterUseCaseInput {
 
 export class FindByIDChapterUseCase implements UseCase<FindByIDChapterUseCaseInput, Chapter> {
   static create({config}: {config: Config}) {
-    return new FindByIDChapterUseCase(config, HTTPChapterRepository.create(config))
+    return new FindByIDChapterUseCase(HTTPChapterRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: ChapterRepository) {}
+  constructor(private readonly repository: ChapterRepository) {}
 
   async execute({id, bookID}: FindByIDChapterUseCaseInput): Promise<Chapter> {
     return this.repository.findByID(ID.create({value: id}), ID.create({value: bookID}))

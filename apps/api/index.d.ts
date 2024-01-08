@@ -13,6 +13,7 @@ declare global {
       REFRESH_TOKEN_PRIVATE_KEY: string
       REDIS_PORT: string
       REDIS_HOST: string
+      REDIS_PROTOCOL: string
       REDIS_PASSWORD: string
       REDIS_USER: string
       SALT: string

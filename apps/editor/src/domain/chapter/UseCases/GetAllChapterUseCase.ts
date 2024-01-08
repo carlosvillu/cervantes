@@ -11,10 +11,10 @@ export interface GetAllChapterUseCaseInput {
 
 export class GetAllChapterUseCase implements UseCase<GetAllChapterUseCaseInput, Chapters> {
   static create({config}: {config: Config}) {
-    return new GetAllChapterUseCase(config, HTTPChapterRepository.create(config))
+    return new GetAllChapterUseCase(HTTPChapterRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: ChapterRepository) {}
+  constructor(private readonly repository: ChapterRepository) {}
 
   async execute({bookID}: GetAllChapterUseCaseInput): Promise<Chapters> {
     return this.repository.findAll(ID.create({value: bookID}))

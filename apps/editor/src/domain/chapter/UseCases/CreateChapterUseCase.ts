@@ -17,10 +17,10 @@ export interface CreateChapterUseCaseInput {
 
 export class CreateChapterUseCase implements UseCase<CreateChapterUseCaseInput, Chapter> {
   static create({config}: {config: Config}) {
-    return new CreateChapterUseCase(config, HTTPChapterRepository.create(config))
+    return new CreateChapterUseCase(HTTPChapterRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: ChapterRepository) {}
+  constructor(private readonly repository: ChapterRepository) {}
 
   async execute({title, userID, bookID, summary, id}: CreateChapterUseCaseInput): Promise<Chapter> {
     return this.repository.create(

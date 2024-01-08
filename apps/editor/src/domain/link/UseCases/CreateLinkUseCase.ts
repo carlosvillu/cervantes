@@ -20,10 +20,10 @@ export interface CreateLinkUseCaseInput {
 
 export class CreateLinkUseCase implements UseCase<CreateLinkUseCaseInput, Link> {
   static create({config}: {config: Config}) {
-    return new CreateLinkUseCase(config, HTTPLinkRepository.create(config))
+    return new CreateLinkUseCase(HTTPLinkRepository.create(config))
   }
 
-  constructor(private readonly config: Config, private readonly repository: LinkRepository) {}
+  constructor(private readonly repository: LinkRepository) {}
 
   async execute({id, body, from, to, kind, userID, bookID}: CreateLinkUseCaseInput): Promise<Link> {
     return this.repository.create(

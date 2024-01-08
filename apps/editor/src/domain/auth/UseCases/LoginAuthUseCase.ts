@@ -18,14 +18,10 @@ export type LoginAuthUseCaseInput = z.infer<typeof LoginAuthUseCaseValidations>
 
 export class LoginAuthUseCase implements UseCase<LoginAuthUseCaseInput, AuthTokens> {
   static create({config}: {config: Config}) {
-    return new LoginAuthUseCase(config, HTTPAuthRepository.create(config), LocalStorageAuthRepository.create(config))
+    return new LoginAuthUseCase(HTTPAuthRepository.create(config), LocalStorageAuthRepository.create())
   }
 
-  constructor(
-    private readonly config: Config,
-    private readonly remoteRepository: AuthRepository,
-    private readonly localRepository: AuthRepository
-  ) {}
+  constructor(private readonly remoteRepository: AuthRepository, private readonly localRepository: AuthRepository) {}
 
   async execute({email, password}: LoginAuthUseCaseInput): Promise<AuthTokens> {
     LoginAuthUseCaseValidations.parse({email, password})

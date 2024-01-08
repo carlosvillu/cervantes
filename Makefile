@@ -7,6 +7,18 @@ SHELL := /bin/sh
 export DEBUG ?= cervantes:*
 BUILD ?=
 
+deploy:
+	flyctl deploy --config $(PWD)/apps/$(APP)/fly.toml --build-target $(APP) --dockerfile ./.docker/Dockerfile
+
+deploy_api:
+	APP=api make deploy
+
+deploy_editor:
+	APP=editor make deploy
+
+deploy_all:
+	make -j deploy_api deploy_all
+
 dev: ## develop the application
 		npx ultra-runner --raw --recursive dev
 
