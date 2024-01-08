@@ -42,3 +42,5 @@ FROM pierrezemb/gostatic as editor
 EXPOSE 8043
 
 COPY --from=builder /usr/src/app/apps/editor/dist/ /srv/http/
+
+CMD ["--fallback", "index.html"]
