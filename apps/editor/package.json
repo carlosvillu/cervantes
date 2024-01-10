@@ -18,6 +18,7 @@
     "@tailwindcss/forms": "^0.5.7",
     "@tiptap/extension-color": "^2.1.15",
     "@tiptap/extension-text-style": "^2.1.15",
+    "@tiptap/extension-underline": "^2.1.15",
     "@tiptap/pm": "^2.1.15",
     "@tiptap/react": "^2.1.15",
     "@tiptap/starter-kit": "^2.1.15",
