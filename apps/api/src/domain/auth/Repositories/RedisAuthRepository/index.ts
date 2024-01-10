@@ -29,7 +29,7 @@ export class RedisAuthRepository implements AuthRepository {
   async generateTokens(id: ID): Promise<AuthTokens> {
     await this.#createIndex()
     const access = jwt.sign(id.toJSON(), ACCESS_TOKEN_PRIVATE_KEY, {
-      expiresIn: '14m'
+      expiresIn: '10m'
     })
 
     const refresh = jwt.sign(id.toJSON(), REFRESH_TOKEN_PRIVATE_KEY, {
@@ -54,7 +54,7 @@ export class RedisAuthRepository implements AuthRepository {
         if (err != null) resolve(AuthTokens.empty())
         const {id} = tokenDetails as {id: string}
 
-        const access = jwt.sign({id}, process.env.ACCESS_TOKEN_PRIVATE_KEY, {expiresIn: '14m'})
+        const access = jwt.sign({id}, process.env.ACCESS_TOKEN_PRIVATE_KEY, {expiresIn: '10m'})
         resolve(AuthTokens.create({access, refresh: token.value}))
       })
     })

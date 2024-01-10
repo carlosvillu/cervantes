@@ -17,10 +17,11 @@ deploy_editor:
 	APP=editor make deploy
 
 deploy_all:
-	make -j deploy_api deploy_all
+	make -j $(nproc) deploy_api deploy_all
 
 dev: ## develop the application
-		npx ultra-runner --raw --recursive dev
+	docker compose -f ./.docker/compose.yaml up -d --remove-orphans
+	npx ultra-runner --raw --recursive dev
 
 build_dev: clean ## build and then start de env
 		npx ultra-runner --recursive --build

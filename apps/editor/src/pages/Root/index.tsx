@@ -4,7 +4,7 @@ import debug from 'debug'
 
 import type {Books} from '../../domain/book/Models/Books'
 import type {User} from '../../domain/user/Models/User'
-import {Layout} from '../../ui'
+import {Layout} from '../../ui/Layout'
 
 const log = debug('cervantes:editor:pages:Root')
 

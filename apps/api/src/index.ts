@@ -35,8 +35,8 @@ app.use(domain)
 
 // CORS
 app.use(function (req, res, next) {
-  log(req.header('origin'))
-  if (req.header('origin')?.includes('localhost') || req.header('origin')?.includes('cervantes-editor.fly.dev')) { // eslint-disable-line 
+  const ALLOW_ORIGINS = ['localhost', 'cervantes-editor.fly.dev', 'editor.bookadventur.es']
+  if (ALLOW_ORIGINS.some(origin => req.header('origin')?.includes(origin))) {
     res.setHeader('Access-Control-Allow-Origin', req.get('origin')!)
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type, Authorization')
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')

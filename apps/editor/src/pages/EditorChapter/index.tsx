@@ -1,5 +1,7 @@
 import {FC} from 'react'
 
+import {Editor} from '../../ui/Editor/test.tsx'
+
 export const Component: FC<{}> = () => {
-  return <h1>Editor</h1>
+  return <Editor />
 }

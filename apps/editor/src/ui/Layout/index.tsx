@@ -346,7 +346,7 @@ export const Layout: FC<ILayoutProps> = ({children, user, books}) => {
           </div>
         </div>
 
-        <main className="py-10" style={{height: 'calc(100vh - 64px)'}}>
+        <main className="" style={{height: 'calc(100vh - 64px)'}}>
           <div className="h-full px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>

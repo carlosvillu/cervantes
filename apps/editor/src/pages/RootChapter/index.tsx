@@ -90,7 +90,7 @@ export const Component: FC<{}> = () => {
         </div>
       </div>
 
-      <div className="py-5 sm:py-6">
+      <div className="py-5 sm:py-6 h-full">
         <Outlet />
       </div>
     </>
