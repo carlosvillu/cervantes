@@ -24,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="/sign-in" lazy={async () => import('./pages/SignIn')} />
       <Route path="/sign-up" lazy={async () => import('./pages/SignUp')} />
       <Route path="/sign-out" lazy={async () => import('./pages/SignOut')} />
+      <Route path="/faqs" lazy={async () => import('./pages/FAQs')} />
       <Route path="/" lazy={async () => import('./pages/Root')} errorElement={<ErrorPage />}>
         <Route index lazy={async () => import('./pages/Index')} />
         <Route path="new-book" lazy={async () => import('./pages/NewBook')} />

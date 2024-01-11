@@ -19,6 +19,7 @@ import {
 import type {Books} from '../../domain/book/Models/Books'
 import type {User} from '../../domain/user/Models/User'
 import {classNames} from '../../js/css'
+import {Footer} from '../Footer'
 
 const navigation = [
   {name: 'Dashboard', href: '#', icon: HomeIcon, current: true},
@@ -349,6 +350,7 @@ export const Layout: FC<ILayoutProps> = ({children, user, books}) => {
         <main className="" style={{height: 'calc(100vh - 64px)'}}>
           <div className="h-full px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
+        <Footer />
       </div>
     </>
   )
