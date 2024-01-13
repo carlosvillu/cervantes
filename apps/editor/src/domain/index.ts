@@ -32,6 +32,11 @@ import type {GetAllLinkUseCaseInput} from './link/UseCases/GetAllLinkUseCase.js'
 import type {FindByIDLinkUseCaseInput} from './link/UseCases/FindByIDLinkUseCase.js'
 import type {CreateLinkUseCaseInput} from './link/UseCases/CreateLinkUseCase.js'
 
+/** Body */
+import type {Body} from './body/Models/Body.js'
+import type {CommitBodyUseCaseInput} from './body/UseCases/CommitBodyUseCase.js'
+import type {GetLastCommitBodyUseCaseInput} from './body/UseCases/GetLastCommitBodyUseCase.js'
+
 const log = debug('cervantes:editor:domain:entrypoint')
 
 export class Domain {
@@ -73,6 +78,10 @@ export class Domain {
   get GetAllLinkUseCase() {return this.#getter<GetAllLinkUseCaseInput, Links>(async () => import('./link/UseCases/GetAllLinkUseCase.js'), 'GetAllLinkUseCase')} // eslint-disable-line 
   get FindByIDLinkUseCase() {return this.#getter<FindByIDLinkUseCaseInput, Link>(async () => import('./link/UseCases/FindByIDLinkUseCase.js'), 'FindByIDLinkUseCase')} // eslint-disable-line 
   get CreateLinkUseCase() {return this.#getter<CreateLinkUseCaseInput, Link>(async () => import('./link/UseCases/CreateLinkUseCase.js'), 'CreateLinkUseCase')} // eslint-disable-line 
+
+  /** Body */
+  get CommitBodyUseCase() {return this.#getter<CommitBodyUseCaseInput, Body>(async () => import('./body/UseCases/CommitBodyUseCase.js'), 'CommitBodyUseCase')} // eslint-disable-line 
+  get GetLastCommitBodyUseCase() {return this.#getter<GetLastCommitBodyUseCaseInput, Body>(async () => import('./body/UseCases/GetLastCommitBodyUseCase.js'), 'GetLastCommitBodyUseCase')} // eslint-disable-line 
 
   #getter<I, O>(loader: Function, name: string) {
     return {

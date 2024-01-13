@@ -20,7 +20,9 @@
       "./node_modules/@s-ui/lint/eslintrc.js"
     ],
     "rules": {
-      "@typescript-eslint/strict-boolean-expressions": 0
+      "@typescript-eslint/strict-boolean-expressions": 0,
+      "@typescript-eslint/no-non-null-assertion": 0,
+      "@typescript-eslint/no-misused-promises": 0
     }
   },
   "prettier": "./node_modules/@s-ui/lint/.prettierrc.js",

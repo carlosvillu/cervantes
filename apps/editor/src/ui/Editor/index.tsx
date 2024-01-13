@@ -1,19 +1,40 @@
 import {FC} from 'react'
+import {useLoaderData, useParams} from 'react-router-dom'
+
+import debug from 'debug'
+import {ulid} from 'ulid'
 
 import Underline from '@tiptap/extension-underline'
 import {EditorContent, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
+import {UserJSON} from '../../domain/user/Models/User'
 import {Buttons} from './Buttons'
 
 const extensions = [StarterKit, Underline]
+const log = debug('cervantes:editor:ui:editor')
 
 export const Editor: FC<{}> = () => {
+  const {user, lastCommitBody} = useLoaderData() as {user: UserJSON; lastCommitBody: string}
+  const {bookID, chapterID} = useParams() as {bookID: string; chapterID: string}
+
   const editor = useEditor({
     autofocus: 'start',
     injectCSS: false,
     extensions,
-    content: '',
+    content: lastCommitBody,
+    onUpdate: async ({editor}) => {
+      const id = ulid()
+      const body = await window.domain.CommitBodyUseCase.execute({
+        bookID,
+        chapterID,
+        userID: user.id,
+        content: JSON.stringify(editor.getHTML()),
+        id
+      })
+
+      if (body.isEmpty()) log('Error commiting the body %s', id)
+    },
     editorProps: {
       attributes: {
         class:
@@ -33,7 +54,7 @@ export const Editor: FC<{}> = () => {
               <Buttons editor={editor} />
             </div>
             <div className="flex flex-wrap items-center space-x-1 rtl:space-x-reverse sm:ps-4">
-              <p className="pl-3 text-gray-500">saving locally...</p>
+              <p className="hidden pl-3 text-gray-500">saving locally...</p>
             </div>
           </div>
           <button
