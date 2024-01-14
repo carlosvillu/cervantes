@@ -19,6 +19,7 @@ import {
 import type {Books} from '../../domain/book/Models/Books'
 import type {User} from '../../domain/user/Models/User'
 import {classNames} from '../../js/css'
+import logoURL from '../../statics/logobandwhite.png'
 import {Footer} from '../Footer'
 
 const navigation = [
@@ -90,11 +91,7 @@ export const Layout: FC<ILayoutProps> = ({children, user, books}) => {
                 {/* Sidebar component, swap this element with another sidebar if you like */}
                 <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                   <Link to="/" className="flex h-16 shrink-0 items-center">
-                    <img
-                      className="h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                      alt="Your Company"
-                    />
+                    <img className="mx-auto w-auto" style={{height: '64px'}} src={logoURL} alt="Your Company" />
                   </Link>
                   <nav className="flex flex-1 flex-col">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -181,11 +178,7 @@ export const Layout: FC<ILayoutProps> = ({children, user, books}) => {
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
           <Link to="/" className="flex h-16 shrink-0 items-center">
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            />
+            <img className="mx-auto w-auto" style={{height: '64px'}} src={logoURL} alt="Your Company" />
           </Link>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
