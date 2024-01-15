@@ -1,3 +1,9 @@
+## AI
+
+## STTurbo web:
+
+(STTurbo)[https://islamov.ai/diffusers.js/]
+
 ### Negative Prompt:
 
 ```
