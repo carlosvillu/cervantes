@@ -2,7 +2,7 @@
 
 ## STTurbo web:
 
-(STTurbo)[https://islamov.ai/diffusers.js/]
+[STTurbo](https://islamov.ai/diffusers.js/)
 
 ### Negative Prompt:
 
