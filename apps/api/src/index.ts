@@ -1,9 +1,11 @@
 /* eslint @typescript-eslint/no-misused-promises:0 */
 import debug from 'debug'
-import express from 'express'
+import express, {Request, Response} from 'express'
 import bearerToken from 'express-bearer-token'
 import {createHttpTerminator} from 'http-terminator'
+import pino from 'pino-http'
 import type {RedisClientType} from 'redis'
+import {ulid} from 'ulid'
 
 import healthCheckMiddleware from '@crdtech/express-health-check-middleware'
 
@@ -16,7 +18,7 @@ import {router as chapterRouter} from './routes/chapter/index.js'
 import {router as linkRouter} from './routes/link/index.js'
 import {router as userRouter} from './routes/user/index.js'
 
-const {PORT, HOST} = process.env
+const {PORT, HOST, STAGE} = process.env
 const log = debug('cervantes:api:server')
 
 log(`
@@ -32,6 +34,20 @@ const app = express()
 app.use(bearerToken())
 app.use(express.json())
 app.use(healthCheckMiddleware()(app))
+STAGE === 'production' &&
+  app.use(
+    // @ts-expect-error
+    pino({
+      // Define a custom request id function
+      genReqId: function (req: Request, res: Response) {
+        const existingID = req.id ?? req.headers['x-request-id']
+        if (existingID) return existingID
+        const id = ulid()
+        res.setHeader('X-Request-Id', id)
+        return id
+      }
+    })
+  )
 app.use(domain)
 
 // CORS

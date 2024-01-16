@@ -24,6 +24,7 @@ declare global {
 declare global {
   namespace Express {
     export interface Request {
+      id: string | undefined
       user: User
       _domain: Domain
     }

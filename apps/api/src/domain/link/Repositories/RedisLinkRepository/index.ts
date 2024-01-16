@@ -58,7 +58,7 @@ export class RedisLinkRepository implements LinkRepository {
     await this.#createIndex()
 
     const linksRecords = (await this.#chapterRepository
-      ?.searchRaw(`@userID:{${userID.value} @from:{${from.value}}`)
+      ?.searchRaw(`@userID:{${userID.value}} @from:{${from.value}}`)
       .return.all()) as LinkRecord[]
 
     if (linksRecords === null || linksRecords === undefined) return Links.empty()

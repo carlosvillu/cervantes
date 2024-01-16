@@ -24,6 +24,7 @@
     "express-bearer-token": "^2.4.0",
     "http-terminator": "^3.2.0",
     "jsonwebtoken": "^9.0.2",
+    "pino-http": "^9.0.0",
     "redis": "4.6.6",
     "redis-om": "^0.4.3",
     "ulid": "^2.3.0",
