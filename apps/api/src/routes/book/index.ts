@@ -5,7 +5,7 @@ import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
 import {createBodySchema, findByIDBodySchema, RequestCreate, RequestFindByID} from './schemas.js'
 
-const log = debug('cervantes:api:routes:user')
+const log = debug('cervantes:api:routes:book')
 
 export const router = Router()
 router.post('/', auth(), validate(createBodySchema), async (req: RequestCreate, res: Response) => {

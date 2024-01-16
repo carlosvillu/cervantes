@@ -31,7 +31,7 @@ export const auth = () => async (req: Request, res: Response, next: NextFunction
       if (!isPayload(data)) return res.status(403).json({error: true, message: '403 Forbidden'})
 
       const user = await req._domain.FindByIDUserUseCase.execute({id: data.id})
-      log('User -> %O', user)
+      log('User -> %s', user.email)
 
       if (user.isEmpty()) return res.status(403).json({error: true, message: '403 Forbidden'})
 

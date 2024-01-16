@@ -10,6 +10,7 @@ import healthCheckMiddleware from '@crdtech/express-health-check-middleware'
 import {Redis} from './domain/_redis/index.js'
 import {domain} from './middlewares/domain.js'
 import {router as authRouter} from './routes/auth/index.js'
+import {router as bodyRouter} from './routes/body/index.js'
 import {router as bookRouter} from './routes/book/index.js'
 import {router as chapterRouter} from './routes/chapter/index.js'
 import {router as linkRouter} from './routes/link/index.js'
@@ -49,6 +50,7 @@ app.use('/user', userRouter)
 app.use('/book', bookRouter)
 app.use('/chapter', chapterRouter)
 app.use('/link', linkRouter)
+app.use('/body', bodyRouter)
 
 const server = app.listen(+PORT!, HOST!, () => log('app Listen in:', `http://${HOST!}:${PORT!}`)) // eslint-disable-line 
 

@@ -38,6 +38,13 @@ import type {FindByIDLinkUseCaseInput} from './link/UseCases/FindByIDLinkUseCase
 import type {CreateLinkUseCaseInput} from './link/UseCases/CreateLinkUseCase.js'
 import type {GetAllLinkUseCaseInput} from './link/UseCases/GetAllLinkUseCase.js'
 
+/** Body */
+import type {GetAllBodyUseCaseInput} from './body/UseCases/GetAllBodyUseCase.js'
+import type {FindByIDBodyUseCaseInput} from './body/UseCases/FindByIDBodyUseCase.js'
+import type {AddBodyUseCaseInput} from './body/UseCases/AddBodyUseCase.js'
+import type {Body} from './body/Models/Body.js'
+import type {Bodies} from './body/Models/Bodies.js'
+
 const log = debug('cervantes:api:domain:entrypoint')
 
 export class Domain {
@@ -81,6 +88,11 @@ export class Domain {
   get FindByIDLinkUseCase() {return this.#getter<FindByIDLinkUseCaseInput, Link>(async () => import('./link/UseCases/FindByIDLinkUseCase.js'), 'FindByIDLinkUseCase')} // eslint-disable-line 
   get CreateLinkUseCase() {return this.#getter<CreateLinkUseCaseInput, Link>(async () => import('./link/UseCases/CreateLinkUseCase.js'), 'CreateLinkUseCase')} // eslint-disable-line 
   get GetAllLinkUseCase() {return this.#getter<GetAllLinkUseCaseInput, Links>(async () => import('./link/UseCases/GetAllLinkUseCase.js'), 'GetAllLinkUseCase')} // eslint-disable-line 
+
+  /** Body */
+  get AddBodyUseCase() {return this.#getter<AddBodyUseCaseInput, Body>(async () => import('./body/UseCases/AddBodyUseCase.js'), 'AddBodyUseCase')} // eslint-disable-line 
+  get FindByIDBodyUseCase() {return this.#getter<FindByIDBodyUseCaseInput, Body>(async () => import('./body/UseCases/FindByIDBodyUseCase.js'), 'FindByIDBodyUseCase')} // eslint-disable-line 
+  get GetAllBodyUseCase() {return this.#getter<GetAllBodyUseCaseInput, Bodies>(async () => import('./body/UseCases/GetAllBodyUseCase.js'), 'GetAllBodyUseCase')} // eslint-disable-line 
 
   #getter<I, O>(loader: Function, name: string) {
     return {
