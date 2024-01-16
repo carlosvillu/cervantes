@@ -1,5 +1,5 @@
-import {FC} from 'react'
-import {useLoaderData, useParams} from 'react-router-dom'
+import {FC, useRef} from 'react'
+import {Form, useLoaderData, useParams} from 'react-router-dom'
 
 import debug from 'debug'
 import {ulid} from 'ulid'
@@ -17,6 +17,7 @@ const log = debug('cervantes:editor:ui:editor')
 export const Editor: FC<{}> = () => {
   const {user, lastCommitBody} = useLoaderData() as {user: UserJSON; lastCommitBody: string}
   const {bookID, chapterID} = useParams() as {bookID: string; chapterID: string}
+  const contentRef = useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
     autofocus: 'start',
@@ -34,6 +35,7 @@ export const Editor: FC<{}> = () => {
       })
 
       if (body.isEmpty()) log('Error commiting the body %s', id)
+      if (contentRef.current) contentRef.current.setAttribute('value', body.content ?? '')
     },
     editorProps: {
       attributes: {
@@ -46,7 +48,11 @@ export const Editor: FC<{}> = () => {
   if (!editor) return null
 
   return (
-    <form className="h-full">
+    <Form className="h-full" action={`/book/${bookID}/chapter/${chapterID}/editor`} method="post">
+      <input type="hidden" name="userID" value={user.id} />
+      <input type="hidden" name="bookID" value={bookID} />
+      <input type="hidden" name="chapterID" value={chapterID} />
+      <input type="hidden" name="content" value={lastCommitBody} ref={contentRef} />
       <div className="w-full h-full flex flex-col mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
         <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
           <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
@@ -69,7 +75,7 @@ export const Editor: FC<{}> = () => {
           </button>
           <button
             type="button"
-            className="hidden  sm:block p-2 text-gray-500 rounded cursor-pointer  hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+            className="hidden sm:block p-2 text-gray-500 rounded cursor-pointer  hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
           >
             <svg
               className="w-4 h-4"
@@ -93,6 +99,6 @@ export const Editor: FC<{}> = () => {
           <EditorContent editor={editor} className="h-full" />
         </div>
       </div>
-    </form>
+    </Form>
   )
 }

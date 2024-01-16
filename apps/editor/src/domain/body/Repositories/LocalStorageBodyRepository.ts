@@ -1,5 +1,6 @@
 import {ID} from '../../_kernel/ID'
 import {TimeStamp} from '../../_kernel/TimeStamp'
+import {Bodies} from '../Models/Bodies'
 import {Body, BodyJSON} from '../Models/Body'
 import type {BodyRepository} from './BodyRepository'
 
@@ -28,6 +29,10 @@ export class LocalStorageBodyRepository implements BodyRepository {
       createdAt: TimeStamp.create({value: bodyJSON.createdAt}),
       content: bodyJSON.content
     })
+  }
+
+  async findAll(bookID: ID, chapterID: ID): Promise<Bodies> {
+    return Bodies.empty()
   }
 
   async save(body: Body): Promise<Body> {
