@@ -53,7 +53,7 @@ export const Editor: FC<{}> = () => {
       <input type="hidden" name="userID" value={user.id} />
       <input type="hidden" name="bookID" value={bookID} />
       <input type="hidden" name="chapterID" value={chapterID} />
-      <input type="hidden" name="content" value={lastCommitBody} ref={contentRef} />
+      <input type="text" className="hidden" name="content" defaultValue={lastCommitBody} ref={contentRef} />
       <div className="w-full h-full flex flex-col mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
         <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
           <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
@@ -76,7 +76,7 @@ export const Editor: FC<{}> = () => {
           </button>
           <button
             type="button"
-            className="hidden sm:block p-2 text-gray-500 rounded cursor-pointer  hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+            className="hidden p-2 text-gray-500 rounded cursor-pointer  hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
           >
             <svg
               className="w-4 h-4"

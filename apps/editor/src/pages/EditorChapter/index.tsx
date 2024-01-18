@@ -1,6 +1,7 @@
 import {FC} from 'react'
 import {ActionFunctionArgs, json, LoaderFunctionArgs} from 'react-router-dom'
 
+import {BodyJSON} from '../../domain/body/Models/Body.ts'
 import {Editor} from '../../ui/Editor/index.tsx'
 
 export const loader = async ({params}: LoaderFunctionArgs) => {
@@ -12,10 +13,11 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
   ])
 
   if (bodyRemote.isNewerThan(bodyCommit)) {
-    debugger
+    await window.domain.CommitBodyUseCase.execute(bodyRemote.toJSON() as BodyJSON)
   }
+  const body = await window.domain.GetLastCommitBodyUseCase.execute({userID: currentUser.id!, bookID, chapterID})
 
-  return json({user: currentUser.toJSON(), lastCommitBody: bodyCommit.stripContent()})
+  return json({user: currentUser.toJSON(), lastCommitBody: body.stripContent()})
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -26,7 +28,10 @@ export const action = async ({request}: ActionFunctionArgs) => {
     chapterID: string
     content: string
   }
-  return json({})
+
+  const body = await window.domain.SaveBodyUseCase.execute({id, userID, bookID, chapterID, content})
+
+  return json(body.toJSON())
 }
 
 export const Component: FC<{}> = () => {
