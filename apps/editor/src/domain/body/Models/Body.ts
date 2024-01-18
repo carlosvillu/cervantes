@@ -76,6 +76,13 @@ export class Body {
     return this.content.replaceAll(/^"|"$/g, '')
   }
 
+  isNewerThan(other: Body): boolean {
+    if (this.isEmpty()) return false
+    if (other.isEmpty()) return true
+
+    return this.createdAt! > other.createdAt!
+  }
+
   attributes() {
     return {
       userID: this.userID,

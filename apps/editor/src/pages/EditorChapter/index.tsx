@@ -6,9 +6,16 @@ import {Editor} from '../../ui/Editor/index.tsx'
 export const loader = async ({params}: LoaderFunctionArgs) => {
   const {bookID, chapterID} = params as {bookID: string; chapterID: string}
   const currentUser = await window.domain.CurrentUserUseCase.execute()
-  const body = await window.domain.GetLastCommitBodyUseCase.execute({userID: currentUser.id!, bookID, chapterID})
+  const [bodyCommit, bodyRemote] = await Promise.all([
+    window.domain.GetLastCommitBodyUseCase.execute({userID: currentUser.id!, bookID, chapterID}),
+    window.domain.GetLastBodyUseCase.execute({userID: currentUser.id!, bookID, chapterID})
+  ])
 
-  return json({user: currentUser.toJSON(), lastCommitBody: body.stripContent()})
+  if (bodyRemote.isNewerThan(bodyCommit)) {
+    debugger
+  }
+
+  return json({user: currentUser.toJSON(), lastCommitBody: bodyCommit.stripContent()})
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {

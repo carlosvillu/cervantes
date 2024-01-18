@@ -49,6 +49,7 @@ export const Editor: FC<{}> = () => {
 
   return (
     <Form className="h-full" action={`/book/${bookID}/chapter/${chapterID}/editor`} method="post">
+      <input type="hidden" name="id" value={ulid()} />
       <input type="hidden" name="userID" value={user.id} />
       <input type="hidden" name="bookID" value={bookID} />
       <input type="hidden" name="chapterID" value={chapterID} />
