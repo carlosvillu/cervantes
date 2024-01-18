@@ -15,7 +15,7 @@ export const bodySchema = new Schema(
     bookID: {type: 'string'},
     chapterID: {type: 'string'},
     content: {type: 'string'},
-    createdAt: {type: 'number'}
+    createdAt: {type: 'number', sortable: true}
   },
   {
     dataStructure: 'JSON'
