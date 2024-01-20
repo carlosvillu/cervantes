@@ -31,7 +31,7 @@ export class LocalStorageBodyRepository implements BodyRepository {
     })
   }
 
-  async findAll(bookID: ID, chapterID: ID): Promise<Bodies> {
+  async findAll(): Promise<Bodies> {
     return Bodies.empty()
   }
 

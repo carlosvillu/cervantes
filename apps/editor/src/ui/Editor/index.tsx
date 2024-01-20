@@ -1,4 +1,4 @@
-import {FC, useRef} from 'react'
+import {FC, useState} from 'react'
 import {Form, useLoaderData, useParams} from 'react-router-dom'
 
 import debug from 'debug'
@@ -17,7 +17,7 @@ const log = debug('cervantes:editor:ui:editor')
 export const Editor: FC<{}> = () => {
   const {user, lastCommitBody} = useLoaderData() as {user: UserJSON; lastCommitBody: string}
   const {bookID, chapterID} = useParams() as {bookID: string; chapterID: string}
-  const contentRef = useRef<HTMLInputElement>(null)
+  const [inputContent, setInputContent] = useState<string>(lastCommitBody)
 
   const editor = useEditor({
     autofocus: 'start',
@@ -35,7 +35,7 @@ export const Editor: FC<{}> = () => {
       })
 
       if (body.isEmpty()) log('Error commiting the body %s', id)
-      if (contentRef.current) contentRef.current.setAttribute('value', body.content ?? '')
+      setInputContent(body.content ?? '')
     },
     editorProps: {
       attributes: {
@@ -53,7 +53,7 @@ export const Editor: FC<{}> = () => {
       <input type="hidden" name="userID" value={user.id} />
       <input type="hidden" name="bookID" value={bookID} />
       <input type="hidden" name="chapterID" value={chapterID} />
-      <input type="text" className="hidden" name="content" defaultValue={lastCommitBody} ref={contentRef} />
+      <input readOnly type="text" className="hidden" name="content" value={inputContent} />
       <div className="w-full h-full flex flex-col mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
         <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
           <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse dark:divide-gray-600">
