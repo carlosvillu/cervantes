@@ -6,8 +6,10 @@ import {WindowFetcher} from '../../_fetcher/WindowFetcher'
 import {ID} from '../../_kernel/ID'
 import {TimeStamp} from '../../_kernel/TimeStamp'
 import {Body} from '../Models/Body'
+import {Chapter} from '../Models/Chapter'
 import {Link} from '../Models/Link'
 import {Links} from '../Models/Links'
+import {Title} from '../Models/Title'
 import type {LinkRepository} from './LinkRepository'
 
 const CreateResponseSchema = z.object({
@@ -31,6 +33,12 @@ const FindByIDResponseSchema = CreateResponseSchema.extend({
 })
 type FindByIDResponseType = z.infer<typeof FindByIDResponseSchema>
 
+const FindChapterByIDResponseSchema = z.object({
+  id: z.string({required_error: 'ID required'}),
+  title: z.string({required_error: 'title required'})
+})
+type FindChapterByIDResponseType = z.infer<typeof FindChapterByIDResponseSchema>
+
 export class HTTPLinkRepository implements LinkRepository {
   static create(config: Config) {
     return new HTTPLinkRepository(config, WindowFetcher.create(config))
@@ -50,6 +58,21 @@ export class HTTPLinkRepository implements LinkRepository {
     return link
   }
 
+  async findChapterByID(chapterID: ID, bookID: ID): Promise<Chapter> {
+    const [error, chapter] = await this.fetcher.get<FindChapterByIDResponseType>(
+      this.config.get('API_HOST') + '/chapter/' + chapterID.value + `?bookID=${bookID.value as string}`,
+      {},
+      FindChapterByIDResponseSchema
+    )
+
+    if (error) return Chapter.empty()
+
+    return Chapter.create({
+      id: ID.create({value: chapter.id}),
+      title: Title.create({value: chapter.title})
+    })
+  }
+
   async findByID(id: ID): Promise<Link> {
     const [error, link] = await this.fetcher.get<FindByIDResponseType>(
       this.config.get('API_HOST') + '/link/' + id.value,
@@ -59,6 +82,11 @@ export class HTTPLinkRepository implements LinkRepository {
 
     if (error) return Link.empty()
 
+    const [toChapter, fromChapter] = await Promise.all([
+      this.findChapterByID(ID.create({value: link.to}), ID.create({value: link.bookID})),
+      this.findChapterByID(ID.create({value: link.from}), ID.create({value: link.bookID}))
+    ])
+
     return Link.create({
       id: ID.create({value: link.id}),
       from: ID.create({value: link.from}),
@@ -67,7 +95,9 @@ export class HTTPLinkRepository implements LinkRepository {
       body: Body.create({value: link.body}),
       userID: ID.create({value: link.userID}),
       bookID: ID.create({value: link.bookID}),
-      createdAt: TimeStamp.create({value: link.createdAt})
+      createdAt: TimeStamp.create({value: link.createdAt}),
+      toChapter,
+      fromChapter
     })
   }
 
@@ -81,6 +111,19 @@ export class HTTPLinkRepository implements LinkRepository {
 
     if (error || !links) return Links.empty()
 
+    const chaptersMap = links.reduce((acc: {[idx: string]: Promise<Chapter>}, link) => {
+      if (!acc[link.from]) acc[link.from] = this.findChapterByID(ID.create({value: link.from}), ID.create({value: link.bookID})) // eslint-disable-line 
+      if (!acc[link.to]) acc[link.to] = this.findChapterByID(ID.create({value: link.to}), ID.create({value: link.bookID})) // eslint-disable-line 
+
+      return acc
+    }, {})
+
+    const chaptersList = (await Promise.all(Object.values(chaptersMap))) as Chapter[]
+    const chaptersDB = chaptersList.reduce((acc: {[idx: string]: Chapter}, chapter) => {
+      acc[chapter.id!] = acc[chapter.id!] ?? chapter
+      return acc
+    }, {})
+
     return Links.create({
       links: links.map(link =>
         Link.create({
@@ -91,7 +134,9 @@ export class HTTPLinkRepository implements LinkRepository {
           body: Body.create({value: link.body}),
           userID: ID.create({value: link.userID}),
           bookID: ID.create({value: link.bookID}),
-          createdAt: TimeStamp.create({value: link.createdAt})
+          createdAt: TimeStamp.create({value: link.createdAt}),
+          toChapter: chaptersDB[link.to],
+          fromChapter: chaptersDB[link.from]
         })
       )
     })

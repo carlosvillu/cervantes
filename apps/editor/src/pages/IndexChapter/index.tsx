@@ -107,7 +107,7 @@ export const Component: FC<{}> = () => {
               rows={links.map(link => [
                 link.kind,
                 link.body,
-                link.to,
+                link.toChapter?.title ?? link.to,
                 `/book/${link.bookID as string}/chapter/${link.from as string}/link/${link.id as string}/delete`
               ])}
               onClickActionButton={() => setOpenOVerlay(true)}
