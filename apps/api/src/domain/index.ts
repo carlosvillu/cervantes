@@ -44,6 +44,7 @@ import type {FindByIDBodyUseCaseInput} from './body/UseCases/FindByIDBodyUseCase
 import type {AddBodyUseCaseInput} from './body/UseCases/AddBodyUseCase.js'
 import type {Body} from './body/Models/Body.js'
 import type {Bodies} from './body/Models/Bodies.js'
+import type {FindByHashBodyUseCaseInput} from './body/UseCases/FindByHashUseCase.js'
 
 const log = debug('cervantes:api:domain:entrypoint')
 
@@ -93,6 +94,7 @@ export class Domain {
   get AddBodyUseCase() {return this.#getter<AddBodyUseCaseInput, Body>(async () => import('./body/UseCases/AddBodyUseCase.js'), 'AddBodyUseCase')} // eslint-disable-line 
   get FindByIDBodyUseCase() {return this.#getter<FindByIDBodyUseCaseInput, Body>(async () => import('./body/UseCases/FindByIDBodyUseCase.js'), 'FindByIDBodyUseCase')} // eslint-disable-line 
   get GetAllBodyUseCase() {return this.#getter<GetAllBodyUseCaseInput, Bodies>(async () => import('./body/UseCases/GetAllBodyUseCase.js'), 'GetAllBodyUseCase')} // eslint-disable-line 
+  get FindByHashBodyUseCase() {return this.#getter<FindByHashBodyUseCaseInput, Bodies>(async () => import('./body/UseCases/FindByHashBodyUseCase.js'), 'FindByHashBodyUseCase')} // eslint-disable-line 
 
   #getter<I, O>(loader: Function, name: string) {
     return {

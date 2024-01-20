@@ -6,6 +6,7 @@ export interface BodyRecord extends Entity {
   chapterID: string
   content: string
   createdAt: number
+  hash: string
 }
 
 export const bodySchema = new Schema(
@@ -15,6 +16,7 @@ export const bodySchema = new Schema(
     bookID: {type: 'string'},
     chapterID: {type: 'string'},
     content: {type: 'string'},
+    hash: {type: 'string'},
     createdAt: {type: 'number', sortable: true}
   },
   {

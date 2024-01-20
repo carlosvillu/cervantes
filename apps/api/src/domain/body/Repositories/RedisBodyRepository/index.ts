@@ -6,6 +6,7 @@ import {TimeStamp} from '../../../_kernel/TimeStamp.js'
 import {Redis} from '../../../_redis/index.js'
 import {Bodies} from '../../Models/Bodies.js'
 import {Body} from '../../Models/Body.js'
+import {Hash} from '../../Models/Hash.js'
 import {BodyRepository} from '../BodyRepository.js'
 import {BodyRecord, bodySchema} from './schemas.js'
 
@@ -19,6 +20,8 @@ export class RedisBodyRepository implements BodyRepository {
 
   async create(body: Body): Promise<Body> {
     if (body.isEmpty()) return body
+    const savedBody = await this.findByHash(Hash.create({value: body.content!}))
+    if (!savedBody.isEmpty()) return savedBody
 
     await this.#createIndex()
 
@@ -26,6 +29,26 @@ export class RedisBodyRepository implements BodyRepository {
 
     if (bodyRecord === null || bodyRecord === undefined) return Body.empty()
     return body
+  }
+
+  async findByHash(hash: Hash, userID?: ID): Promise<Body> {
+    await this.#createIndex()
+    let query = `@hash:{${hash.value}}`
+    if (userID !== undefined) query += ` @userID:{${userID.value}}`
+
+    const [bodyRecord] = ((await this.#bodyRepository?.searchRaw(query).return.all()) ?? []) as BodyRecord[]
+
+    if (bodyRecord === null || bodyRecord === undefined) return Body.empty()
+
+    return Body.create({
+      id: ID.create({value: bodyRecord[EntityId] as string}),
+      userID: ID.create({value: bodyRecord.userID}),
+      bookID: ID.create({value: bodyRecord.bookID}),
+      chapterID: ID.create({value: bodyRecord.chapterID}),
+      content: bodyRecord.content,
+      createdAt: TimeStamp.create({value: bodyRecord.createdAt}),
+      hash: Hash.create({value: bodyRecord.hash})
+    })
   }
 
   async findByID(id: ID, userID: ID): Promise<Body> {

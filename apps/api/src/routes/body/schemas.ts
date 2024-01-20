@@ -20,7 +20,8 @@ export const findByIDBodySchema = z.object({
 export const findAllBodySchema = z.object({
   query: z.object({
     bookID: z.string({required_error: 'bookID is required'}),
-    chapterID: z.string({required_error: 'chapterID is required'})
+    chapterID: z.string({required_error: 'chapterID is required'}),
+    hash: z.string({required_error: 'chapterID is required'}).optional()
   })
 })
 

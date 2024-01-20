@@ -19,14 +19,22 @@ router.post('/', auth(), validate(createBodySchema), async (req: RequestCreate, 
 })
 
 router.get('/', auth(), async (req: RequestFindAll, res: Response) => {
-  log(`Geting all bodies for user %s, bookID %s and chapterID %s`, req.user.id!, req.query.bookID, req.query.chapterID)
+  if (req.query.hash) {
+    log('Getting Body by Hash %s for user %s', req.query.hash, req.user.id)
+    const body = await req._domain.FindByHashBodyUseCase.execute({hash: req.query.hash, userID: req.user.id!})
 
+    if (body.isEmpty()) return res.status(404).json({error: true, message: 'body NOT FOUND'})
+    return res.status(200).json(body.toJSON())
+  }
+
+  log(`Geting all bodies for user %s, bookID %s and chapterID %s`, req.user.id!, req.query.bookID, req.query.chapterID)
   const bodies = await req._domain.GetAllBodyUseCase.execute({
     userID: req.user.id!,
     bookID: req.query.bookID,
     chapterID: req.query.chapterID
   })
 
+  if (bodies.isEmpty()) return res.status(404).json({error: true, message: 'bodies NOT FOUND'})
   return res.status(200).json(bodies.toJSON().bodies)
 })
 
