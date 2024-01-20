@@ -37,6 +37,7 @@ import type {Links} from './link/Models/Links.js'
 import type {FindByIDLinkUseCaseInput} from './link/UseCases/FindByIDLinkUseCase.js'
 import type {CreateLinkUseCaseInput} from './link/UseCases/CreateLinkUseCase.js'
 import type {GetAllLinkUseCaseInput} from './link/UseCases/GetAllLinkUseCase.js'
+import type {RemoveByIDLinkUseCaseInput} from './link/UseCases/RemoveByIDLinkUseCase.js'
 
 /** Body */
 import type {GetAllBodyUseCaseInput} from './body/UseCases/GetAllBodyUseCase.js'
@@ -44,7 +45,7 @@ import type {FindByIDBodyUseCaseInput} from './body/UseCases/FindByIDBodyUseCase
 import type {AddBodyUseCaseInput} from './body/UseCases/AddBodyUseCase.js'
 import type {Body} from './body/Models/Body.js'
 import type {Bodies} from './body/Models/Bodies.js'
-import type {FindByHashBodyUseCaseInput} from './body/UseCases/FindByHashUseCase.js'
+import type {FindByHashBodyUseCaseInput} from './body/UseCases/FindByHashBodyUseCase.js'
 
 const log = debug('cervantes:api:domain:entrypoint')
 
@@ -89,6 +90,7 @@ export class Domain {
   get FindByIDLinkUseCase() {return this.#getter<FindByIDLinkUseCaseInput, Link>(async () => import('./link/UseCases/FindByIDLinkUseCase.js'), 'FindByIDLinkUseCase')} // eslint-disable-line 
   get CreateLinkUseCase() {return this.#getter<CreateLinkUseCaseInput, Link>(async () => import('./link/UseCases/CreateLinkUseCase.js'), 'CreateLinkUseCase')} // eslint-disable-line 
   get GetAllLinkUseCase() {return this.#getter<GetAllLinkUseCaseInput, Links>(async () => import('./link/UseCases/GetAllLinkUseCase.js'), 'GetAllLinkUseCase')} // eslint-disable-line 
+  get RemoveByIDLinkUseCase() {return this.#getter<RemoveByIDLinkUseCaseInput, Links>(async () => import('./link/UseCases/RemoveByIDLinkUseCase.js'), 'RemoveByIDLinkUseCase')} // eslint-disable-line 
 
   /** Body */
   get AddBodyUseCase() {return this.#getter<AddBodyUseCaseInput, Body>(async () => import('./body/UseCases/AddBodyUseCase.js'), 'AddBodyUseCase')} // eslint-disable-line 

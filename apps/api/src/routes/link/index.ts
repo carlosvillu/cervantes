@@ -36,3 +36,14 @@ router.get('/:linkID', validate(findByIDBodySchema), auth(), async (req: Request
   if (link.isEmpty()) return res.status(404).json({error: true, message: 'link NOT FOUND'})
   return res.status(200).json(link.toJSON())
 })
+
+router.delete('/:linkID', validate(findByIDBodySchema), auth(), async (req: RequestFindByID, res: Response) => {
+  log('Removing link => %o', req.params.linkID)
+
+  const link = await req._domain.RemoveByIDLinkUseCase.execute({
+    id: req.params.linkID,
+    userID: req.user.id!
+  })
+  if (!link.isEmpty()) return res.status(404).json({error: true, message: 'link NOT FOUND'})
+  return res.status(200).json(link.toJSON())
+})

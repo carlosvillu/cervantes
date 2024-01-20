@@ -1,6 +1,7 @@
 import debug from 'debug'
 import type {RedisClientType} from 'redis'
 import {createClient} from 'redis'
+import {Repository, Schema} from 'redis-om'
 
 const log = debug('cervantes:api:domain:redis')
 
@@ -37,5 +38,11 @@ export class Redis {
       res = resolve
       rej = reject
     })
+  }
+
+  repository(schema: Schema): Repository | undefined {
+    if (!redisClient) return undefined
+
+    return new Repository(schema, redisClient)
   }
 }

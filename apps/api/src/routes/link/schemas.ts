@@ -18,6 +18,12 @@ export const findByIDBodySchema = z.object({
   })
 })
 
+export const removeByIDBodySchema = z.object({
+  params: z.object({
+    linkID: z.string({required_error: 'linkID is required'})
+  })
+})
+
 export const findAllBodySchema = z.object({
   query: z.object({
     from: z.string({required_error: 'from is required'})
@@ -30,6 +36,10 @@ export interface RequestCreate extends Request {
 
 export interface RequestFindByID extends Request {
   params: z.infer<typeof findByIDBodySchema>['params']
+}
+
+export interface RequestRemoveByID extends Request {
+  params: z.infer<typeof removeByIDBodySchema>['params']
 }
 
 export interface RequestFindAll extends Request {

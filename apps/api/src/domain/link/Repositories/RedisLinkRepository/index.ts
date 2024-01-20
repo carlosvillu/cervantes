@@ -1,9 +1,5 @@
-/* eslint @typescript-eslint/no-non-null-assertion:0 */
+import {type Repository, EntityId} from 'redis-om'
 
-import type {RedisClientType} from 'redis'
-import {EntityId, Repository} from 'redis-om'
-
-import {Config} from '../../../_config/index.js'
 import {ID} from '../../../_kernel/ID.js'
 import {TimeStamp} from '../../../_kernel/TimeStamp.js'
 import {Redis} from '../../../_redis/index.js'
@@ -17,11 +13,9 @@ export class RedisLinkRepository implements LinkRepository {
   #indexCreated = false
   #chapterRepository: Repository | undefined = undefined
 
-  static create(config: Config) {
-    return new RedisLinkRepository(config)
+  static create() {
+    return new RedisLinkRepository()
   }
-
-  constructor(private readonly config: Config) {}
 
   async create(link: Link): Promise<Link> {
     if (link.isEmpty()) return link
@@ -79,13 +73,26 @@ export class RedisLinkRepository implements LinkRepository {
     })
   }
 
+  async removeByID(id: ID, userID: ID): Promise<Link> {
+    await this.#createIndex()
+
+    const linkRecord = (await this.#chapterRepository?.fetch(id.value)) as LinkRecord
+    if (linkRecord === null || linkRecord === undefined) return Link.empty()
+    if (linkRecord.userID !== userID.value) return Link.empty()
+
+    await this.#chapterRepository?.remove(id.value)
+
+    return Link.empty()
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 
-    const client = (await Redis.create().createAndConnectClient()) as RedisClientType
+    const redis = Redis.create()
+    await redis.createAndConnectClient()
 
-    this.#chapterRepository = new Repository(linkSchema, client)
+    this.#chapterRepository = redis.repository(linkSchema)
     this.#indexCreated = true
-    return this.#chapterRepository.createIndex()
+    return this.#chapterRepository?.createIndex()
   }
 }
