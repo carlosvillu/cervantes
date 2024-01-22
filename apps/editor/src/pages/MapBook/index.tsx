@@ -1,9 +1,11 @@
-// @ts-nocheck
-import React, {useCallback} from 'react'
+import {useEffect} from 'react'
+import {LoaderFunctionArgs, useLoaderData} from 'react-router-dom'
 import ReactFlow, {
   Background,
   Controls,
-  Panel,
+  Edge,
+  MarkerType,
+  Node,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
@@ -12,18 +14,21 @@ import ReactFlow, {
 
 import Dagre from '@dagrejs/dagre'
 
-import {initialEdges, initialNodes} from './nodes-edges.js'
+import {LinkJSON} from '../../domain/link/Models/Link.js'
+import {Links} from '../../domain/link/Models/Links.js'
 
 import 'reactflow/dist/style.css'
 import './index.css'
 
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
+const nodeWidth = 172
+const nodeHeight = 36
 
-const getLayoutedElements = (nodes, edges, options) => {
+const getLayoutedElements = (nodes: Node[], edges: Edge[], options: {direction: 'TB' | 'LR'}) => {
   g.setGraph({rankdir: options.direction})
 
   edges.forEach(edge => g.setEdge(edge.source, edge.target))
-  nodes.forEach(node => g.setNode(node.id, node))
+  nodes.forEach(node => g.setNode(node.id, {width: nodeWidth, height: nodeHeight}))
 
   Dagre.layout(g)
 
@@ -38,39 +43,80 @@ const getLayoutedElements = (nodes, edges, options) => {
 }
 
 const LayoutFlow = () => {
+  const {edges: initialEdges, nodes: initialNodes} = useLoaderData() as {
+    nodes: Array<{
+      id: string
+      data: {label: string}
+      position: {x: number; y: number}
+    }>
+    edges: Array<{
+      markerEnd: {
+        type: MarkerType
+        width: number
+        height: number
+      }
+      id: string
+      source: string
+      target: string
+      animated: boolean
+    }>
+  }
+
   const {fitView} = useReactFlow()
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const {nodes: layoutedNodes, edges: layoutedEdges} = getLayoutedElements(initialNodes, initialEdges, {
+    direction: 'TB'
+  })
+  const [nodes, , onNodesChange] = useNodesState(layoutedNodes)
+  const [edges, , onEdgesChange] = useEdgesState(layoutedEdges)
 
-  const onLayout = useCallback(
-    (direction = 'TB') => {
-      const layouted = getLayoutedElements(nodes, edges, {direction})
-
-      setNodes([...layouted.nodes])
-      setEdges([...layouted.edges])
-
-      window.requestAnimationFrame(() => {
-        fitView()
-      })
-    },
-    [nodes, edges]
-  )
+  useEffect(() => {
+    window.requestAnimationFrame(() => {
+      fitView()
+    })
+  }, []) // eslint-disable-line 
 
   return (
     <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} fitView>
-      <Panel position="top-right">
-        <button onClick={() => onLayout('TB')}>vertical layout</button>
-        <button onClick={() => onLayout('LR')}>horizontal layout</button>
-      </Panel>
       <Controls />
+      {/* @ts-expect-error */}
       <Background variant="dots" gap={12} size={1} />
     </ReactFlow>
   )
 }
 
+export const loader = async ({params}: LoaderFunctionArgs) => {
+  const {bookID} = params as {bookID: string}
+  const chapters = await window.domain.GetAllChapterUseCase.execute({bookID})
+  const linksMatrix: Links[] = await Promise.all(
+    chapters.ids().map(id => {
+      return window.domain.GetAllLinkUseCase.execute({from: id})
+    })
+  )
+
+  const markerEnd = {
+    type: MarkerType.Arrow,
+    width: 20,
+    height: 20
+  }
+
+  const edges = linksMatrix
+    .filter(links => links.links.length)
+    .map(l => l.toJSON().links)
+    .flat(Infinity)
+    .map(link => {
+      link = link as unknown as LinkJSON
+      return {markerEnd, id: link.id, source: link.from, target: link.to, animated: true, label: link.body}
+    })
+
+  const nodes = chapters.toJSON().chapters.map((chapter, index) => {
+    return {id: chapter.id, data: {label: chapter.title}, position: {x: 0, y: 100 * index}}
+  })
+  return {edges, nodes}
+}
+
 export const Component = () => {
   return (
-    <div style={{width: 'calc(100vw - var(--adjust-map-width))', height: 'calc(100vh - var(--adjust-map-heigth))'}}>
+    <div style={{width: 'calc(100dvw - var(--adjust-map-width))', height: 'calc(100dvh - var(--adjust-map-heigth))'}}>
       <ReactFlowProvider>
         <LayoutFlow />
       </ReactFlowProvider>

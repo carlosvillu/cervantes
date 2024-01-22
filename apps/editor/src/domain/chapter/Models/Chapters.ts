@@ -24,6 +24,10 @@ export class Chapters {
     return this.chapters.filter(chapter => !chapter.isEmpty()).map(chapter => chapter.title!)
   }
 
+  ids(): string[] {
+    return this.chapters.filter(chapter => !chapter.isEmpty()).map(chapter => chapter.id!)
+  }
+
   isEmpty() {
     return this.empty !== undefined && this.empty
   }
