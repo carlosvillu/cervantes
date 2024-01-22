@@ -128,6 +128,7 @@ export const Layout: FC<ILayoutProps> = ({children, user, books}) => {
                             books.books.map<ReactElement>(book => (
                               <li key={book.id}>
                                 <Link
+                                  onClick={() => setSidebarOpen(false)}
                                   to={`/book/${book.id as string}`}
                                   className={classNames(
                                     bookID && bookID === book.id

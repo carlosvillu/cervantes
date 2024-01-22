@@ -39,6 +39,9 @@ const FindChapterByIDResponseSchema = z.object({
 })
 type FindChapterByIDResponseType = z.infer<typeof FindChapterByIDResponseSchema>
 
+const RemoveByIDResponseSchema = z.object({})
+type RemoveByIDResponseType = z.infer<typeof RemoveByIDResponseSchema>
+
 export class HTTPLinkRepository implements LinkRepository {
   static create(config: Config) {
     return new HTTPLinkRepository(config, WindowFetcher.create(config))
@@ -140,5 +143,17 @@ export class HTTPLinkRepository implements LinkRepository {
         })
       )
     })
+  }
+
+  async removeByID(id: ID): Promise<Link> {
+    const [error] = await this.fetcher.del<RemoveByIDResponseType>(
+      this.config.get('API_HOST') + '/link/' + id.value,
+      {},
+      RemoveByIDResponseSchema
+    )
+
+    if (error) return Link.empty()
+
+    return Link.empty()
   }
 }

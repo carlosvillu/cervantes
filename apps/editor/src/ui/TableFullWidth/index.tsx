@@ -1,4 +1,5 @@
 import {FC} from 'react'
+import {Form} from 'react-router-dom'
 
 import {capitalizaFirstLetter} from '../../js/string'
 
@@ -87,9 +88,11 @@ export const TableFullWidth: FC<{
                         </td>
                       ))}
                       <td className="relative text-ellipsis py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 lg:pr-8">
-                        <a href={urlAction} className={kindActionsCLX[kindAction]}>
-                          {rowAction}
-                        </a>
+                        <Form method="delete" action={urlAction}>
+                          <button type="submit" className={kindActionsCLX[kindAction]}>
+                            {rowAction}
+                          </button>
+                        </Form>
                       </td>
                     </tr>
                   )

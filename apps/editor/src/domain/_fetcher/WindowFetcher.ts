@@ -18,6 +18,14 @@ export class WindowFetcher implements Fetcher {
     return this.#request(url, {...options, method: 'get'}, schema)
   }
 
+  del = async <O>(
+    url: string,
+    options: RequestInit,
+    schema: AnyZodObject | ZodArray<AnyZodObject>
+  ): Promise<ResponseFetcher<O>> => {
+    return this.#request(url, {...options, method: 'delete'}, schema)
+  }
+
   post = async <O>(
     url: string,
     options: RequestFetcher,

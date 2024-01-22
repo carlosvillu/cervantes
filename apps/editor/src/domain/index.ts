@@ -31,6 +31,7 @@ import type {Links} from './link/Models/Links.js'
 import type {GetAllLinkUseCaseInput} from './link/UseCases/GetAllLinkUseCase.js'
 import type {FindByIDLinkUseCaseInput} from './link/UseCases/FindByIDLinkUseCase.js'
 import type {CreateLinkUseCaseInput} from './link/UseCases/CreateLinkUseCase.js'
+import type {RemoveByIDLinkUseCaseInput} from './link/UseCases/RemoveByIDLinkUseCase.js'
 
 /** Body */
 import type {Body} from './body/Models/Body.js'
@@ -80,6 +81,7 @@ export class Domain {
   get GetAllLinkUseCase() {return this.#getter<GetAllLinkUseCaseInput, Links>(async () => import('./link/UseCases/GetAllLinkUseCase.js'), 'GetAllLinkUseCase')} // eslint-disable-line 
   get FindByIDLinkUseCase() {return this.#getter<FindByIDLinkUseCaseInput, Link>(async () => import('./link/UseCases/FindByIDLinkUseCase.js'), 'FindByIDLinkUseCase')} // eslint-disable-line 
   get CreateLinkUseCase() {return this.#getter<CreateLinkUseCaseInput, Link>(async () => import('./link/UseCases/CreateLinkUseCase.js'), 'CreateLinkUseCase')} // eslint-disable-line 
+  get RemoveByIDLinkUseCase() {return this.#getter<RemoveByIDLinkUseCaseInput, Link>(async () => import('./link/UseCases/RemoveByIDLinkUseCase.js'), 'RemoveByIDLinkUseCase')} // eslint-disable-line 
 
   /** Body */
   get CommitBodyUseCase() {return this.#getter<CommitBodyUseCaseInput, Body>(async () => import('./body/UseCases/CommitBodyUseCase.js'), 'CommitBodyUseCase')} // eslint-disable-line 

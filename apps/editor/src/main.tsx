@@ -36,6 +36,7 @@ const router = createBrowserRouter(
           <Route index lazy={async () => import('./pages/IndexChapter')} />
           <Route path="editor" lazy={async () => import('./pages/EditorChapter')} />
           <Route path="map" lazy={async () => import('./pages/MapChapter')} />
+          <Route path="link/:linkID/delete" lazy={async () => import('./pages/DeleteLink')} />
         </Route>
       </Route>
     </>
