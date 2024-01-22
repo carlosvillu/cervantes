@@ -15,6 +15,7 @@ import Dagre from '@dagrejs/dagre'
 import {initialEdges, initialNodes} from './nodes-edges.js'
 
 import 'reactflow/dist/style.css'
+import './index.css'
 
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
 
@@ -69,7 +70,7 @@ const LayoutFlow = () => {
 
 export const Component = () => {
   return (
-    <div style={{width: 'calc(100vw - 336px)', height: 'calc(100vh - 180px)'}}>
+    <div style={{width: 'calc(100vw - var(--adjust-map-width))', height: 'calc(100vh - var(--adjust-map-heigth))'}}>
       <ReactFlowProvider>
         <LayoutFlow />
       </ReactFlowProvider>
