@@ -109,36 +109,38 @@ export const Component: FC<{}> = () => {
                   Create a new chapter
                 </a>
                 <ul role="list" className="divide-y divide-gray-100">
-                  {chapters.map(chapter => {
-                    return (
-                      <li key={chapter.id} className="flex items-center justify-between gap-x-6 py-5">
-                        <div className="flex gap-x-4">
-                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500">
-                            <span className="text-sm font-medium leading-none text-white">
-                              {chapter.title.toUpperCase().slice(0, 2)}
+                  {chapters
+                    .sort((c1, c2) => c1.createdAt - c2.createdAt)
+                    .map(chapter => {
+                      return (
+                        <li key={chapter.id} className="flex items-center justify-between gap-x-6 py-5">
+                          <div className="flex gap-x-4">
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500">
+                              <span className="text-sm font-medium leading-none text-white">
+                                {chapter.title.toUpperCase().slice(0, 2)}
+                              </span>
                             </span>
-                          </span>
-                          <div className="min-w-0 flex-auto">
-                            <p className="text-sm font-semibold leading-6 text-gray-900">
-                              <Link
-                                to={`/book/${book.id as string}/chapter/${chapter.id as string}`}
-                                className="font-medium text-indigo-600 hover:text-indigo-500"
-                              >
-                                {chapter.title}
-                              </Link>
-                            </p>
-                            <p className="mt-1 truncate text-xs leading-5 text-gray-500">{chapter.summary}</p>
+                            <div className="min-w-0 flex-auto">
+                              <p className="text-sm font-semibold leading-6 text-gray-900">
+                                <Link
+                                  to={`/book/${book.id as string}/chapter/${chapter.id as string}`}
+                                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                                >
+                                  {chapter.title}
+                                </Link>
+                              </p>
+                              <p className="mt-1 truncate text-xs leading-5 text-gray-500">{chapter.summary}</p>
+                            </div>
                           </div>
-                        </div>
-                        <Link
-                          to={`/book/${book.id as string}/chapter/${chapter.id as string}`}
-                          className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        >
-                          View
-                        </Link>
-                      </li>
-                    )
-                  })}
+                          <Link
+                            to={`/book/${book.id as string}/chapter/${chapter.id as string}`}
+                            className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          >
+                            View
+                          </Link>
+                        </li>
+                      )
+                    })}
                 </ul>
               </div>
             </dd>
