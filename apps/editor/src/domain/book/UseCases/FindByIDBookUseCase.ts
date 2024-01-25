@@ -3,7 +3,7 @@ import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {Book} from '../Models/Book.js'
 import {BookRepository} from '../Repository/BookRepository.js'
-import {HTTPBookRepository} from '../Repository/HTTPBookRepository.js'
+import {HTTPBookRepository} from '../Repository/HTTPBookRepository'
 
 export interface FindByIDBookUseCaseInput {
   id: string

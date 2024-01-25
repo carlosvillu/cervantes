@@ -34,6 +34,14 @@ export class WindowFetcher implements Fetcher {
     return this.#request<O>(url, {...options, method: 'post', body: JSON.stringify(options.body)}, schema)
   }
 
+  put = async <O>(
+    url: string,
+    options: RequestFetcher,
+    schema: AnyZodObject | ZodArray<AnyZodObject>
+  ): Promise<ResponseFetcher<O>> => {
+    return this.#request<O>(url, {...options, method: 'put', body: JSON.stringify(options.body)}, schema)
+  }
+
   #request = async <O>(
     url: string,
     options: RequestInit,

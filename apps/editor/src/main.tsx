@@ -31,11 +31,11 @@ const router = createBrowserRouter(
         <Route path="book/:bookID" lazy={async () => import('./pages/RootBook')}>
           <Route index lazy={async () => import('./pages/IndexBook')} />
           <Route path="map" lazy={async () => import('./pages/MapBook')} />
+          <Route path="edit" lazy={async () => import('./pages/EditBook')} />
         </Route>
         <Route path="book/:bookID/chapter/:chapterID" lazy={async () => import('./pages/RootChapter')}>
           <Route index lazy={async () => import('./pages/IndexChapter')} />
           <Route path="editor" lazy={async () => import('./pages/EditorChapter')} />
-          <Route path="map" lazy={async () => import('./pages/MapChapter')} />
           <Route path="link/:linkID/delete" lazy={async () => import('./pages/DeleteLink')} />
         </Route>
       </Route>

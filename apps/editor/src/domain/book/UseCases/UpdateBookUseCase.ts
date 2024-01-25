@@ -8,28 +8,29 @@ import {Title} from '../Models/Title.js'
 import {BookRepository} from '../Repository/BookRepository.js'
 import {HTTPBookRepository} from '../Repository/HTTPBookRepository'
 
-export interface CreateBookUseCaseInput {
+export interface UpdateBookUseCaseInput {
   title: string
   summary: string
   id: string
   userID: string
+  createdAt: string
 }
 
-export class CreateBookUseCase implements UseCase<CreateBookUseCaseInput, Book> {
+export class UpdateBookUseCase implements UseCase<UpdateBookUseCaseInput, Book> {
   static create({config}: {config: Config}) {
-    return new CreateBookUseCase(HTTPBookRepository.create(config))
+    return new UpdateBookUseCase(HTTPBookRepository.create(config))
   }
 
   constructor(private readonly repository: BookRepository) {}
 
-  async execute({title, userID, summary, id}: CreateBookUseCaseInput): Promise<Book> {
-    return this.repository.create(
+  async execute({title, userID, summary, id, createdAt}: UpdateBookUseCaseInput): Promise<Book> {
+    return this.repository.update(
       Book.create({
         id: ID.create({value: id}),
         userID: ID.create({value: userID}),
         title: Title.create({value: title}),
         summary: Summary.create({value: summary}),
-        createdAt: TimeStamp.now()
+        createdAt: TimeStamp.create({value: +createdAt})
       })
     )
   }

@@ -4,6 +4,7 @@ import {Books} from '../Models/Books.js'
 
 export interface BookRepository {
   create: (book: Book) => Promise<Book>
+  update: (book: Book) => Promise<Book>
   findAll: () => Promise<Books>
   findByID: (id: ID) => Promise<Book>
 }

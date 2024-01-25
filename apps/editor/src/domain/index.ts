@@ -14,6 +14,7 @@ import type {User} from './user/Models/User.js'
 
 /** Book */
 import type {CreateBookUseCaseInput} from './book/UseCases/CreateBookUseCase.js'
+import type {UpdateBookUseCaseInput} from './book/UseCases/UpdateBookUseCase.js'
 import type {FindByIDBookUseCaseInput} from './book/UseCases/FindByIDBookUseCase.js'
 import type {Book} from './book/Models/Book.js'
 import type {Books} from './book/Models/Books.js'
@@ -69,8 +70,8 @@ export class Domain {
   /** Book */
   get FindByIDBookUseCase() {return this.#getter<FindByIDBookUseCaseInput, Book>(async () => import('./book/UseCases/FindByIDBookUseCase.js'), 'FindByIDBookUseCase')} // eslint-disable-line 
   get CreateBookUseCase() {return this.#getter<CreateBookUseCaseInput, Book>(async () => import('./book/UseCases/CreateBookUseCase.js'), 'CreateBookUseCase')} // eslint-disable-line 
+  get UpdateBookUseCase() {return this.#getter<UpdateBookUseCaseInput, Book>(async () => import('./book/UseCases/UpdateBookUseCase.js'), 'UpdateBookUseCase')} // eslint-disable-line 
   get GetAllBookUseCase() {return this.#getter<void, Books>(async () => import('./book/UseCases/GetAllBookUseCase.js'), 'GetAllBookUseCase')} // eslint-disable-line 
-
 
   /** Chapter */
   get CreateChapterUseCase() {return this.#getter<CreateChapterUseCaseInput, Chapter>(async () => import('./chapter/UseCases/CreateChapterUseCase.js'), 'CreateChapterUseCase')} // eslint-disable-line 

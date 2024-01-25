@@ -10,4 +10,5 @@ export interface Fetcher {
   get: <O>(url: string, options: RequestInit, schema: AnyZodObject) => Promise<ResponseFetcher<O>>
   del: <O>(url: string, options: RequestInit, schema: AnyZodObject) => Promise<ResponseFetcher<O>>
   post: <O>(url: string, options: RequestFetcher, schema: AnyZodObject) => Promise<ResponseFetcher<O>>
+  put: <O>(url: string, options: RequestFetcher, schema: AnyZodObject) => Promise<ResponseFetcher<O>>
 }
