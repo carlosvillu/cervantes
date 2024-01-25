@@ -69,7 +69,7 @@ export const Component: FC<{}> = () => {
         />
       </OverlayWide>
       <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-        <h3 className="text-base font-semibold leading-6 text-gray-900">{capitalizaFirstLetter(book.title)}</h3>
+        <h3 className="text-base font-semibold leading-6 text-gray-900">{capitalizaFirstLetter(book?.title ?? '')}</h3>
         <div className="mt-3 flex sm:ml-4 sm:mt-0">
           <Link
             type="button"

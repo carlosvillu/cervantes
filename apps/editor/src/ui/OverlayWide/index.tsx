@@ -3,11 +3,12 @@ import {type FC, type ReactElement, Fragment} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {XMarkIcon} from '@heroicons/react/24/outline'
 
-export const OverlayWide: FC<{children: ReactElement; open: boolean; onClose: (forceVal?: boolean) => void}> = ({
-  children,
-  open,
-  onClose
-}) => {
+export const OverlayWide: FC<{
+  children: ReactElement
+  open: boolean
+  onClose: (forceVal?: boolean) => void
+  title?: string
+}> = ({children, open, onClose, title}) => {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -29,9 +30,11 @@ export const OverlayWide: FC<{children: ReactElement; open: boolean; onClose: (f
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-20 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                          Panel title
-                        </Dialog.Title>
+                        {title && (
+                          <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
+                            {title}
+                          </Dialog.Title>
+                        )}
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"

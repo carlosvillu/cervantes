@@ -1,8 +1,7 @@
 import {FC} from 'react'
-import {ActionFunctionArgs, redirect, useActionData} from 'react-router-dom'
+import {ActionFunctionArgs, redirect} from 'react-router-dom'
 
 import {FormCreateOrEditBook} from '../../ui/FormCreateOrEditBook'
-import {Notification} from '../../ui/Notification'
 
 export const loader = async () => {
   const user = await window.domain.CurrentUserUseCase.execute()
