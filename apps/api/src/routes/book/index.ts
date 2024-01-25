@@ -3,7 +3,14 @@ import {Request, Response, Router} from 'express'
 
 import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
-import {createBodySchema, findByIDBodySchema, RequestCreate, RequestFindByID} from './schemas.js'
+import {
+  createBodySchema,
+  findByIDBodySchema,
+  RequestCreate,
+  RequestFindByID,
+  RequestUpdate,
+  updateBodySchema
+} from './schemas.js'
 
 const log = debug('cervantes:api:routes:book')
 
@@ -32,6 +39,23 @@ router.get('/:bookID', validate(findByIDBodySchema), auth(), async (req: Request
   const book = await req._domain.FindByIDBookUseCase.execute({id: req.params.bookID, userID: req.user.id!})
 
   if (book.isEmpty()) return res.status(404).json({error: true, message: 'Book NOT FOUND'})
+
+  return res.status(200).json(book.toJSON())
+})
+
+router.put('/:bookID', auth(), validate(updateBodySchema), async (req: RequestUpdate, res: Response) => {
+  log('Updating the Book %j', req.body)
+
+  if (req.body.id !== req.params.bookID)
+    return res.status(410).json({error: true, message: 'Imposible update the book'})
+
+  const book = await req._domain.UpdateBookUseCase.execute({
+    ...req.body,
+    userID: req.user.id!,
+    id: req.params.bookID
+  })
+
+  if (book.isEmpty()) return res.status(410).json({error: true, message: 'Imposible update the book'})
 
   return res.status(200).json(book.toJSON())
 })

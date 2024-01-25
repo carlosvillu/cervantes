@@ -1,6 +1,5 @@
 import {z} from 'zod'
 
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {Body} from '../Models/Body.js'
@@ -19,11 +18,11 @@ export interface CreateLinkUseCaseInput {
 }
 
 export class CreateLinkUseCase implements UseCase<CreateLinkUseCaseInput, Link> {
-  static create({config}: {config: Config}) {
-    return new CreateLinkUseCase(config, RedisLinkRepository.create(config))
+  static create() {
+    return new CreateLinkUseCase(RedisLinkRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: LinkRepository) {}
+  constructor(private readonly repository: LinkRepository) {}
 
   async execute({id, body, from, to, kind, userID, bookID}: CreateLinkUseCaseInput): Promise<Link> {
     return this.repository.create(

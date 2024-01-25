@@ -10,17 +10,26 @@ const BookValidations = z.object({
   userID: z.instanceof(ID, {message: 'userID required'}),
   title: z.instanceof(Title, {message: 'title required'}),
   summary: z.instanceof(Summary, {message: 'Summary required'}),
-  createdAt: z.instanceof(TimeStamp).optional()
+  createdAt: z.instanceof(TimeStamp).optional(),
+  updatedAt: z.instanceof(TimeStamp).optional()
 })
 
 export class Book {
-  static create({id, userID, title, summary, createdAt}: z.infer<typeof BookValidations>) {
-    BookValidations.parse({id, userID, title, summary, createdAt})
-    return new Book(id, userID, title, summary, createdAt ?? TimeStamp.now(), false)
+  static create({id, userID, title, summary, createdAt, updatedAt}: z.infer<typeof BookValidations>) {
+    BookValidations.parse({id, userID, title, summary, createdAt, updatedAt})
+    return new Book(
+      id,
+      userID,
+      title,
+      summary,
+      createdAt ?? TimeStamp.now(),
+      updatedAt ?? createdAt ?? TimeStamp.now(),
+      false
+    )
   }
 
   static empty() {
-    return new Book(undefined, undefined, undefined, undefined, undefined, true)
+    return new Book(undefined, undefined, undefined, undefined, undefined, undefined, true)
   }
 
   constructor(
@@ -29,6 +38,7 @@ export class Book {
     public readonly _title?: Title,
     public readonly _summary?: Summary,
     public readonly _createdAt?: TimeStamp,
+    public readonly _updatedAt?: TimeStamp,
     public readonly empty?: boolean
   ) {}
 
@@ -37,13 +47,15 @@ export class Book {
   get summary() {return this._summary?.value} // eslint-disable-line
   get title() {return this._title?.value} // eslint-disable-line
   get createdAt() {return this._createdAt?.value} // eslint-disable-line
+  get updatedAt() {return this._updatedAt?.value} // eslint-disable-line
 
   attributes() {
     return {
       userID: this.userID,
       title: this.title,
       summary: this.summary,
-      createdAt: this.createdAt
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt
     }
   }
 
@@ -53,7 +65,8 @@ export class Book {
       userID: this.userID,
       title: this.title,
       summary: this.summary,
-      createdAt: this.createdAt
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt
     }
   }
 

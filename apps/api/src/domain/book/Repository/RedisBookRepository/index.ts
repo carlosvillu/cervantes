@@ -35,6 +35,17 @@ export class RedisBookRepository implements BookRepository {
     return book
   }
 
+  async update(book: Book): Promise<Book> {
+    if (book.isEmpty()) return book
+
+    await this.#createIndex()
+
+    const bookRecord = await this.#bookRepository?.save(book.id!, book.attributes())
+
+    if (bookRecord === null || bookRecord === undefined) return Book.empty()
+    return book
+  }
+
   async findByID(id: ID, userID: ID): Promise<Book> {
     await this.#createIndex()
 
