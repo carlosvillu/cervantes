@@ -97,7 +97,7 @@ export const Editor: FC<{}> = () => {
           </button>
         </div>
         <div className="h-full px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
-          <EditorContent editor={editor} className="h-full" />
+          <EditorContent editor={editor} className="h-full" style={{minHeight: 'calc(-64px + 100vh)'}} />
         </div>
       </div>
     </Form>
