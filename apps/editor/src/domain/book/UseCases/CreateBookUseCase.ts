@@ -3,6 +3,7 @@ import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {TimeStamp} from '../../_kernel/TimeStamp.js'
 import {Book} from '../Models/Book.js'
+import {PublishStatus} from '../Models/PublishStatus.js'
 import {Summary} from '../Models/Summary.js'
 import {Title} from '../Models/Title.js'
 import {BookRepository} from '../Repository/BookRepository.js'
@@ -29,6 +30,7 @@ export class CreateBookUseCase implements UseCase<CreateBookUseCaseInput, Book> 
         userID: ID.create({value: userID}),
         title: Title.create({value: title}),
         summary: Summary.create({value: summary}),
+        published: PublishStatus.create({value: false}),
         createdAt: TimeStamp.now()
       })
     )

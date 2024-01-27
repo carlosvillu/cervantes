@@ -39,6 +39,7 @@ export const Editor: FC<{}> = () => {
     },
     editorProps: {
       attributes: {
+        style: 'min-height: calc(-64px + 100vh);',
         class:
           'h-full block w-full px-0 text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 border-none focus-visible:outline-none'
       }
@@ -97,7 +98,7 @@ export const Editor: FC<{}> = () => {
           </button>
         </div>
         <div className="h-full px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
-          <EditorContent editor={editor} className="h-full" style={{minHeight: 'calc(-64px + 100vh)'}} />
+          <EditorContent editor={editor} className="h-full" />
         </div>
       </div>
     </Form>

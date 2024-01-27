@@ -20,6 +20,7 @@ export const FormCreateOrEditBook: FC<{}> = () => {
       <Form method="post" action={book ? `/book/${book.id as string}/edit` : 'new-book'}>
         <input id="id" name="id" type="hidden" value={book?.id ?? ulid()} />
         <input id="createdAt" name="createdAt" type="hidden" value={book?.createdAt} />
+        <input id="published" name="published" type="checkbox" defaultChecked={book?.published} className="hidden" />
         <input id="userID" name="userID" type="hidden" value={user.id} />
 
         <div className="space-y-12">

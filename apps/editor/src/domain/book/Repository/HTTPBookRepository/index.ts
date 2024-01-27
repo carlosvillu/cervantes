@@ -5,6 +5,7 @@ import {ID} from '../../../_kernel/ID'
 import {TimeStamp} from '../../../_kernel/TimeStamp'
 import {Book} from '../../Models/Book'
 import {Books} from '../../Models/Books'
+import {PublishStatus} from '../../Models/PublishStatus'
 import {Summary} from '../../Models/Summary'
 import {Title} from '../../Models/Title'
 import type {BookRepository} from '../BookRepository'
@@ -54,6 +55,7 @@ export class HTTPBookRepository implements BookRepository {
       id: ID.create({value: book.id}),
       userID: ID.create({value: book.userID}),
       summary: Summary.create({value: book.summary}),
+      published: PublishStatus.create({value: book.published ?? false}),
       title: Title.create({value: book.title}),
       createdAt: TimeStamp.create({value: book.createdAt}),
       updatedAt: TimeStamp.create({value: book.updatedAt})
@@ -76,6 +78,7 @@ export class HTTPBookRepository implements BookRepository {
           id: ID.create({value: book.id}),
           userID: ID.create({value: book.userID}),
           summary: Summary.create({value: book.summary}),
+          published: PublishStatus.create({value: book.published ?? false}),
           title: Title.create({value: book.title}),
           createdAt: TimeStamp.create({value: book.createdAt}),
           updatedAt: TimeStamp.create({value: book.updatedAt})

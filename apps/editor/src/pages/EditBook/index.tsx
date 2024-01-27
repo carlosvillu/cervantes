@@ -12,15 +12,23 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
-  const {id, userID, title, summary, createdAt} = Object.fromEntries(await request.formData()) as {
+  const {id, userID, title, published, summary, createdAt} = Object.fromEntries(await request.formData()) as {
     id: string
     userID: string
     title: string
     summary: string
     createdAt: string
+    published: string
   }
 
-  const book = await window.domain.UpdateBookUseCase.execute({id, summary, title, userID, createdAt})
+  const book = await window.domain.UpdateBookUseCase.execute({
+    id,
+    summary,
+    published: published === 'on',
+    title,
+    userID,
+    createdAt
+  })
 
   if (book.isEmpty()) return {success: false}
 

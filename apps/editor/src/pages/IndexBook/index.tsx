@@ -38,24 +38,43 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
-  const {id, userID, bookID, title, summary} = Object.fromEntries(await request.formData()) as {
-    bookID: string
-    id: string
-    userID: string
-    summary: string
-    title: string
-    intent: string
+  const formData = await request.formData()
+  const {intent} = Object.fromEntries(formData) as {
+    intent: 'tooglePublishStatus' | 'createChapter'
   }
 
-  const chapter = await window.domain.CreateChapterUseCase.execute({bookID, id, summary, title, userID})
+  if (intent === 'createChapter') {
+    const {id, userID, bookID, title, summary} = Object.fromEntries(formData) as {
+      bookID: string
+      id: string
+      userID: string
+      summary: string
+      title: string
+    }
+    const chapter = await window.domain.CreateChapterUseCase.execute({bookID, id, summary, title, userID})
 
-  if (chapter.isEmpty()) return {success: false}
+    if (chapter.isEmpty()) return {success: false}
 
-  return {success: true}
+    return {success: true}
+  }
+
+  if (intent === 'tooglePublishStatus') {
+    // const {id, userID, title, published, summary, createdAt} = Object.fromEntries(formData) as {
+    //   id: string
+    //   userID: string
+    //   title: string
+    //   summary: string
+    //   createdAt: string
+    //   published: string
+    // }
+
+    // const isPublished = published === 'on'
+    return {success: true}
+  }
 }
 
 export const Component: FC<{}> = () => {
-  const {book, chapters} = useLoaderData() as {book: BookJSON; user: UserJSON; chapters: ChapterJSON[]}
+  const {book, chapters, user} = useLoaderData() as {book: BookJSON; user: UserJSON; chapters: ChapterJSON[]}
   const {success} = (useActionData() ?? {}) as {success?: boolean}
   const [openOverlay, setOpenOVerlay] = useState(false)
 
@@ -64,6 +83,10 @@ export const Component: FC<{}> = () => {
   useEffect(() => {
     if (success === true) setOpenOVerlay(false)
   }, [success])
+
+  const publishAndUnpublishButtonClx = book.published
+    ? 'bg-red-600 hover:bg-red-500'
+    : 'bg-indigo-600 hover:bg-indigo-500'
 
   return (
     <div>
@@ -86,12 +109,26 @@ export const Component: FC<{}> = () => {
           >
             Edit
           </Link>
-          <Form method="post" action={`/book/${book.id as string}/publish`}>
+          <Form method="post">
+            <input id="id" name="id" type="hidden" value={book?.id} />
+            <input id="title" name="title" type="hidden" value={book?.title} />
+            <input id="summary" name="summary" type="hidden" value={book?.summary} />
+            <input id="createdAt" name="createdAt" type="hidden" value={book?.createdAt} />
+            <input
+              id="published"
+              name="published"
+              type="checkbox"
+              defaultChecked={book?.published}
+              className="hidden"
+            />
+            <input id="userID" name="userID" type="hidden" value={user.id} />
             <button
               type="submit"
-              className="ml-3 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visile:outline-indigo-600"
+              className={`ml-3 inline-flex items-center rounded-md ${publishAndUnpublishButtonClx} px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visile:outline-indigo-600`}
+              name="intent"
+              value="tooglePublishStatus"
             >
-              Publish
+              {book.published ? 'Unpublish' : 'Publish'}
             </button>
           </Form>
         </div>
