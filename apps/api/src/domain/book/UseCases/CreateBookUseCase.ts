@@ -1,7 +1,7 @@
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {Book} from '../Models/Book.js'
+import {PublishStatus} from '../Models/PublishStatud.js'
 import {Summary} from '../Models/Summary.js'
 import {Title} from '../Models/Title.js'
 import {BookRepository} from '../Repository/BookRepository.js'
@@ -15,11 +15,11 @@ export interface CreateBookUseCaseInput {
 }
 
 export class CreateBookUseCase implements UseCase<CreateBookUseCaseInput, Book> {
-  static create({config}: {config: Config}) {
-    return new CreateBookUseCase(config, RedisBookRepository.create(config))
+  static create() {
+    return new CreateBookUseCase(RedisBookRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: BookRepository) {}
+  constructor(private readonly repository: BookRepository) {}
 
   async execute({title, userID, summary, id}: CreateBookUseCaseInput): Promise<Book> {
     return this.repository.create(
@@ -27,6 +27,7 @@ export class CreateBookUseCase implements UseCase<CreateBookUseCaseInput, Book> 
         id: ID.create({value: id}),
         userID: ID.create({value: userID}),
         title: Title.create({value: title}),
+        published: PublishStatus.create({value: false}),
         summary: Summary.create({value: summary})
       })
     )

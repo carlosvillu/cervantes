@@ -1,4 +1,3 @@
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {Books} from '../Models/Books.js'
@@ -10,11 +9,11 @@ export interface GetAllBookUseCaseInput {
 }
 
 export class GetAllBookUseCase implements UseCase<GetAllBookUseCaseInput, Books> {
-  static create({config}: {config: Config}) {
-    return new GetAllBookUseCase(config, RedisBookRepository.create(config))
+  static create() {
+    return new GetAllBookUseCase(RedisBookRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: BookRepository) {}
+  constructor(private readonly repository: BookRepository) {}
 
   async execute({userID}: GetAllBookUseCaseInput): Promise<Books> {
     return this.repository.findAll(ID.create({value: userID}))

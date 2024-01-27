@@ -16,6 +16,7 @@ export const updateBodySchema = z.object({
     bookID: z.string({required_error: 'bookID is required'})
   }),
   body: bodyBook.extend({
+    published: z.boolean({required_error: 'published is required'}),
     createdAt: z.number({required_error: 'createdAt is required'})
   })
 })

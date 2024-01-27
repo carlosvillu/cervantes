@@ -3,12 +3,12 @@
 import type {RedisClientType} from 'redis'
 import {EntityId, Repository} from 'redis-om'
 
-import {Config} from '../../../_config/index.js'
 import {ID} from '../../../_kernel/ID.js'
 import {TimeStamp} from '../../../_kernel/TimeStamp.js'
 import {Redis} from '../../../_redis/index.js'
 import {Book} from '../../Models/Book.js'
 import {Books} from '../../Models/Books.js'
+import {PublishStatus} from '../../Models/PublishStatud.js'
 import {Summary} from '../../Models/Summary.js'
 import {Title} from '../../Models/Title.js'
 import {BookRepository} from '../BookRepository.js'
@@ -18,11 +18,9 @@ export class RedisBookRepository implements BookRepository {
   #indexCreated = false
   #bookRepository: Repository | undefined = undefined
 
-  static create(config: Config) {
-    return new RedisBookRepository(config)
+  static create() {
+    return new RedisBookRepository()
   }
-
-  constructor(private readonly config: Config) {}
 
   async create(book: Book): Promise<Book> {
     if (book.isEmpty()) return book
@@ -57,6 +55,7 @@ export class RedisBookRepository implements BookRepository {
     return Book.create({
       id: ID.create({value: bookRecord[EntityId] as string}),
       summary: Summary.create({value: bookRecord.summary}),
+      published: PublishStatus.create({value: bookRecord.published ?? false}),
       title: Title.create({value: bookRecord.title}),
       userID: ID.create({value: bookRecord.userID}),
       createdAt: TimeStamp.create({value: bookRecord.createdAt})
@@ -80,6 +79,7 @@ export class RedisBookRepository implements BookRepository {
           id: ID.create({value: record[EntityId] as string}),
           title: Title.create({value: record.title}),
           summary: Summary.create({value: record.summary}),
+          published: PublishStatus.create({value: record.published ?? false}),
           createdAt: TimeStamp.create({value: record.createdAt}),
           userID: ID.create({value: record.userID})
         })
