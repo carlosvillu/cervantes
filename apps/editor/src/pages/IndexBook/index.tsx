@@ -16,7 +16,7 @@ import {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import type {UserJSON} from '../../domain/user/Models/User'
 import {fromTimeStampToDate} from '../../js/date'
 import {capitalizaFirstLetter} from '../../js/string'
-import {FormNewChapter} from '../../ui/FormNewChapter'
+import {FormCreateOrEditChapter} from '../../ui/FormCreateOrEditChapter'
 import {Notification} from '../../ui/Notification'
 import {OverlayWide} from '../../ui/OverlayWide'
 
@@ -59,16 +59,27 @@ export const action = async ({request}: ActionFunctionArgs) => {
   }
 
   if (intent === 'tooglePublishStatus') {
-    // const {id, userID, title, published, summary, createdAt} = Object.fromEntries(formData) as {
-    //   id: string
-    //   userID: string
-    //   title: string
-    //   summary: string
-    //   createdAt: string
-    //   published: string
-    // }
+    const {id, userID, title, published, summary, createdAt} = Object.fromEntries(formData) as {
+      id: string
+      userID: string
+      title: string
+      summary: string
+      createdAt: string
+      published: string
+    }
 
-    // const isPublished = published === 'on'
+    const isPublished = published === 'on'
+    const nextPublishValue = !isPublished
+    const book = await window.domain.UpdateBookUseCase.execute({
+      id,
+      summary,
+      published: nextPublishValue,
+      title,
+      userID,
+      createdAt
+    })
+    if (book.isEmpty()) return {success: false}
+
     return {success: true}
   }
 }
@@ -92,7 +103,7 @@ export const Component: FC<{}> = () => {
     <div>
       {createdFailed ? <Notification status="error" title="Error creating the chapter" /> : null}
       <OverlayWide open={openOverlay} onClose={force => setOpenOVerlay(force ?? !openOverlay)}>
-        <FormNewChapter
+        <FormCreateOrEditChapter
           onClickCancel={() => {
             ;(document.getElementById('form-new-chapter') as HTMLFormElement).reset()
             setOpenOVerlay(false)
@@ -118,8 +129,9 @@ export const Component: FC<{}> = () => {
               id="published"
               name="published"
               type="checkbox"
-              defaultChecked={book?.published}
+              checked={book?.published}
               className="hidden"
+              readOnly
             />
             <input id="userID" name="userID" type="hidden" value={user.id} />
             <button
@@ -151,6 +163,12 @@ export const Component: FC<{}> = () => {
               </dd>
             </div>
           )}
+          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt className="text-sm font-medium leading-6 text-gray-900">Publish status</dt>
+            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              {book.published ? 'Published' : 'Hidden'}
+            </dd>
+          </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">Summary</dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{book.summary}</dd>

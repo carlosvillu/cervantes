@@ -74,14 +74,14 @@ export const Component: FC<{}> = () => {
         />
       </OverlayWide>
       <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-        <h3 className="text-base font-semibold leading-6 text-gray-900">{capitalizaFirstLetter(chapter.title)}</h3>
+        <h3 className="text-base font-semibold leading-6 text-gray-900">{capitalizaFirstLetter(chapter.title!)}</h3>
         <div className="mt-3 flex sm:ml-4 sm:mt-0">
-          <button
-            type="button"
+          <Link
+            to={`/book/${book.id as string}/chapter/${chapter.id as string}/edit`}
             className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
           >
             Edit
-          </button>
+          </Link>
         </div>
       </div>
       <div className="mt-6">
@@ -97,7 +97,13 @@ export const Component: FC<{}> = () => {
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">Created at</dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {fromTimeStampToDate(chapter.createdAt)}
+              {fromTimeStampToDate(chapter.createdAt!)}
+            </dd>
+          </div>
+          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt className="text-sm font-medium leading-6 text-gray-900">Updated at</dt>
+            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              {fromTimeStampToDate(chapter.updatedAt!)}
             </dd>
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">

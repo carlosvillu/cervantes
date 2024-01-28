@@ -21,6 +21,7 @@ import type {Books} from './book/Models/Books.js'
 
 /** Chapter */
 import type {CreateChapterUseCaseInput} from './chapter/UseCases/CreateChapterUseCase.js'
+import type {UpdateChapterUseCaseInput} from './chapter/UseCases/UpdateChapterUseCase.js'
 import type {Chapter} from './chapter/Models/Chapter.js'
 import type {FindByIDChapterUseCaseInput} from './chapter/UseCases/FindByIDChapterUseCase.js'
 import type {GetAllChapterUseCaseInput} from './chapter/UseCases/GetAllChapterUseCase.js'
@@ -75,6 +76,7 @@ export class Domain {
 
   /** Chapter */
   get CreateChapterUseCase() {return this.#getter<CreateChapterUseCaseInput, Chapter>(async () => import('./chapter/UseCases/CreateChapterUseCase.js'), 'CreateChapterUseCase')} // eslint-disable-line 
+  get UpdateChapterUseCase() {return this.#getter<UpdateChapterUseCaseInput, Chapter>(async () => import('./chapter/UseCases/UpdateChapterUseCase.js'), 'UpdateChapterUseCase')} // eslint-disable-line 
   get FindByIDChapterUseCase() {return this.#getter<FindByIDChapterUseCaseInput, Chapter>(async () => import('./chapter/UseCases/FindByIDChapterUseCase.js'), 'FindByIDChapterUseCase')} // eslint-disable-line 
   get GetAllChapterUseCase() {return this.#getter<GetAllChapterUseCaseInput, Chapters>(async () => import('./chapter/UseCases/GetAllChapterUseCase.js'), 'GetAllChapterUseCase')} // eslint-disable-line 
 

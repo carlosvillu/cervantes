@@ -4,6 +4,7 @@ import type {Chapters} from '../Models/Chapters.js'
 
 export interface ChapterRepository {
   create: (chapter: Chapter) => Promise<Chapter>
+  update: (chapter: Chapter) => Promise<Chapter>
   findAll: (bookID: ID) => Promise<Chapters>
   findByID: (chapterID: ID, bookID: ID) => Promise<Chapter>
 }

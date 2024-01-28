@@ -21,11 +21,13 @@ const CreateResponseSchema = z.object({
 type CreateResponseType = z.infer<typeof CreateResponseSchema>
 
 const FindAllResponseSchema = CreateResponseSchema.extend({
+  updatedAt: z.number({required_error: 'updatedAt required'}),
   createdAt: z.number({required_error: 'CreatedAt required'})
 }).array()
 type FindAllResponseType = z.infer<typeof FindAllResponseSchema>
 
 const FindByIDResponseSchema = CreateResponseSchema.extend({
+  updatedAt: z.number({required_error: 'updatedAt required'}),
   createdAt: z.number({required_error: 'CreatedAt required'})
 })
 type FindByIDResponseType = z.infer<typeof FindByIDResponseSchema>
@@ -49,6 +51,18 @@ export class HTTPChapterRepository implements ChapterRepository {
     return chapter
   }
 
+  async update(chapter: Chapter): Promise<Chapter> {
+    const [error] = await this.fetcher.put<CreateResponseType>(
+      this.config.get('API_HOST') + `/chapter/${chapter.id as string}`,
+      {body: chapter.toJSON()},
+      CreateResponseSchema
+    )
+
+    if (error) return Chapter.empty()
+
+    return chapter
+  }
+
   async findByID(id: ID, bookID: ID): Promise<Chapter> {
     const [error, chapter] = await this.fetcher.get<FindByIDResponseType>(
       this.config.get('API_HOST') + '/chapter/' + id.value + `?bookID=${bookID.value as string}`,
@@ -63,7 +77,9 @@ export class HTTPChapterRepository implements ChapterRepository {
       userID: ID.create({value: chapter.userID}),
       bookID: ID.create({value: chapter.bookID}),
       summary: Summary.create({value: chapter.summary}),
-      title: Title.create({value: chapter.title})
+      title: Title.create({value: chapter.title}),
+      createdAt: TimeStamp.create({value: chapter.createdAt}),
+      updatedAt: TimeStamp.create({value: chapter.updatedAt})
     })
   }
 
@@ -85,7 +101,8 @@ export class HTTPChapterRepository implements ChapterRepository {
           bookID: ID.create({value: chapter.bookID}),
           summary: Summary.create({value: chapter.summary}),
           title: Title.create({value: chapter.title}),
-          createdAt: TimeStamp.create({value: chapter.createdAt})
+          createdAt: TimeStamp.create({value: chapter.createdAt}),
+          updatedAt: TimeStamp.create({value: chapter.updatedAt})
         })
       )
     })

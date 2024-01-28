@@ -1,24 +1,37 @@
 import {FC} from 'react'
-import {Form, useLoaderData} from 'react-router-dom'
+import {Form, useLoaderData, useNavigate} from 'react-router-dom'
 
 import {ulid} from 'ulid'
 
 import type {BookJSON} from '../../domain/book/Models/Book'
+import {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import type {UserJSON} from '../../domain/user/Models/User'
 
-export const FormNewChapter: FC<{onClickCancel: () => void}> = ({onClickCancel}) => {
-  const {book, user} = useLoaderData() as {book: BookJSON; user: UserJSON}
+export const FormCreateOrEditChapter: FC<{onClickCancel?: () => void}> = ({onClickCancel}) => {
+  const {book, user, chapter} = useLoaderData() as {book: BookJSON; user: UserJSON; chapter?: ChapterJSON}
+  const navigate = useNavigate()
 
   return (
     <>
-      <Form id="form-new-chapter" method="post" action={`/book/${book.id as string}?index`}>
-        <input id="id" name="id" type="hidden" value={ulid()} />
-        <input id="intent" name="intent" type="hidden" value="new-chapter" />
+      <Form
+        id="form-new-chapter"
+        method="post"
+        action={
+          chapter
+            ? `/book/${book.id as string}/chapter/${chapter.id as string}/edit`
+            : `/book/${book.id as string}?index`
+        }
+      >
+        <input id="id" name="id" type="hidden" value={chapter?.id ?? ulid()} />
+        <input id="intent" name="intent" type="hidden" value={chapter ? 'edit-chapter' : 'new-chapter'} />
         <input id="userID" name="userID" type="hidden" value={user.id} />
         <input id="bookID" name="bookID" type="hidden" value={book.id} />
+        <input id="createdAt" name="createdAt" type="hidden" value={chapter?.createdAt} />
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">New Chapter</h2>
+            <h2 className="text-base font-semibold leading-7 text-gray-900">
+              {chapter ? 'Edit Chapter' : 'New Chapter'}
+            </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
               This information will be displayed publicly so be careful what you share.
             </p>
@@ -35,7 +48,7 @@ export const FormNewChapter: FC<{onClickCancel: () => void}> = ({onClickCancel})
                     id="title"
                     autoComplete="off"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    defaultValue={''}
+                    defaultValue={chapter?.title ?? ''}
                     required
                   />
                 </div>
@@ -51,11 +64,15 @@ export const FormNewChapter: FC<{onClickCancel: () => void}> = ({onClickCancel})
                     name="summary"
                     rows={3}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    defaultValue={''}
+                    defaultValue={chapter?.summary ?? ''}
                     required
                   />
                 </div>
-                <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about your new chapter.</p>
+                <p className="mt-3 text-sm leading-6 text-gray-600">
+                  {chapter
+                    ? 'Write a few sentences about your chapter.'
+                    : 'Write a few sentences about your new chapter.'}
+                </p>
               </div>
             </div>
           </div>
@@ -65,15 +82,13 @@ export const FormNewChapter: FC<{onClickCancel: () => void}> = ({onClickCancel})
           <button
             type="button"
             className="text-sm font-semibold leading-6 text-gray-900"
-            onClick={() => onClickCancel()}
+            onClick={() => onClickCancel?.() ?? navigate(-1)}
           >
             Cancel
           </button>
           <button
             type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            name="intent"
-            value="createChapter"
           >
             Save
           </button>

@@ -213,31 +213,33 @@ export const Layout: FC<ILayoutProps> = ({children, user, books}) => {
                 <div className="text-xs font-semibold leading-6 text-gray-400">Your books</div>
                 <ul role="list" className="-mx-2 mt-2 space-y-1">
                   {!books.empty &&
-                    books.books.map(book => (
-                      <li key={book.id}>
-                        <Link
-                          to={`/book/${book.id as string}`}
-                          className={classNames(
-                            bookID && bookID === book.id
-                              ? 'bg-gray-50 text-indigo-600'
-                              : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                            'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                          )}
-                        >
-                          <span
+                    books.books
+                      .sort((a, b) => a.createdAt! - b.createdAt!)
+                      .map(book => (
+                        <li key={book.id}>
+                          <Link
+                            to={`/book/${book.id as string}`}
                             className={classNames(
                               bookID && bookID === book.id
-                                ? 'text-indigo-600 border-indigo-600'
-                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                              'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
+                                ? 'bg-gray-50 text-indigo-600'
+                                : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                              'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
                             )}
                           >
-                            {book.title?.slice(0, 2)}
-                          </span>
-                          <span className="truncate">{book.title}</span>
-                        </Link>
-                      </li>
-                    ))}
+                            <span
+                              className={classNames(
+                                bookID && bookID === book.id
+                                  ? 'text-indigo-600 border-indigo-600'
+                                  : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600',
+                                'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
+                              )}
+                            >
+                              {book.title?.slice(0, 2)}
+                            </span>
+                            <span className="truncate">{book.title}</span>
+                          </Link>
+                        </li>
+                      ))}
                 </ul>
               </li>
               <li className="mt-auto" hidden={true}>
