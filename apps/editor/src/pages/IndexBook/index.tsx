@@ -186,14 +186,14 @@ export const Component: FC<{}> = () => {
                 </a>
                 <ul role="list" className="divide-y divide-gray-100">
                   {chapters
-                    .sort((c1, c2) => c1.createdAt - c2.createdAt)
+                    .sort((c1, c2) => c1.createdAt! - c2.createdAt!)
                     .map(chapter => {
                       return (
                         <li key={chapter.id} className="flex items-center justify-between gap-x-6 py-5">
                           <div className="flex gap-x-4">
                             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-500">
                               <span className="text-sm font-medium leading-none text-white">
-                                {chapter.title.toUpperCase().slice(0, 2)}
+                                {chapter.title!.toUpperCase().slice(0, 2)}
                               </span>
                             </span>
                             <div className="min-w-0 flex-auto">

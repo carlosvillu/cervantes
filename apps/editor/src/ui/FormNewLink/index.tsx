@@ -57,9 +57,9 @@ export const FormNewLink: FC<{onClickCancel: () => void}> = ({onClickCancel}) =>
                     name="to"
                     label="Chapter to link"
                     items={chapters.map(chapter => {
-                      return {id: chapter.id, name: capitalizaFirstLetter(chapter.title)}
+                      return {id: chapter.id!, name: capitalizaFirstLetter(chapter.title!)}
                     })}
-                    defaultItem={{id: chapters[0].id, name: capitalizaFirstLetter(chapters[0].title)}}
+                    defaultItem={{id: chapters[0].id!, name: capitalizaFirstLetter(chapters[0].title!)}}
                   />
                 </div>
               </div>
