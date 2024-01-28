@@ -3,7 +3,6 @@
 import type {RedisClientType} from 'redis'
 import {EntityId, Repository} from 'redis-om'
 
-import {Config} from '../../../_config/index.js'
 import {ID} from '../../../_kernel/ID.js'
 import {TimeStamp} from '../../../_kernel/TimeStamp.js'
 import {Redis} from '../../../_redis/index.js'
@@ -18,13 +17,22 @@ export class RedisChapterRepository implements ChapterRepository {
   #indexCreated = false
   #chapterRepository: Repository | undefined = undefined
 
-  static create(config: Config) {
-    return new RedisChapterRepository(config)
+  static create() {
+    return new RedisChapterRepository()
   }
 
-  constructor(private readonly config: Config) {}
-
   async create(chapter: Chapter): Promise<Chapter> {
+    if (chapter.isEmpty()) return chapter
+
+    await this.#createIndex()
+
+    const chapterRecord = (await this.#chapterRepository?.save(chapter.id!, chapter.attributes())) as ChapterRecord
+
+    if (chapterRecord === null || chapterRecord === undefined) return Chapter.empty()
+    return chapter
+  }
+
+  async update(chapter: Chapter): Promise<Chapter> {
     if (chapter.isEmpty()) return chapter
 
     await this.#createIndex()
@@ -50,7 +58,8 @@ export class RedisChapterRepository implements ChapterRepository {
       title: Title.create({value: chapterRecord.title}),
       userID: ID.create({value: chapterRecord.userID}),
       bookID: ID.create({value: chapterRecord.bookID}),
-      createdAt: TimeStamp.create({value: chapterRecord.createdAt})
+      createdAt: TimeStamp.create({value: chapterRecord.createdAt}),
+      ...(chapterRecord.updatedAt && {updatedAt: TimeStamp.create({value: chapterRecord.updatedAt})})
     })
   }
 
@@ -71,7 +80,8 @@ export class RedisChapterRepository implements ChapterRepository {
           summary: Summary.create({value: record.summary}),
           createdAt: TimeStamp.create({value: record.createdAt}),
           userID: ID.create({value: record.userID}),
-          bookID: ID.create({value: record.bookID})
+          bookID: ID.create({value: record.bookID}),
+          ...(record.updatedAt && {updatedAt: TimeStamp.create({value: record.updatedAt})})
         })
       )
     })

@@ -1,12 +1,23 @@
 import {Request} from 'express'
 import {z} from 'zod'
 
+const bodyChapter = z.object({
+  id: z.string({required_error: 'ID is required'}),
+  bookID: z.string({required_error: 'bookID is required'}),
+  title: z.string({required_error: 'Title required'}),
+  summary: z.string({required_error: 'Summary required'})
+})
+
 export const createBodySchema = z.object({
-  body: z.object({
-    id: z.string({required_error: 'ID is required'}),
-    bookID: z.string({required_error: 'bookID is required'}),
-    title: z.string({required_error: 'Title required'}),
-    summary: z.string({required_error: 'Summary required'})
+  body: bodyChapter
+})
+
+export const updateBodySchema = z.object({
+  params: z.object({
+    chapterID: z.string({required_error: 'bookID is required'})
+  }),
+  body: bodyChapter.extend({
+    createdAt: z.number({required_error: 'createdAt is required'})
   })
 })
 
@@ -27,6 +38,11 @@ export const findAllBodySchema = z.object({
 
 export interface RequestCreate extends Request {
   body: z.infer<typeof createBodySchema>['body']
+}
+
+export interface RequestUpdate extends Request {
+  params: z.infer<typeof updateBodySchema>['params']
+  body: z.infer<typeof updateBodySchema>['body']
 }
 
 export interface RequestFindByID extends Request {

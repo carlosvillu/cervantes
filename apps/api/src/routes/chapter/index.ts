@@ -3,7 +3,15 @@ import {Response, Router} from 'express'
 
 import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
-import {createBodySchema, findByIDBodySchema, RequestCreate, RequestFindAll, RequestFindByID} from './schemas.js'
+import {
+  createBodySchema,
+  findByIDBodySchema,
+  RequestCreate,
+  RequestFindAll,
+  RequestFindByID,
+  RequestUpdate,
+  updateBodySchema
+} from './schemas.js'
 
 const log = debug('cervantes:api:routes:chapter')
 
@@ -35,5 +43,18 @@ router.get('/:chapterID', validate(findByIDBodySchema), auth(), async (req: Requ
     userID: req.user.id!
   })
   if (chapter.isEmpty()) return res.status(404).json({error: true, message: 'chapter NOT FOUND'})
+  return res.status(200).json(chapter.toJSON())
+})
+
+router.put('/:chapterID', auth(), validate(updateBodySchema), async (req: RequestUpdate, res: Response) => {
+  log('Updating the chapter %j', req.body)
+
+  if (req.body.id !== req.params.chapterID)
+    return res.status(410).json({error: true, message: 'Imposible update the chapter'})
+
+  const chapter = await req._domain.UpdateChapterUseCase.execute({...req.body, userID: req.user.id!})
+
+  if (chapter.isEmpty()) return res.status(410).json({error: true, message: 'Imposible update the chapter'})
+
   return res.status(200).json(chapter.toJSON())
 })

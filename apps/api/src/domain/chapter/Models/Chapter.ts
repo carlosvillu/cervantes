@@ -11,17 +11,27 @@ const ChapterValidations = z.object({
   bookID: z.instanceof(ID, {message: 'bookID required'}),
   title: z.instanceof(Title, {message: 'title required'}),
   summary: z.instanceof(Summary, {message: 'Summary required'}),
-  createdAt: z.instanceof(TimeStamp).optional()
+  createdAt: z.instanceof(TimeStamp).optional(),
+  updatedAt: z.instanceof(TimeStamp).optional()
 })
 
 export class Chapter {
-  static create({id, userID, bookID, title, summary, createdAt}: z.infer<typeof ChapterValidations>) {
-    ChapterValidations.parse({id, userID, bookID, title, summary, createdAt})
-    return new Chapter(id, userID, bookID, title, summary, createdAt ?? TimeStamp.now(), false)
+  static create({id, userID, bookID, title, summary, createdAt, updatedAt}: z.infer<typeof ChapterValidations>) {
+    ChapterValidations.parse({id, userID, bookID, title, summary, createdAt, updatedAt})
+    return new Chapter(
+      id,
+      userID,
+      bookID,
+      title,
+      summary,
+      createdAt ?? TimeStamp.now(),
+      updatedAt ?? TimeStamp.now(),
+      false
+    )
   }
 
   static empty() {
-    return new Chapter(undefined, undefined, undefined, undefined, undefined, undefined, true)
+    return new Chapter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, true)
   }
 
   constructor(
@@ -31,6 +41,7 @@ export class Chapter {
     public readonly _title?: Title,
     public readonly _summary?: Summary,
     public readonly _createdAt?: TimeStamp,
+    public readonly _updatedAt?: TimeStamp,
     public readonly empty?: boolean
   ) {}
 
@@ -40,6 +51,7 @@ export class Chapter {
   get summary() {return this._summary?.value} // eslint-disable-line
   get title() {return this._title?.value} // eslint-disable-line
   get createdAt() {return this._createdAt?.value} // eslint-disable-line
+  get updatedAt() {return this._updatedAt?.value} // eslint-disable-line
 
   attributes() {
     return {
@@ -47,18 +59,15 @@ export class Chapter {
       bookID: this.bookID,
       title: this.title,
       summary: this.summary,
-      createdAt: this.createdAt
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt
     }
   }
 
   toJSON() {
     return {
       id: this.id,
-      userID: this.userID,
-      bookID: this.bookID,
-      title: this.title,
-      summary: this.summary,
-      createdAt: this.createdAt
+      ...this.attributes()
     }
   }
 

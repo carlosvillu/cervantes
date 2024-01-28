@@ -58,7 +58,8 @@ export class RedisBookRepository implements BookRepository {
       published: PublishStatus.create({value: bookRecord.published ?? false}),
       title: Title.create({value: bookRecord.title}),
       userID: ID.create({value: bookRecord.userID}),
-      createdAt: TimeStamp.create({value: bookRecord.createdAt})
+      createdAt: TimeStamp.create({value: bookRecord.createdAt}),
+      ...(bookRecord.updaedAt && {updatedAt: TimeStamp.create({value: bookRecord.updatedAt})})
     })
   }
 
@@ -81,7 +82,8 @@ export class RedisBookRepository implements BookRepository {
           summary: Summary.create({value: record.summary}),
           published: PublishStatus.create({value: record.published ?? false}),
           createdAt: TimeStamp.create({value: record.createdAt}),
-          userID: ID.create({value: record.userID})
+          userID: ID.create({value: record.userID}),
+          ...(record.updaedAt && {updatedAt: TimeStamp.create({value: record.updatedAt})})
         })
       )
     })

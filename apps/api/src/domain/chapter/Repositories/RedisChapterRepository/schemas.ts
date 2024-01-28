@@ -6,6 +6,7 @@ export interface ChapterRecord extends Entity {
   userID: string
   bookID: string
   createdAt: number
+  updatedAt: number
 }
 
 export const chapterSchema = new Schema(
@@ -15,7 +16,8 @@ export const chapterSchema = new Schema(
     summary: {type: 'string'},
     userID: {type: 'string'},
     bookID: {type: 'string'},
-    createdAt: {type: 'number'}
+    createdAt: {type: 'number'},
+    updatedAt: {type: 'number'}
   },
   {
     dataStructure: 'JSON'

@@ -1,4 +1,3 @@
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {Chapters} from '../Models/Chapters.js'
@@ -11,11 +10,11 @@ export interface GetAllChapterUseCaseInput {
 }
 
 export class GetAllChapterUseCase implements UseCase<GetAllChapterUseCaseInput, Chapters> {
-  static create({config}: {config: Config}) {
-    return new GetAllChapterUseCase(config, RedisChapterRepository.create(config))
+  static create() {
+    return new GetAllChapterUseCase(RedisChapterRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: ChapterRepository) {}
+  constructor(private readonly repository: ChapterRepository) {}
 
   async execute({userID, bookID}: GetAllChapterUseCaseInput): Promise<Chapters> {
     return this.repository.findAll(ID.create({value: userID}), ID.create({value: bookID}))
