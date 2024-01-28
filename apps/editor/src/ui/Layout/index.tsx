@@ -1,4 +1,4 @@
-import {FC, Fragment, ReactChild, ReactElement, useState} from 'react'
+import {FC, Fragment, ReactElement, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
 
 import {Dialog, Menu, Transition} from '@headlessui/react'
@@ -36,7 +36,7 @@ const userNavigation = [
 ]
 
 export interface ILayoutProps {
-  children: ReactChild
+  children: ReactElement | ReactElement[]
   user: User
   books: Books
 }
