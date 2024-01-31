@@ -43,7 +43,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     intent: 'tooglePublishStatus' | 'createChapter'
   }
 
-  if (intent === 'createChapter') {
+  if (intent === 'new-chapter') {
     const {id, userID, bookID, title, summary} = Object.fromEntries(formData) as {
       bookID: string
       id: string

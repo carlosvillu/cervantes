@@ -17,7 +17,7 @@ export const FormCreateOrEditBook: FC<{}> = () => {
   return (
     <>
       {createdFailed ? <Notification status="error" title="Error creating the book" /> : null}
-      <Form method="post" action={book ? `/book/${book.id as string}/edit` : 'new-book'}>
+      <Form method="post" action={book ? `/book/${book.id as string}/edit` : '/new-book'}>
         <input id="id" name="id" type="hidden" value={book?.id ?? ulid()} />
         <input id="createdAt" name="createdAt" type="hidden" value={book?.createdAt} />
         <input id="published" name="published" type="checkbox" defaultChecked={book?.published} className="hidden" />

@@ -115,11 +115,16 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 }
 
 export const Component = () => {
-  return (
-    <div style={{width: 'calc(100dvw - var(--adjust-map-width))', height: 'calc(100dvh - var(--adjust-map-heigth))'}}>
-      <ReactFlowProvider>
-        <LayoutFlow />
-      </ReactFlowProvider>
-    </div>
-  )
+  const {nodes} = useLoaderData() as {nodes: Array<Map<string, unknown>>}
+
+  if (nodes.length === 0) return null
+
+  if (nodes)
+    return (
+      <div style={{width: 'calc(100dvw - var(--adjust-map-width))', height: 'calc(100dvh - var(--adjust-map-heigth))'}}>
+        <ReactFlowProvider>
+          <LayoutFlow />
+        </ReactFlowProvider>
+      </div>
+    )
 }
