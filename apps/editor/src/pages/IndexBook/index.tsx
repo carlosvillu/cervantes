@@ -40,7 +40,7 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData()
   const {intent} = Object.fromEntries(formData) as {
-    intent: 'tooglePublishStatus' | 'createChapter'
+    intent: 'tooglePublishStatus' | 'new-chapter'
   }
 
   if (intent === 'new-chapter') {
