@@ -1,5 +1,12 @@
 import {FC, useEffect, useState} from 'react'
-import {ActionFunctionArgs, Link, LoaderFunctionArgs, useActionData, useLoaderData} from 'react-router-dom'
+import {
+  ActionFunctionArgs,
+  Link,
+  LoaderFunctionArgs,
+  useActionData,
+  useLoaderData,
+  useNavigation
+} from 'react-router-dom'
 
 import {BookJSON} from '../../domain/book/Models/Book'
 import {ChapterJSON} from '../../domain/chapter/Models/Chapter'
@@ -55,18 +62,20 @@ export const Component: FC<{}> = () => {
   const {book, chapter, links} = useLoaderData() as {book: BookJSON; chapter: ChapterJSON; links: LinkJSON[]}
   const {success} = (useActionData() ?? {}) as {success?: boolean}
   const [openOverlay, setOpenOVerlay] = useState(false)
+  const navigation = useNavigation()
 
   const createdFailed = success === false
 
   useEffect(() => {
-    if (success === true) setOpenOVerlay(false)
-  }, [success])
+    if (navigation.state === 'idle') setOpenOVerlay(false)
+  }, [navigation.state])
 
   return (
     <div>
       {createdFailed ? <Notification status="error" title="Error creating the chapter" /> : null}
       <OverlayWide open={openOverlay} onClose={force => setOpenOVerlay(force ?? !openOverlay)}>
         <FormNewLink
+          action={`/book/${book.id as string}/chapter/${chapter.id as string}?index`}
           onClickCancel={() => {
             ;(document.getElementById('form-new-link') as HTMLFormElement).reset()
             setOpenOVerlay(false)

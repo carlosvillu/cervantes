@@ -1,162 +1,12 @@
-import {useEffect, useState} from 'react'
-import {ActionFunctionArgs, LoaderFunctionArgs, useActionData, useLoaderData} from 'react-router-dom'
-import ReactFlow, {
-  Background,
-  Controls,
-  Edge,
-  MarkerType,
-  Node,
-  Panel,
-  ReactFlowProvider,
-  useEdgesState,
-  useNodesState,
-  useReactFlow
-} from 'reactflow'
+import {ActionFunctionArgs, LoaderFunctionArgs, useLoaderData} from 'react-router-dom'
+import {MarkerType, ReactFlowProvider} from 'reactflow'
 
-import Dagre from '@dagrejs/dagre'
-
-import {BookJSON} from '../../domain/book/Models/Book.js'
 import {LinkJSON} from '../../domain/link/Models/Link.js'
 import {Links} from '../../domain/link/Models/Links.js'
-import {FormCreateOrEditChapter} from '../../ui/FormCreateOrEditChapter/index.js'
-import {FormNewLink} from '../../ui/FormNewLink/index.js'
-import {Notification} from '../../ui/Notification/index.js'
-import {OverlayWide} from '../../ui/OverlayWide/index.js'
+import {LayoutFlow} from './LayoutFlow.js'
 
 import 'reactflow/dist/style.css'
 import './index.css'
-
-const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
-const nodeWidth = 172
-const nodeHeight = 36
-
-const getLayoutedElements = (nodes: Node[], edges: Edge[], options: {direction: 'TB' | 'LR'}) => {
-  g.setGraph({rankdir: options.direction})
-
-  edges.forEach(edge => g.setEdge(edge.source, edge.target))
-  nodes.forEach(node => g.setNode(node.id, {width: nodeWidth, height: nodeHeight}))
-
-  Dagre.layout(g)
-
-  return {
-    nodes: nodes.map(node => {
-      const {x, y} = g.node(node.id)
-
-      return {...node, position: {x, y}}
-    }),
-    edges
-  }
-}
-
-const LayoutFlow = () => {
-  const {edges: initialEdges, nodes: initialNodes} = useLoaderData() as {
-    nodes: Array<{
-      id: string
-      data: {label: string}
-      position: {x: number; y: number}
-    }>
-    edges: Array<{
-      markerEnd: {
-        type: MarkerType
-        width: number
-        height: number
-      }
-      id: string
-      source: string
-      target: string
-      animated: boolean
-    }>
-  }
-
-  const {fitView} = useReactFlow()
-  const {nodes: layoutedNodes, edges: layoutedEdges} = getLayoutedElements(initialNodes, initialEdges, {
-    direction: 'TB'
-  })
-  const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges)
-
-  const [openOverlayChapter, setOpenOVerlayChapter] = useState(false)
-  const [openOverlayLink, setOpenOVerlayLink] = useState(false)
-
-  const [chapterFrom, setChapterFrom] = useState('')
-  const [chapterTo, setChapterTo] = useState('')
-
-  const {book} = useLoaderData() as {book: BookJSON}
-  const {success} = (useActionData() ?? {}) as {success?: boolean}
-  const createdFailed = success === false
-
-  useEffect(() => {
-    window.requestAnimationFrame(() => {
-      fitView()
-    })
-  }, [])// eslint-disable-line 
-
-  useEffect(() => {
-    setNodes(layoutedNodes)
-    setEdges(layoutedEdges)
-  }, [layoutedEdges, layoutedEdges])// eslint-disable-line 
-
-  useEffect(() => {
-    if (success === true) setOpenOVerlayChapter(false)
-    if (success === true) setOpenOVerlayLink(false)
-  }, [success])
-
-  return (
-    <>
-      {createdFailed ? <Notification status="error" title="Error creating the chapter" /> : null}
-      <OverlayWide open={openOverlayChapter} onClose={force => setOpenOVerlayChapter(force ?? !openOverlayChapter)}>
-        <FormCreateOrEditChapter
-          action={`/book/${book.id as string}/map`}
-          onClickCancel={() => {
-            ;(document.getElementById('form-new-chapter') as HTMLFormElement).reset()
-            setOpenOVerlayChapter(false)
-          }}
-        />
-      </OverlayWide>
-      <OverlayWide open={openOverlayLink} onClose={force => setOpenOVerlayLink(force ?? !openOverlayLink)}>
-        <FormNewLink
-          from={chapterFrom}
-          to={chapterTo}
-          onClickCancel={() => {
-            ;(document.getElementById('form-new-link') as HTMLFormElement).reset()
-            setOpenOVerlayLink(false)
-          }}
-        />
-      </OverlayWide>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={nodes => {
-          if (nodes.some(node => node.type === 'dimensions')) fitView()
-          onNodesChange(nodes)
-        }}
-        onEdgesChange={edges => {
-          onEdgesChange(edges)
-        }}
-        onConnect={conn => {
-          setChapterFrom(conn.source!)
-          setChapterTo(conn.target!)
-          setOpenOVerlayLink(true)
-        }}
-        fitView
-      >
-        <Controls />
-        {/* @ts-expect-error */}
-        <Background variant="dots" gap={12} size={1} />
-        <Panel position="top-right">
-          <button
-            onClick={() => {
-              setOpenOVerlayChapter(true)
-            }}
-            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Create Chapter
-          </button>
-        </Panel>
-      </ReactFlow>
-    </>
-  )
-}
 
 export const loader = async ({params}: LoaderFunctionArgs) => {
   const {bookID} = params as {bookID: string}
@@ -194,7 +44,27 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData()
   const {intent} = Object.fromEntries(formData) as {
-    intent: 'tooglePublishStatus' | 'new-chapter'
+    intent: 'new-link' | 'new-chapter'
+  }
+
+  if (intent === 'new-link') {
+    const {id, bookID, userID, chapterID, kind, body, to} = Object.fromEntries(formData) as {
+      intent: string
+      id: string
+      from: string
+      to: string
+      body: string
+      chapterID: string
+      kind: string
+      bookID: string
+      userID: string
+    }
+
+    const link = await window.domain.CreateLinkUseCase.execute({id, from: chapterID, to, body, bookID, userID, kind})
+
+    if (link.isEmpty()) return {success: false}
+
+    return {success: true}
   }
 
   if (intent === 'new-chapter') {

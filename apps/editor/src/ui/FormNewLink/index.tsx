@@ -11,7 +11,12 @@ import {capitalizaFirstLetter} from '../../js/string'
 import {ComboBoxSimple} from '../ComboBoxSimple'
 import {Item, SelectMenuSimpleCustom} from '../SelectMenuSimpleCustom'
 
-export const FormNewLink: FC<{onClickCancel: () => void; from?: string; to?: string}> = ({onClickCancel, from, to}) => {
+export const FormNewLink: FC<{onClickCancel: () => void; from?: string; to?: string; action: string}> = ({
+  onClickCancel,
+  from,
+  to,
+  action
+}) => {
   const kinds = Link.Kinds.map(kind => {
     return {id: kind, name: capitalizaFirstLetter(kind)}
   }) as Item[]
@@ -48,11 +53,7 @@ export const FormNewLink: FC<{onClickCancel: () => void; from?: string; to?: str
 
   return (
     <>
-      <Form
-        id="form-new-link"
-        method="post"
-        action={`/book/${book.id as string}/chapter/${chapter.id as string}?index`}
-      >
+      <Form id="form-new-link" method="post" action={action}>
         <input id="id" name="id" type="hidden" value={ulid()} />
         <input id="intent" name="intent" type="hidden" value="new-link" />
         <input id="userID" name="userID" type="hidden" value={user.id} />
