@@ -44,7 +44,17 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData()
   const {intent} = Object.fromEntries(formData) as {
-    intent: 'new-link' | 'new-chapter'
+    intent: 'new-link' | 'new-chapter' | 'remove-link'
+  }
+
+  if (intent === 'remove-link') {
+    const {linkID} = Object.fromEntries(formData) as {
+      linkID: string
+    }
+
+    await window.domain.RemoveByIDLinkUseCase.execute({id: linkID})
+
+    return {success: true}
   }
 
   if (intent === 'new-link') {

@@ -1,5 +1,5 @@
 import {FC, useEffect, useState} from 'react'
-import {useActionData, useLoaderData, useNavigation} from 'react-router-dom'
+import {useActionData, useFetcher, useLoaderData, useNavigation} from 'react-router-dom'
 import ReactFlow, {
   Background,
   Controls,
@@ -75,6 +75,7 @@ export const LayoutFlow: FC<{}> = () => {
   const [chapterFrom, setChapterFrom] = useState('')
   const [chapterTo, setChapterTo] = useState('')
 
+  const fetcherRemoveLink = useFetcher()
   const navigation = useNavigation()
   const {book} = useLoaderData() as {book: BookJSON}
   const {success} = (useActionData() ?? {}) as {success?: boolean}
@@ -127,6 +128,15 @@ export const LayoutFlow: FC<{}> = () => {
           onNodesChange(nodes)
         }}
         onEdgesChange={edges => {
+          edges
+            .filter(edge => edge.type === 'remove')
+            .forEach(edge => {
+              const formData = new FormData()
+              formData.append('intent', 'remove-link')
+              // @ts-expect-error
+              formData.append('linkID', edge.id)
+              fetcherRemoveLink.submit(formData, {method: 'post'})
+            })
           onEdgesChange(edges)
         }}
         onConnect={conn => {
