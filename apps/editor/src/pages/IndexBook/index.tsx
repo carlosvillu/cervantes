@@ -104,6 +104,7 @@ export const Component: FC<{}> = () => {
       {createdFailed ? <Notification status="error" title="Error creating the chapter" /> : null}
       <OverlayWide open={openOverlay} onClose={force => setOpenOVerlay(force ?? !openOverlay)}>
         <FormCreateOrEditChapter
+        action={`/book/${book.id as string}?index`}
           onClickCancel={() => {
             ;(document.getElementById('form-new-chapter') as HTMLFormElement).reset()
             setOpenOVerlay(false)

@@ -1,6 +1,8 @@
 import {FC} from 'react'
-import {ActionFunctionArgs, LoaderFunctionArgs, redirect} from 'react-router-dom'
+import {ActionFunctionArgs, LoaderFunctionArgs, redirect, useLoaderData} from 'react-router-dom'
 
+import {BookJSON} from '../../domain/book/Models/Book'
+import {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import {FormCreateOrEditChapter} from '../../ui/FormCreateOrEditChapter'
 
 export const loader = async ({params}: LoaderFunctionArgs) => {
@@ -33,5 +35,6 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 export const Component: FC<{}> = () => {
-  return <FormCreateOrEditChapter />
+  const {book, chapter} = useLoaderData() as {book: BookJSON; chapter: ChapterJSON}
+  return <FormCreateOrEditChapter action={`/book/${book.id as string}/chapter/${chapter.id as string}/edit`} />
 }

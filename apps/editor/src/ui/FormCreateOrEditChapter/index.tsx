@@ -7,21 +7,13 @@ import type {BookJSON} from '../../domain/book/Models/Book'
 import {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import type {UserJSON} from '../../domain/user/Models/User'
 
-export const FormCreateOrEditChapter: FC<{onClickCancel?: () => void}> = ({onClickCancel}) => {
+export const FormCreateOrEditChapter: FC<{onClickCancel?: () => void; action: string}> = ({onClickCancel, action}) => {
   const {book, user, chapter} = useLoaderData() as {book: BookJSON; user: UserJSON; chapter?: ChapterJSON}
   const navigate = useNavigate()
 
   return (
     <>
-      <Form
-        id="form-new-chapter"
-        method="post"
-        action={
-          chapter
-            ? `/book/${book.id as string}/chapter/${chapter.id as string}/edit`
-            : `/book/${book.id as string}?index`
-        }
-      >
+      <Form id="form-new-chapter" method="post" action={action}>
         <input id="id" name="id" type="hidden" value={chapter?.id ?? ulid()} />
         <input id="intent" name="intent" type="hidden" value={chapter ? 'edit-chapter' : 'new-chapter'} />
         <input id="userID" name="userID" type="hidden" value={user.id} />
@@ -77,7 +69,6 @@ export const FormCreateOrEditChapter: FC<{onClickCancel?: () => void}> = ({onCli
             </div>
           </div>
         </div>
-
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <button
             type="button"
