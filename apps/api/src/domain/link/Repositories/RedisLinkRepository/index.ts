@@ -11,7 +11,7 @@ import {LinkRecord, linkSchema} from './schemas.js'
 
 export class RedisLinkRepository implements LinkRepository {
   #indexCreated = false
-  #chapterRepository: Repository | undefined = undefined
+  #linkRepository: Repository | undefined = undefined
 
   static create() {
     return new RedisLinkRepository()
@@ -22,7 +22,7 @@ export class RedisLinkRepository implements LinkRepository {
 
     await this.#createIndex()
 
-    const linkRecord = (await this.#chapterRepository?.save(link.id!, link.attributes())) as LinkRecord
+    const linkRecord = (await this.#linkRepository?.save(link.id!, link.attributes())) as LinkRecord
 
     if (linkRecord === null || linkRecord === undefined) return Link.empty()
     return link
@@ -31,7 +31,7 @@ export class RedisLinkRepository implements LinkRepository {
   async findByID(id: ID, userID: ID): Promise<Link> {
     await this.#createIndex()
 
-    const linkRecord = (await this.#chapterRepository?.fetch(id.value)) as LinkRecord
+    const linkRecord = (await this.#linkRepository?.fetch(id.value)) as LinkRecord
 
     if (linkRecord === null || linkRecord === undefined) return Link.empty()
     if (linkRecord.userID !== userID.value) return Link.empty()
@@ -51,7 +51,7 @@ export class RedisLinkRepository implements LinkRepository {
   async findAll(from: ID, userID: ID): Promise<Links> {
     await this.#createIndex()
 
-    const linksRecords = (await this.#chapterRepository
+    const linksRecords = (await this.#linkRepository
       ?.searchRaw(`@userID:{${userID.value}} @from:{${from.value}}`)
       .return.all()) as LinkRecord[]
 
@@ -76,11 +76,11 @@ export class RedisLinkRepository implements LinkRepository {
   async removeByID(id: ID, userID: ID): Promise<Link> {
     await this.#createIndex()
 
-    const linkRecord = (await this.#chapterRepository?.fetch(id.value)) as LinkRecord
+    const linkRecord = (await this.#linkRepository?.fetch(id.value)) as LinkRecord
     if (linkRecord === null || linkRecord === undefined) return Link.empty()
     if (linkRecord.userID !== userID.value) return Link.empty()
 
-    await this.#chapterRepository?.remove(id.value)
+    await this.#linkRepository?.remove(id.value)
 
     return Link.empty()
   }
@@ -91,8 +91,8 @@ export class RedisLinkRepository implements LinkRepository {
     const redis = Redis.create()
     await redis.createAndConnectClient()
 
-    this.#chapterRepository = redis.repository(linkSchema)
+    this.#linkRepository = redis.repository(linkSchema)
     this.#indexCreated = true
-    return this.#chapterRepository?.createIndex()
+    return this.#linkRepository?.createIndex()
   }
 }

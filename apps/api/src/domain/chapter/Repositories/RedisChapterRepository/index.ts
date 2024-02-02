@@ -87,6 +87,18 @@ export class RedisChapterRepository implements ChapterRepository {
     })
   }
 
+  async removeByID(chapterID: ID, userID: ID): Promise<Chapter> {
+    await this.#createIndex()
+
+    const chapterRecord = (await this.#chapterRepository?.fetch(chapterID.value)) as ChapterRecord
+    if (chapterRecord === null || chapterRecord === undefined) return Chapter.empty()
+    if (chapterRecord.userID !== userID.value) return Chapter.empty()
+
+    await this.#chapterRepository?.remove(chapterID.value)
+
+    return Chapter.empty()
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 

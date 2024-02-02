@@ -58,3 +58,14 @@ router.put('/:chapterID', auth(), validate(updateBodySchema), async (req: Reques
 
   return res.status(200).json(chapter.toJSON())
 })
+
+router.delete('/:chapterID', validate(findByIDBodySchema), auth(), async (req: RequestFindByID, res: Response) => {
+  log('Removing chapter => %o', req.params.chapterID)
+
+  const link = await req._domain.RemoveByIDChapterUseCase.execute({
+    id: req.params.chapterID,
+    userID: req.user.id!
+  })
+  if (!link.isEmpty()) return res.status(404).json({error: true, message: 'chapter NOT FOUND'})
+  return res.status(200).json(link.toJSON())
+})
