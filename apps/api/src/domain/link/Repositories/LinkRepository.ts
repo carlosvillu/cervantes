@@ -7,4 +7,5 @@ export interface LinkRepository {
   findByID: (id: ID, userID: ID) => Promise<Link>
   findAll: (from: ID, userID: ID) => Promise<Links>
   removeByID: (id: ID, userID: ID) => Promise<Link>
+  removeByChapterID: (id: ID, userID: ID) => Promise<Links>
 }

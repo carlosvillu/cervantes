@@ -85,6 +85,28 @@ export class RedisLinkRepository implements LinkRepository {
     return Link.empty()
   }
 
+  async removeByChapterID(id: ID, userID: ID): Promise<Links> {
+    await this.#createIndex()
+
+    const linksFromRecords = (await this.#linkRepository
+      ?.searchRaw(`@userID:{${userID.value}} @from:{${id.value}}`)
+      .return.all()) as LinkRecord[]
+
+    const linksToRecords = (await this.#linkRepository
+      ?.searchRaw(`@userID:{${userID.value}} @to:{${id.value}}`)
+      .return.all()) as LinkRecord[]
+
+    if (!linksFromRecords && !linksToRecords) return Links.empty()
+
+    await Promise.all(
+      [...linksToRecords, ...linksFromRecords].map(async linkRecord =>
+        this.#linkRepository?.remove(linkRecord[EntityId] as string)
+      )
+    )
+
+    return Links.empty()
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 

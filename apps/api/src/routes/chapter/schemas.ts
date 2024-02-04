@@ -17,7 +17,9 @@ export const updateBodySchema = z.object({
     chapterID: z.string({required_error: 'bookID is required'})
   }),
   body: bodyChapter.extend({
-    createdAt: z.string({required_error: 'createdAt is required'})
+    createdAt: z
+      .string({required_error: 'createdAt is required'})
+      .or(z.number({required_error: 'createdAt is required'}))
   })
 })
 

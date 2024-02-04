@@ -8,4 +8,5 @@ export interface BodyRepository {
   findAll: (userID: ID, bookID: ID, chapterID: ID) => Promise<Bodies>
   findByID: (id: ID, userID: ID) => Promise<Body>
   findByHash: (hash: Hash, userID?: ID) => Promise<Body>
+  removeByChapterID: (id: ID, userID: ID) => Promise<Bodies>
 }

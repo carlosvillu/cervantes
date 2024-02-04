@@ -95,6 +95,22 @@ export class RedisBodyRepository implements BodyRepository {
     })
   }
 
+  async removeByChapterID(id: ID, userID: ID): Promise<Bodies> {
+    await this.#createIndex()
+
+    const bodiesRecords = (await this.#bodyRepository
+      ?.searchRaw(`@userID:{${userID.value}} @chapterID:{${id.value}}`)
+      .return.all()) as BodyRecord[]
+
+    if (!bodiesRecords) return Bodies.empty()
+
+    await Promise.all(
+      bodiesRecords.map(async bodyRecord => this.#bodyRepository?.remove(bodyRecord[EntityId] as string))
+    )
+
+    return Bodies.empty()
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 
