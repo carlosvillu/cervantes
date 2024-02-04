@@ -3,12 +3,13 @@ import {useNavigation} from 'react-router-dom'
 
 const SVGComponent: FC<{}> = props => (
   <svg
-    width={24}
-    height={24}
-    viewBox="0 0 24 24"
+    width={22}
+    height={22}
+    viewBox="0 0 22 22"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
     style={{fill: 'currentcolor'}}
+    className="text-sm font-semibold"
   >
     <style>
       {
@@ -21,10 +22,10 @@ const SVGComponent: FC<{}> = props => (
   </svg>
 )
 
-export const SubmitButton: FC<{label: string}> = ({label}) => {
+export const SubmitButton: FC<{label: string; show?: boolean}> = ({label, show = false}) => {
   const navigation = useNavigation()
 
-  const showSpinner = navigation.state === 'submitting' || navigation.state === 'loading'
+  const showSpinner = show || navigation.state === 'submitting' || navigation.state === 'loading'
 
   return (
     <button
