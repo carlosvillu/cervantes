@@ -7,4 +7,5 @@ export interface ChapterRepository {
   update: (chapter: Chapter) => Promise<Chapter>
   findAll: (bookID: ID) => Promise<Chapters>
   findByID: (chapterID: ID, bookID: ID) => Promise<Chapter>
+  removeByID: (chapterID: ID, bookID: ID) => Promise<Chapter>
 }

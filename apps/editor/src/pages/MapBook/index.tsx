@@ -44,7 +44,18 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData()
   const {intent} = Object.fromEntries(formData) as {
-    intent: 'new-link' | 'new-chapter' | 'remove-link'
+    intent: 'new-link' | 'new-chapter' | 'remove-link' | 'remove-chapter'
+  }
+
+  if (intent === 'remove-chapter') {
+    const {chapterID, bookID} = Object.fromEntries(formData) as {
+      chapterID: string
+      bookID: string
+    }
+
+    await window.domain.RemoveByIDChapterUseCase.execute({id: chapterID, bookID})
+
+    return {success: true}
   }
 
   if (intent === 'remove-link') {

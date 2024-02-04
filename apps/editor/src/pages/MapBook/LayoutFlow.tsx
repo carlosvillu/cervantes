@@ -76,6 +76,7 @@ export const LayoutFlow: FC<{}> = () => {
   const [chapterTo, setChapterTo] = useState('')
 
   const fetcherRemoveLink = useFetcher()
+  const fetcherRemoveChapter = useFetcher()
   const navigation = useNavigation()
   const {book} = useLoaderData() as {book: BookJSON}
   const {success} = (useActionData() ?? {}) as {success?: boolean}
@@ -124,6 +125,18 @@ export const LayoutFlow: FC<{}> = () => {
         nodes={nodes}
         edges={edges}
         onNodesChange={nodes => {
+          if (nodes.some(node => node.type === 'remove')) {
+            nodes
+              .filter(node => node.type === 'remove')
+              .forEach(node => {
+                const formData = new FormData()
+                // @ts-expect-error
+                formData.append('chapterID', node.id)
+                formData.append('bookID', book.id!)
+                formData.append('intent', 'remove-chapter')
+                fetcherRemoveChapter.submit(formData, {method: 'post'})
+              })
+          }
           if (nodes.some(node => node.type === 'dimensions')) fitView()
           onNodesChange(nodes)
         }}
@@ -132,9 +145,9 @@ export const LayoutFlow: FC<{}> = () => {
             .filter(edge => edge.type === 'remove')
             .forEach(edge => {
               const formData = new FormData()
-              formData.append('intent', 'remove-link')
               // @ts-expect-error
               formData.append('linkID', edge.id)
+              formData.append('intent', 'remove-link')
               fetcherRemoveLink.submit(formData, {method: 'post'})
             })
           onEdgesChange(edges)

@@ -18,20 +18,36 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData()
-  const {id, userID, bookID, createdAt, title, summary} = Object.fromEntries(formData) as {
-    id: string
-    userID: string
-    bookID: string
-    createdAt: string
-    title: string
-    summary: string
+  const {intent} = Object.fromEntries(formData) as {intent: 'edit-chapter' | 'remove-chapter'}
+  debugger
+
+  if (intent === 'remove-chapter') {
+    const {chapterID, bookID} = Object.fromEntries(formData) as {
+      chapterID: string
+      bookID: string
+    }
+
+    await window.domain.RemoveByIDChapterUseCase.execute({id: chapterID, bookID})
+
+    return redirect(`/book/${bookID}`)
   }
 
-  const chapter = await window.domain.UpdateChapterUseCase.execute({bookID, createdAt, id, summary, title, userID})
+  if (intent === 'edit-chapter') {
+    const {id, userID, bookID, createdAt, title, summary} = Object.fromEntries(formData) as {
+      id: string
+      userID: string
+      bookID: string
+      createdAt: string
+      title: string
+      summary: string
+    }
 
-  if (chapter.isEmpty()) return {success: false}
+    const chapter = await window.domain.UpdateChapterUseCase.execute({bookID, createdAt, id, summary, title, userID})
 
-  return redirect(`/book/${bookID}/chapter/${id}`)
+    if (chapter.isEmpty()) return {success: false}
+
+    return redirect(`/book/${bookID}/chapter/${id}`)
+  }
 }
 
 export const Component: FC<{}> = () => {
