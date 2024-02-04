@@ -7,6 +7,7 @@ import type {BookJSON} from '../../domain/book/Models/Book'
 import {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import type {UserJSON} from '../../domain/user/Models/User'
 import {SimpleAlert} from '../SimpleAlert'
+import {SubmitButton} from '../SubmitButton'
 
 export const FormCreateOrEditChapter: FC<{onClickCancel?: () => void; action: string}> = ({onClickCancel, action}) => {
   const removeForm = useRef<HTMLFormElement>(null)
@@ -106,12 +107,7 @@ export const FormCreateOrEditChapter: FC<{onClickCancel?: () => void; action: st
           >
             Cancel
           </button>
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Save
-          </button>
+          <SubmitButton label="Save" />
         </div>
       </Form>
     </>
