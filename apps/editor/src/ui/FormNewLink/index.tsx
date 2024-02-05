@@ -10,6 +10,7 @@ import type {UserJSON} from '../../domain/user/Models/User'
 import {capitalizaFirstLetter} from '../../js/string'
 import {ComboBoxSimple} from '../ComboBoxSimple'
 import {Item, SelectMenuSimpleCustom} from '../SelectMenuSimpleCustom'
+import {SubmitButton} from '../SubmitButton'
 
 export const FormNewLink: FC<{onClickCancel: () => void; from?: string; to?: string; action: string}> = ({
   onClickCancel,
@@ -137,12 +138,10 @@ export const FormNewLink: FC<{onClickCancel: () => void; from?: string; to?: str
           >
             Cancel
           </button>
-          <button
-            type="submit"
+          <SubmitButton
+            label="Save"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Save
-          </button>
+          />
         </div>
       </Form>
     </>

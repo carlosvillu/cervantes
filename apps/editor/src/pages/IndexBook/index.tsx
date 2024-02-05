@@ -19,6 +19,7 @@ import {capitalizaFirstLetter} from '../../js/string'
 import {FormCreateOrEditChapter} from '../../ui/FormCreateOrEditChapter'
 import {Notification} from '../../ui/Notification'
 import {OverlayWide} from '../../ui/OverlayWide'
+import {SubmitButton} from '../../ui/SubmitButton'
 
 const log = debug('cervantes:pages:IndexBook')
 
@@ -40,7 +41,7 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData()
   const {intent} = Object.fromEntries(formData) as {
-    intent: 'tooglePublishStatus' | 'new-chapter'
+    intent: 'toogle-publish-status' | 'new-chapter'
   }
 
   if (intent === 'new-chapter') {
@@ -58,7 +59,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     return {success: true}
   }
 
-  if (intent === 'tooglePublishStatus') {
+  if (intent === 'toogle-publish-status') {
     const {id, userID, title, published, summary, createdAt} = Object.fromEntries(formData) as {
       id: string
       userID: string
@@ -122,6 +123,7 @@ export const Component: FC<{}> = () => {
             Edit
           </Link>
           <Form method="post">
+            <input id="intent" name="intent" type="hidden" value="toogle-publish-status" />
             <input id="id" name="id" type="hidden" value={book?.id} />
             <input id="title" name="title" type="hidden" value={book?.title} />
             <input id="summary" name="summary" type="hidden" value={book?.summary} />
@@ -135,14 +137,10 @@ export const Component: FC<{}> = () => {
               readOnly
             />
             <input id="userID" name="userID" type="hidden" value={user.id} />
-            <button
-              type="submit"
+            <SubmitButton
+              label={book.published ? 'Unpublish' : 'Publish'}
               className={`ml-3 inline-flex items-center rounded-md ${publishAndUnpublishButtonClx} px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visile:outline-indigo-600`}
-              name="intent"
-              value="tooglePublishStatus"
-            >
-              {book.published ? 'Unpublish' : 'Publish'}
-            </button>
+            />
           </Form>
         </div>
       </div>

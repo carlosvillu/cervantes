@@ -22,17 +22,17 @@ const SVGComponent: FC<{}> = props => (
   </svg>
 )
 
-export const SubmitButton: FC<{label: string; show?: boolean}> = ({label, show = false}) => {
+export const SubmitButton: FC<{label: string; show?: boolean; className: string}> = ({
+  label,
+  show = false,
+  className
+}) => {
   const navigation = useNavigation()
 
   const showSpinner = show || navigation.state === 'submitting' || navigation.state === 'loading'
 
   return (
-    <button
-      type="submit"
-      disabled={showSpinner}
-      className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-    >
+    <button type="submit" disabled={showSpinner} className={className}>
       {!showSpinner && label}
       {showSpinner && <SVGComponent />}
     </button>

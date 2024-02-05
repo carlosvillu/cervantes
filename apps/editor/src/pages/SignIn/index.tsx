@@ -4,6 +4,7 @@ import {ActionFunctionArgs, Form, Link, redirect, useActionData} from 'react-rou
 import debug from 'debug'
 
 import logoURL from '../../statics/logobandwhite.png'
+import {SubmitButton} from '../../ui/SubmitButton'
 
 const log = debug('cervantes:editor:pages:SignIn')
 
@@ -88,12 +89,10 @@ export const Component: FC<{}> = () => {
             </div>
 
             <div>
-              <button
-                type="submit"
+              <SubmitButton
+                label="Sign in"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign in
-              </button>
+              />
             </div>
           </Form>
           <p className="mt-5 text-center text-sm text-red-500" hidden={!loginFailed}>

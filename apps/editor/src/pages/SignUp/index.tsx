@@ -4,6 +4,7 @@ import {ActionFunctionArgs, Form, Link, redirect, useActionData} from 'react-rou
 import {ulid} from 'ulid'
 
 import logoURL from '../../statics/logobandwhite.png'
+import {SubmitButton} from '../../ui/SubmitButton'
 
 export const action = async ({request}: ActionFunctionArgs) => {
   const {id, username, email, password} = Object.fromEntries(await request.formData()) as {
@@ -101,12 +102,10 @@ export const Component: FC<{}> = () => {
             </div>
 
             <div>
-              <button
-                type="submit"
+              <SubmitButton
+                label="Sign up"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign up
-              </button>
+              />
             </div>
           </Form>
           <p className="mt-5 text-center text-sm text-red-500" hidden={!createdFailed}>
