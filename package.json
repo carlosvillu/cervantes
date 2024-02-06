@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "apps/editor",
-    "apps/api"
+    "apps/api",
+    "packages/decorators"
   ],
   "engines": {
     "node": "21"
