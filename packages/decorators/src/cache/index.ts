@@ -41,17 +41,18 @@ export function Cache<T>(config: CacheConfig<T>) {
   return function (_Target: unknown, _name: string, descriptor: PropertyDescriptor) {
     const _execute = descriptor.value
     const {name, ...asyncCacheDedupeOptions} = config
-    cache.define(name, asyncCacheDedupeOptions, function (self: unknown, ...args) {
-      return _execute.apply(self, args)
+    cache.define(name, asyncCacheDedupeOptions, async function (args: {_self_: unknown; [k: string]: unknown}) {
+      return _execute.call(args._self_, args)
     })
 
     return Object.assign(
       {},
       {
         ...descriptor,
-        value: async function (...args: unknown[]) {
+        value: async function (params?: unknown) {
           // @ts-expect-error
-          const model = await cache[name](this, ...args)
+          const model = await cache[name]({...params, _self_: this})
+
           return model
         }
       }
