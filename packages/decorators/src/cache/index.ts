@@ -2,7 +2,7 @@ import {createCache} from 'async-cache-dedupe'
 
 export interface InvalidateCacheConfig<T> {
   name?: string
-  references: (result: T) => string[]
+  references: (args: unknown, result: T) => string[]
 }
 
 export interface CacheConfig<T> {
@@ -26,9 +26,11 @@ export function InvalidateCache<T>(config: InvalidateCacheConfig<T>) {
         value: async function (...args: unknown[]) {
           const model = await _execute.apply(this, args)
           if (config.name)
-            await Promise.all(config.references(model).map(async ref => await cache.invalidate(config.name!, ref)))
+            await Promise.all(
+              config.references(args[0], model).map(async ref => await cache.invalidate(config.name!, ref))
+            )
 
-          await Promise.all(config.references(model).map(async ref => await cache.invalidateAll(ref)))
+          await Promise.all(config.references(args[0], model).map(async ref => await cache.invalidateAll(ref)))
 
           return model
         }
