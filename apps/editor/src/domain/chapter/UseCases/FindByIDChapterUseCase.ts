@@ -1,3 +1,5 @@
+import {Cache, CacheConfig} from '@cervantes/decorators'
+
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
@@ -17,6 +19,13 @@ export class FindByIDChapterUseCase implements UseCase<FindByIDChapterUseCaseInp
 
   constructor(private readonly repository: ChapterRepository) {}
 
+  @Cache({
+    name: 'FindByIDChapterUseCase',
+    ttl: Number.MAX_SAFE_INTEGER,
+    references(_args, _key, result) {
+      return ['chapter:' + result.id]
+    }
+  } as const as CacheConfig<Chapter>)
   async execute({id, bookID}: FindByIDChapterUseCaseInput): Promise<Chapter> {
     return this.repository.findByID(ID.create({value: id}), ID.create({value: bookID}))
   }

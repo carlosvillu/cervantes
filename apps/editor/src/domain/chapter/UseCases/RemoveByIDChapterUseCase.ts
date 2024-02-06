@@ -1,3 +1,5 @@
+import {InvalidateCache, InvalidateCacheConfig} from '@cervantes/decorators'
+
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
@@ -17,6 +19,11 @@ export class RemoveByIDChapterUseCase implements UseCase<RemoveByIDChapterUseCas
 
   constructor(private readonly repository: ChapterRepository) {}
 
+  @InvalidateCache({
+    references: (arg: RemoveByIDChapterUseCaseInput, _response) => {
+      return ['chapter:' + arg.id, 'chapter:all:' + arg.bookID]
+    }
+  } as const as InvalidateCacheConfig<Chapter>)
   async execute({id, bookID}: RemoveByIDChapterUseCaseInput): Promise<Chapter> {
     return this.repository.removeByID(ID.create({value: id}), ID.create({value: bookID}))
   }

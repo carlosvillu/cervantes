@@ -28,7 +28,7 @@ export class UpdateBookUseCase implements UseCase<UpdateBookUseCaseInput, Book> 
   constructor(private readonly repository: BookRepository) {}
 
   @InvalidateCache({
-    references(result) {
+    references(_arg: UpdateBookUseCaseInput, result) {
       return ['book:' + result.id, 'book:all']
     }
   } as const as InvalidateCacheConfig<Book>)

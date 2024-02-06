@@ -1,3 +1,5 @@
+import {InvalidateCache, InvalidateCacheConfig} from '@cervantes/decorators'
+
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
@@ -22,6 +24,11 @@ export class CreateChapterUseCase implements UseCase<CreateChapterUseCaseInput, 
 
   constructor(private readonly repository: ChapterRepository) {}
 
+  @InvalidateCache({
+    references: (arg: CreateChapterUseCaseInput, _response) => {
+      return ['chapter:all:' + arg.bookID]
+    }
+  } as const as InvalidateCacheConfig<Chapter>)
   async execute({title, userID, bookID, summary, id}: CreateChapterUseCaseInput): Promise<Chapter> {
     return this.repository.create(
       Chapter.create({
