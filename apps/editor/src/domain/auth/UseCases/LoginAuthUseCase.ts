@@ -1,5 +1,7 @@
 import {z} from 'zod'
 
+import {InvalidateCache, InvalidateCacheConfig} from '@cervantes/decorators'
+
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import type {AuthTokens} from '../Models/AuthTokens.js'
@@ -23,6 +25,7 @@ export class LoginAuthUseCase implements UseCase<LoginAuthUseCaseInput, AuthToke
 
   constructor(private readonly remoteRepository: AuthRepository, private readonly localRepository: AuthRepository) {}
 
+  @InvalidateCache({references: () => ['user:*']} as const as InvalidateCacheConfig<AuthTokens>)
   async execute({email, password}: LoginAuthUseCaseInput): Promise<AuthTokens> {
     LoginAuthUseCaseValidations.parse({email, password})
 

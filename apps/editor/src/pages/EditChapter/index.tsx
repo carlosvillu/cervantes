@@ -19,7 +19,6 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData()
   const {intent} = Object.fromEntries(formData) as {intent: 'edit-chapter' | 'remove-chapter'}
-  debugger
 
   if (intent === 'remove-chapter') {
     const {chapterID, bookID} = Object.fromEntries(formData) as {
