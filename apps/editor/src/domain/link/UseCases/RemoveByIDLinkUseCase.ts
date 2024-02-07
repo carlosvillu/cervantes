@@ -19,7 +19,7 @@ export class RemoveByIDLinkUseCase implements UseCase<RemoveByIDLinkUseCaseInput
   constructor(private readonly repository: LinkRepository) {}
 
   @InvalidateCache({
-    references: (arg: RemoveByIDLinkUseCaseInput, response) => {
+    references: (arg: RemoveByIDLinkUseCaseInput, _response) => {
       return ['link:' + arg.id, 'link:all:*']
     }
   } as const as InvalidateCacheConfig<Link>)
