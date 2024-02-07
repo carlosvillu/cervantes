@@ -20,7 +20,7 @@ export class RemoveByIDLinkUseCase implements UseCase<RemoveByIDLinkUseCaseInput
 
   @InvalidateCache({
     references: (arg: RemoveByIDLinkUseCaseInput, response) => {
-      return ['link:' + arg.id, 'link:all:' + response.from]
+      return ['link:' + arg.id, 'link:all:*']
     }
   } as const as InvalidateCacheConfig<Link>)
   async execute({id}: RemoveByIDLinkUseCaseInput): Promise<Link> {
