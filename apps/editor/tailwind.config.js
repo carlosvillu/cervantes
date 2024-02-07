@@ -4,7 +4,11 @@ import form from '@tailwindcss/forms'
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', '../../packages/ui/src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {}
+    extend: {
+      fontFamily: {
+        prose: ['Tangerine', 'cursive'] // Asegúrate de incluir una fuente de respaldo
+      }
+    }
   },
   plugins: [form]
 }
