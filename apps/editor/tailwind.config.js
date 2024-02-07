@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        prose: ['Tangerine', 'cursive'] // Asegúrate de incluir una fuente de respaldo
+        prose: ['Tangerine', 'cursive']
       }
     }
   },
