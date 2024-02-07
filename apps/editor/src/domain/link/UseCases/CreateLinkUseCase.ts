@@ -1,5 +1,7 @@
 import {z} from 'zod'
 
+import {InvalidateCache, InvalidateCacheConfig} from '@cervantes/decorators'
+
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
@@ -25,6 +27,11 @@ export class CreateLinkUseCase implements UseCase<CreateLinkUseCaseInput, Link> 
 
   constructor(private readonly repository: LinkRepository) {}
 
+  @InvalidateCache({
+    references: (arg: CreateLinkUseCaseInput, _response) => {
+      return ['link:all:' + arg.from]
+    }
+  } as const as InvalidateCacheConfig<Link>)
   async execute({id, body, from, to, kind, userID, bookID}: CreateLinkUseCaseInput): Promise<Link> {
     return this.repository.create(
       Link.create({

@@ -1,3 +1,5 @@
+import {InvalidateCache, InvalidateCacheConfig} from '@cervantes/decorators'
+
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
@@ -23,6 +25,11 @@ export class CreateBookUseCase implements UseCase<CreateBookUseCaseInput, Book> 
 
   constructor(private readonly repository: BookRepository) {}
 
+  @InvalidateCache({
+    references(_arg: CreateBookUseCaseInput, _result) {
+      return ['book:all']
+    }
+  } as const as InvalidateCacheConfig<Book>)
   async execute({title, userID, summary, id}: CreateBookUseCaseInput): Promise<Book> {
     return this.repository.create(
       Book.create({

@@ -1,3 +1,5 @@
+import {InvalidateCache, InvalidateCacheConfig} from '@cervantes/decorators'
+
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
@@ -16,6 +18,11 @@ export class RemoveByIDLinkUseCase implements UseCase<RemoveByIDLinkUseCaseInput
 
   constructor(private readonly repository: LinkRepository) {}
 
+  @InvalidateCache({
+    references: (arg: RemoveByIDLinkUseCaseInput, _response) => {
+      return ['link:' + arg.id, 'link:all:*']
+    }
+  } as const as InvalidateCacheConfig<Link>)
   async execute({id}: RemoveByIDLinkUseCaseInput): Promise<Link> {
     return this.repository.removeByID(ID.create({value: id}))
   }
