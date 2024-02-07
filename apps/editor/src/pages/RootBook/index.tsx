@@ -13,13 +13,16 @@ export const loader = async ({params}: ActionFunctionArgs) => {
   return {book: book.toJSON()}
 }
 
+const MOCKED_ROOT_CHAPTER = '01HP17MPVZHZR45DX06NCND4KF'
+
 export const Component: FC<{}> = () => {
   const {book} = useLoaderData() as {book: BookJSON}
   const {bookID} = useParams() as {bookID: string}
   const navigate = useNavigate()
   const tabs = [
     {to: `/book/${bookID}`, title: 'Info'},
-    {to: `/book/${bookID}/map`, title: 'Map'}
+    {to: `/book/${bookID}/map`, title: 'Map'},
+    {to: `/book/${bookID}/preview/${MOCKED_ROOT_CHAPTER}`, title: 'Preview'}
   ]
 
   return (
