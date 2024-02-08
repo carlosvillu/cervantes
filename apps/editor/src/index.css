@@ -97,3 +97,14 @@
     height: 32px;
   }
 }
+
+/* Oculta la barra de desplazamiento en WebKit-based browsers */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Oculta la barra de desplazamiento en IE, Edge y Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
