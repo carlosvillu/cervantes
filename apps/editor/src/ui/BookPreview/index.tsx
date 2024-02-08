@@ -5,6 +5,7 @@ import type {BodyJSON} from '../../domain/body/Models/Body'
 import type {BookJSON} from '../../domain/book/Models/Book'
 import type {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import type {LinkJSON} from '../../domain/link/Models/Link'
+import {classNames} from '../../js/css'
 import previewBackground from '../../statics/previewbackground.jpg'
 
 interface Props {
@@ -38,21 +39,24 @@ export const BookPreview: FC<Props> = ({book, chapter, body, links}) => {
   }, [chapter.id])
 
   return (
-    <div className="bg-gray-900 h-full">
+    <div
+      className={classNames(
+        `relative h-full transition-opacity ease-in duration-${TRANSITION_DURATION}`,
+        isVisible ? 'opacity-100' : 'opacity-0'
+      )}
+    >
       <div
-        className={`flex flex-col min-h-full relative font-prose transition-opacity ease-in duration-${TRANSITION_DURATION} ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={'absolute inset-0 z-0 bg-cover bg-center h-full'}
+        style={{backgroundImage: `url(${previewBackground})`}}
+      ></div>
+      <div
+        className={`flex flex-col h-full relative overflow-auto hide-scrollbar font-prose transition-opacity ease-in duration-${TRANSITION_DURATION}`}
       >
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{backgroundImage: `url(${previewBackground})`}}
-        ></div>
         <div className="text-center text-white p-4 z-10 bg-gray-900/80">
           <h1 className="text-3xl font-bold">{book.title}</h1>
           <h2 className="text-2xl">{chapter.title}</h2>
         </div>
-        <div className="flex flex-1 overflow-auto relative items-center justify-center	">
+        <div className="flex flex-1 relative items-center justify-center	">
           <div className="absolute top-0 left-0 right-0 h-10 bg-gradient-to-b from-gray-900/80 to-transparent"></div>
           <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-gray-800/80 to-transparent"></div>
           <div
