@@ -1,6 +1,7 @@
 import debug from 'debug'
 import {Response, Router} from 'express'
 
+import {DomainError} from '../../domain/_kernel/DomainError.js'
 import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
 import {createBodySchema, findByIDBodySchema, RequestCreate, RequestFindAll, RequestFindByID} from './schemas.js'
@@ -12,6 +13,10 @@ router.post('/', auth(), validate(createBodySchema), async (req: RequestCreate, 
   log('Creating new link %j', req.body)
 
   const link = await req._domain.CreateLinkUseCase.execute({...req.body, userID: req.user.id!})
+
+  if (link instanceof DomainError) {
+    return res.status(410).json(link.toJSON())
+  }
 
   if (link.isEmpty()) return res.status(410).json({error: true, message: 'Imposible create the link'})
 

@@ -1,6 +1,7 @@
 import {z} from 'zod'
 
 import {UseCase} from '../../_kernel/architecture.js'
+import {DomainError} from '../../_kernel/DomainError.js'
 import {ID} from '../../_kernel/ID.js'
 import {Body} from '../Models/Body.js'
 import {Link, LinkValidations} from '../Models/Link.js'
@@ -17,14 +18,14 @@ export interface CreateLinkUseCaseInput {
   bookID: string
 }
 
-export class CreateLinkUseCase implements UseCase<CreateLinkUseCaseInput, Link> {
+export class CreateLinkUseCase implements UseCase<CreateLinkUseCaseInput, Link | DomainError> {
   static create() {
     return new CreateLinkUseCase(RedisLinkRepository.create())
   }
 
   constructor(private readonly repository: LinkRepository) {}
 
-  async execute({id, body, from, to, kind, userID, bookID}: CreateLinkUseCaseInput): Promise<Link> {
+  async execute({id, body, from, to, kind, userID, bookID}: CreateLinkUseCaseInput): Promise<Link | DomainError> {
     return this.repository.create(
       Link.create({
         id: ID.create({value: id}),

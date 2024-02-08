@@ -3,6 +3,7 @@ import debug from 'debug'
 
 import type {Base} from './_config/index.js'
 import {Config} from './_config/index.js'
+import {DomainError} from './_kernel/DomainError.js'
 
 /** AUTH */
 import type {AuthTokens} from './auth/Models/AuthTokens.js'
@@ -96,7 +97,7 @@ export class Domain {
 
   /** Link */
   get FindByIDLinkUseCase() {return this.#getter<FindByIDLinkUseCaseInput, Link>(async () => import('./link/UseCases/FindByIDLinkUseCase.js'), 'FindByIDLinkUseCase')} // eslint-disable-line 
-  get CreateLinkUseCase() {return this.#getter<CreateLinkUseCaseInput, Link>(async () => import('./link/UseCases/CreateLinkUseCase.js'), 'CreateLinkUseCase')} // eslint-disable-line 
+  get CreateLinkUseCase() {return this.#getter<CreateLinkUseCaseInput, Link | DomainError>(async () => import('./link/UseCases/CreateLinkUseCase.js'), 'CreateLinkUseCase')} // eslint-disable-line 
   get GetAllLinkUseCase() {return this.#getter<GetAllLinkUseCaseInput, Links>(async () => import('./link/UseCases/GetAllLinkUseCase.js'), 'GetAllLinkUseCase')} // eslint-disable-line 
   get RemoveByIDLinkUseCase() {return this.#getter<RemoveByIDLinkUseCaseInput, Links>(async () => import('./link/UseCases/RemoveByIDLinkUseCase.js'), 'RemoveByIDLinkUseCase')} // eslint-disable-line 
   get RemoveByChapterIDLinkUseCase() {return this.#getter<RemoveByChapterIDLinkUseCaseInput, Links>(async () => import('./link/UseCases/RemoveByChapterIDLinkUseCase.js'), 'RemoveByChapterIDLinkUseCase')} // eslint-disable-line 
