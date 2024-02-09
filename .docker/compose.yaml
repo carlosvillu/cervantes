@@ -1,4 +1,10 @@
 services:
+  ds:
+    image: registry.digitalocean.com/carlosvillu/ds:latest
+    ports:
+      - '3002:8043'
+    command: /bin/bash
+
   redis:
     image: redis/redis-stack-server:latest
     restart: always
