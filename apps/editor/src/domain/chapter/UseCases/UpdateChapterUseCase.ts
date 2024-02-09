@@ -16,6 +16,7 @@ export interface UpdateChapterUseCaseInput {
   id: string
   bookID: string
   userID: string
+  isRoot: boolean
   createdAt: string
 }
 
@@ -31,7 +32,7 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
       return ['chapter:' + arg.id, 'chapter:all:' + arg.bookID]
     }
   } as const as InvalidateCacheConfig<Chapter>)
-  async execute({title, userID, bookID, summary, id, createdAt}: UpdateChapterUseCaseInput): Promise<Chapter> {
+  async execute({title, userID, bookID, summary, id, isRoot, createdAt}: UpdateChapterUseCaseInput): Promise<Chapter> {
     return this.repository.update(
       Chapter.create({
         id: ID.create({value: id}),
@@ -39,6 +40,7 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
         bookID: ID.create({value: bookID}),
         title: Title.create({value: title}),
         summary: Summary.create({value: summary}),
+        isRoot: Boolean(isRoot),
         createdAt: TimeStamp.create({value: +createdAt}),
         updatedAt: TimeStamp.now()
       })
