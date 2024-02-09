@@ -32,16 +32,25 @@ export const action = async ({request}: ActionFunctionArgs) => {
   }
 
   if (intent === 'edit-chapter') {
-    const {id, userID, bookID, createdAt, title, summary} = Object.fromEntries(formData) as {
+    const {id, userID, bookID, createdAt, title, summary, isRoot} = Object.fromEntries(formData) as {
       id: string
       userID: string
       bookID: string
       createdAt: string
       title: string
       summary: string
+      isRoot: string
     }
 
-    const chapter = await window.domain.UpdateChapterUseCase.execute({bookID, createdAt, id, summary, title, userID})
+    const chapter = await window.domain.UpdateChapterUseCase.execute({
+      bookID,
+      createdAt,
+      id,
+      summary,
+      title,
+      userID,
+      isRoot: isRoot === 'on'
+    })
 
     if (chapter.isEmpty()) return {success: false}
 
