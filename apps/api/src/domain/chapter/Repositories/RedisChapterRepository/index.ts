@@ -58,6 +58,7 @@ export class RedisChapterRepository implements ChapterRepository {
       title: Title.create({value: chapterRecord.title}),
       userID: ID.create({value: chapterRecord.userID}),
       bookID: ID.create({value: chapterRecord.bookID}),
+      isRoot: chapterRecord.isRoot,
       createdAt: TimeStamp.create({value: chapterRecord.createdAt}),
       ...(chapterRecord.updatedAt && {updatedAt: TimeStamp.create({value: chapterRecord.updatedAt})})
     })
@@ -81,6 +82,7 @@ export class RedisChapterRepository implements ChapterRepository {
           createdAt: TimeStamp.create({value: record.createdAt}),
           userID: ID.create({value: record.userID}),
           bookID: ID.create({value: record.bookID}),
+          isRoot: record.isRoot,
           ...(record.updatedAt && {updatedAt: TimeStamp.create({value: record.updatedAt})})
         })
       )

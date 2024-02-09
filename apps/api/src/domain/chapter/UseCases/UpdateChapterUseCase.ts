@@ -13,6 +13,7 @@ export interface UpdateChapterUseCaseInput {
   id: string
   userID: string
   bookID: string
+  isRoot: boolean
   createdAt: string
 }
 
@@ -23,7 +24,7 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
 
   constructor(private readonly repository: ChapterRepository) {}
 
-  async execute({title, userID, bookID, summary, id, createdAt}: UpdateChapterUseCaseInput): Promise<Chapter> {
+  async execute({title, userID, bookID, summary, id, isRoot, createdAt}: UpdateChapterUseCaseInput): Promise<Chapter> {
     return this.repository.create(
       Chapter.create({
         id: ID.create({value: id}),
@@ -31,6 +32,7 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
         bookID: ID.create({value: bookID}),
         title: Title.create({value: title}),
         summary: Summary.create({value: summary}),
+        isRoot: Boolean(isRoot),
         createdAt: TimeStamp.create({value: +createdAt})
       })
     )

@@ -5,7 +5,8 @@ const bodyChapter = z.object({
   id: z.string({required_error: 'ID is required'}),
   bookID: z.string({required_error: 'bookID is required'}),
   title: z.string({required_error: 'Title required'}),
-  summary: z.string({required_error: 'Summary required'})
+  summary: z.string({required_error: 'Summary required'}),
+  isRoot: z.boolean({required_error: 'isRoot required'})
 })
 
 export const createBodySchema = z.object({
