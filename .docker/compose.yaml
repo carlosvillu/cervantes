@@ -2,8 +2,7 @@ services:
   ds:
     image: registry.digitalocean.com/carlosvillu/ds:latest
     ports:
-      - '3002:8043'
-    command: /bin/bash
+      - '3002:3002'
 
   redis:
     image: redis/redis-stack-server:latest
