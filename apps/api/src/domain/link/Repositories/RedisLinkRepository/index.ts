@@ -1,5 +1,7 @@
 import {type Repository, EntityId} from 'redis-om'
 
+import {DomainError} from '../../../_kernel/DomainError.js'
+import {ErrorCodes} from '../../../_kernel/ErrorsCode.js'
 import {ID} from '../../../_kernel/ID.js'
 import {TimeStamp} from '../../../_kernel/TimeStamp.js'
 import {Redis} from '../../../_redis/index.js'
@@ -17,10 +19,26 @@ export class RedisLinkRepository implements LinkRepository {
     return new RedisLinkRepository()
   }
 
-  async create(link: Link): Promise<Link> {
+  async create(link: Link): Promise<Link | DomainError> {
     if (link.isEmpty()) return link
 
     await this.#createIndex()
+
+    const linksRecords = (await this.#linkRepository
+      ?.searchRaw(`@userID:{${link.userID!}} @from:{${link.from!}}`)
+      .return.all()) as LinkRecord[]
+
+    if (link.isDirect() && linksRecords.length !== 0)
+      return DomainError.create(
+        [new Error(ErrorCodes.LINK_CREATE_NO_MORE_THAN_ONE_DIRECT_LINK)],
+        '[RedisLinkRepository#create] Imposible create link'
+      )
+
+    if (linksRecords.some(link => link.kind === 'direct'))
+      return DomainError.create(
+        [new Error(ErrorCodes.LINK_CREATE_NO_MORE_THAN_ONE_DIRECT_LINK)],
+        '[RedisLinkRepository#create] Imposible create link'
+      )
 
     const linkRecord = (await this.#linkRepository?.save(link.id!, link.attributes())) as LinkRecord
 

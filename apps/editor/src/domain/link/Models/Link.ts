@@ -5,7 +5,7 @@ import {TimeStamp} from '../../_kernel/TimeStamp.js'
 import {Body} from './Body.js'
 import {Chapter, ChapterJSON} from './Chapter.js'
 
-const kinds = ['options'] as [string, ...string[]]
+const kinds = ['options', 'direct'] as [string, ...string[]]
 
 export const LinkValidations = z.object({
   id: z.instanceof(ID, {message: 'ID required'}),

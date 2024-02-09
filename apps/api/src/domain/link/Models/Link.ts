@@ -50,6 +50,10 @@ export class Link {
   get bookID() {return this._bookID?.value} // eslint-disable-line
   get createdAt() {return this._createdAt?.value} // eslint-disable-line
 
+  isDirect() {
+    return this.kind === 'direct'
+  }
+
   attributes() {
     return {
       body: this.body,

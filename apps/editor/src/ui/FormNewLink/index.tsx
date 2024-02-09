@@ -75,7 +75,7 @@ export const FormNewLink: FC<{onClickCancel: () => void; from?: string; to?: str
                   onChange={setKindID}
                 />
               </div>
-              <div className="col-span-full" hidden={kindID !== 'options'}>
+              <div className="col-span-full">
                 <div className="mt-2">
                   {chapterTo === undefined && (
                     <ComboBoxSimple
@@ -108,7 +108,7 @@ export const FormNewLink: FC<{onClickCancel: () => void; from?: string; to?: str
                 </div>
               </div>
 
-              <div className="col-span-full">
+              <div className="col-span-full" hidden={kindID !== 'options'}>
                 <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">
                   Caption
                 </label>
@@ -119,7 +119,7 @@ export const FormNewLink: FC<{onClickCancel: () => void; from?: string; to?: str
                     rows={3}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     defaultValue={''}
-                    required
+                    required={kindID === 'options'}
                   />
                 </div>
                 <p className="mt-3 text-sm leading-6 text-gray-600">
