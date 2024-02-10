@@ -35,7 +35,7 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
     })
 
   const nodes = chapters.toJSON().chapters.map((chapter, index) => {
-    return {id: chapter.id, data: {label: chapter.title}, position: {x: 0, y: 100 * index}}
+    return {id: chapter.id, data: {label: chapter.title}, position: {x: 0, y: 0 * index}}
   })
 
   return {edges, nodes, book: book.toJSON(), user: user.toJSON(), chapters: chapters.toJSON().chapters}
