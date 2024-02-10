@@ -3,7 +3,6 @@ services:
     image: registry.digitalocean.com/carlosvillu/ds:latest
     ports:
       - '3002:3002'
-
   redis:
     image: redis/redis-stack-server:latest
     restart: always
