@@ -1,4 +1,4 @@
-import {ActionFunctionArgs, LoaderFunctionArgs, useLoaderData} from 'react-router-dom'
+import {ActionFunctionArgs, Link, LoaderFunctionArgs, useLoaderData} from 'react-router-dom'
 import {MarkerType, ReactFlowProvider} from 'reactflow'
 
 import {LinkJSON} from '../../domain/link/Models/Link.js'
@@ -31,11 +31,30 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
     .flat(Infinity)
     .map(link => {
       link = link as unknown as LinkJSON
-      return {markerEnd, id: link.id, source: link.from, target: link.to, animated: true, label: link.body}
+      return {
+        markerEnd,
+        id: link.id,
+        source: link.from,
+        target: link.to,
+        animated: true,
+        label: link.body
+      }
     })
 
   const nodes = chapters.toJSON().chapters.map((chapter, index) => {
-    return {id: chapter.id, data: {label: chapter.title}, position: {x: 0, y: 0 * index}}
+    return {
+      id: chapter.id,
+      // type: 'chapterNode',
+      data: {
+        label: (
+          <>
+            <Link to={`/book/${book.id as string}/chapter/${chapter.id as string}/editor`}>{chapter.title}</Link>
+          </>
+        ),
+        chapterID: chapter.id
+      },
+      position: {x: 0, y: 0 * index}
+    }
   })
 
   return {edges, nodes, book: book.toJSON(), user: user.toJSON(), chapters: chapters.toJSON().chapters}

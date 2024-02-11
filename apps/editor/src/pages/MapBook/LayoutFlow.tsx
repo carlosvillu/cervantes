@@ -1,4 +1,4 @@
-import {FC, useCallback, useEffect, useState} from 'react'
+import {FC, useCallback, useEffect, useMemo, useState} from 'react'
 import {useActionData, useFetcher, useLoaderData, useNavigation} from 'react-router-dom'
 import ReactFlow, {
   Background,
@@ -24,6 +24,7 @@ import {FormCreateOrEditChapter} from '../../ui/FormCreateOrEditChapter/index.js
 import {FormNewLink} from '../../ui/FormNewLink/index.js'
 import {Notification} from '../../ui/Notification/index.js'
 import {OverlayWide} from '../../ui/OverlayWide/index.js'
+import {ChapterNode} from './ChapterNode.js'
 
 const MAP_STATE_KEY = '__MAP_STATE_KEY__'
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
@@ -50,6 +51,7 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], options: {direction: 
 }
 const saveMap = debounce((instance: ReactFlowInstance, bookID: string) => {
   if (!instance) return
+  if (instance.toObject().nodes.length === 0) return
   log('Saving Map State')
   const currentState = JSON.parse(window.localStorage.getItem(MAP_STATE_KEY) ?? '{}')
   const nextCurrentState = {
@@ -63,7 +65,7 @@ export const LayoutFlow: FC<{}> = () => {
   const {edges: initialEdges, nodes: initialNodes} = useLoaderData() as {
     nodes: Array<{
       id: string
-      data: {label: string}
+      data: {label: string; chapterID: string}
       position: {x: number; y: number}
     }>
     edges: Array<{
@@ -96,8 +98,8 @@ export const LayoutFlow: FC<{}> = () => {
   const {book} = useLoaderData() as {book: BookJSON}
   const {success} = (useActionData() ?? {}) as {success?: boolean}
   const createdFailed = success === false
-  // @ts-expect-error
-  window.rfInstance = rfInstance
+
+  const nodeTypes = useMemo(() => ({chapterNode: ChapterNode}), [])
 
   useEffect(() => {
     let nodes: Node[] = initialNodes
@@ -176,6 +178,7 @@ export const LayoutFlow: FC<{}> = () => {
         />
       </OverlayWide>
       <ReactFlow
+        nodeTypes={nodeTypes}
         nodes={nodes}
         edges={edges}
         onInit={instance => {
