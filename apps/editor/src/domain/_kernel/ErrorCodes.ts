@@ -1,0 +1,3 @@
+export enum ErrorCodes {
+  USER_LOGIN_NOT_VERIFIED = 'USER_LOGIN_NOT_VERIFIED'
+}

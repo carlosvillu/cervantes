@@ -42,6 +42,7 @@ import type {CommitBodyUseCaseInput} from './body/UseCases/CommitBodyUseCase.js'
 import type {GetLastCommitBodyUseCaseInput} from './body/UseCases/GetLastCommitBodyUseCase.js'
 import type {GetLastBodyUseCaseInput} from './body/UseCases/GetLastBodyUseCase.js'
 import type {SaveBodyUseCaseInput} from './body/UseCases/SaveBodyUseCase.js'
+import {DomainError} from './_kernel/DomainError.js'
 
 const log = debug('cervantes:editor:domain:entrypoint')
 
@@ -66,7 +67,7 @@ export class Domain {
   get LoginAuthUseCase() {return this.#getter<LoginAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/LoginAuthUseCase.js'), 'LoginAuthUseCase')} // eslint-disable-line 
 
   /** USER */
-  get CreateUserUseCase() {return this.#getter<CreateUserUseCaseInput, User>(async () => import('./user/UseCases/CreateUserUseCase.js'), 'CreateUserUseCase')} // eslint-disable-line 
+  get CreateUserUseCase() {return this.#getter<CreateUserUseCaseInput, User | DomainError>(async () => import('./user/UseCases/CreateUserUseCase.js'), 'CreateUserUseCase')} // eslint-disable-line 
   get CurrentUserUseCase() {return this.#getter<void, User>(async () => import('./user/UseCases/CurrentUserUseCase.js'), 'CurrentUserUseCase')} // eslint-disable-line 
 
   /** Book */
