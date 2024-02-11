@@ -26,7 +26,7 @@ import {Notification} from '../../ui/Notification/index.js'
 import {OverlayWide} from '../../ui/OverlayWide/index.js'
 import {ChapterNode} from './ChapterNode.js'
 
-const MAP_STATE_KEY = '__MAP_STATE_KEY__'
+const MAP_STATE_KEY = 'MAP_STATE'
 const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
 const nodeWidth = 172
 const nodeHeight = 36

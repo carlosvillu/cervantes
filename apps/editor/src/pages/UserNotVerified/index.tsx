@@ -1,4 +1,11 @@
 import {FC} from 'react'
+import {ActionFunctionArgs, Form, Link} from 'react-router-dom'
+
+import {SubmitButton} from '../../ui/SubmitButton'
+
+export const action = async ({request}: ActionFunctionArgs) => {
+  debugger
+}
 
 export const Component: FC<{}> = () => {
   return (
@@ -7,18 +14,23 @@ export const Component: FC<{}> = () => {
         <div className="text-center">
           <p className="text-base font-semibold text-indigo-600">401</p>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            User's email not verified
+            The user has not yet verified their email address.
           </h1>
           <p className="mt-6 text-base leading-7 text-gray-600">
-            Sorry, but you have to verify your email. Click the button to send a verification code to your email
+            I'm sorry, but it is necessary for you to verify your email address. Please click the button below to
+            request a verification code be sent to your email inbox.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <a
-              href="#"
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Send code
-            </a>
+            <Form method="post">
+              <SubmitButton
+                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                label="Send Verification Code"
+              />
+            </Form>
+
+            <Link to="/" className="text-sm font-semibold text-gray-900">
+              Go to homepage <span aria-hidden="true">&rarr;</span>
+            </Link>
           </div>
         </div>
       </main>
