@@ -34,6 +34,7 @@ export const auth = () => async (req: Request, res: Response, next: NextFunction
       log('User -> %s', user.email)
 
       if (user.isEmpty()) return res.status(403).json({error: true, message: '403 Forbidden'})
+      if (!user.verified) return res.status(401).json({error: true, message: '401 User not verified'})
 
       req.user = user
       next()
