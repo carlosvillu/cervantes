@@ -1,8 +1,9 @@
 /* eslint @typescript-eslint/no-misused-promises:0, @typescript-eslint/no-non-null-assertion:0 */
 
 import debug from 'debug'
-import {Response, Router} from 'express'
+import {Request, Response, Router} from 'express'
 
+import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
 import {
   loginBodySchema,
@@ -72,4 +73,15 @@ router.delete('/refresh', validate(refreshTokenBodySchema), async (req: RequestR
   if (!authTokens.isEmpty()) return res.status(400).json({error: true, message: 'Invalid Refresh Token'})
 
   res.status(200).json({error: false, message: 'Logged Out Sucessfully'})
+})
+
+router.post('/validationToken', auth({allowUnvalidate: true}), async (req: Request, res: Response) => {
+  log('Sending a validation token for the user %s', req.user.email)
+
+  const validationToken = await req._domain.SendValidationCodeAuthUseCase.execute({
+    id: req.user.id!,
+    email: req.user.email!
+  })
+
+  res.status(200).json(validationToken.toJSON())
 })

@@ -4,27 +4,27 @@
 import jwt from 'jsonwebtoken'
 import type {RedisClientType} from 'redis'
 import {EntityId, Repository} from 'redis-om'
+import {Resend} from 'resend'
 
-import type {Config} from '../../../_config/index.js'
-import type {ID} from '../../../_kernel/ID.js'
+import {ID} from '../../../_kernel/ID.js'
 import {Redis} from '../../../_redis/index.js'
 import {AuthTokens} from '../../Models/AuthTokens.js'
-import type {Token} from '../../Models/Token.js'
+import {Token} from '../../Models/Token.js'
 import {UserToken} from '../../Models/UserToken.js'
+import {ValidationToken} from '../../Models/ValidationToken.js'
 import type {AuthRepository} from '../AuthRepository.js'
-import {TokenRecord, tokenSchema} from './schemas.js'
+import {TokenRecord, tokenSchema, validationTokenSchema} from './schemas.js'
 
 const {ACCESS_TOKEN_PRIVATE_KEY, REFRESH_TOKEN_PRIVATE_KEY} = process.env
 
 export class RedisAuthRepository implements AuthRepository {
   #indexCreated = false
   #tokenRepository: Repository | undefined = undefined
+  #validationTokenRepository: Repository | undefined = undefined
 
-  static create(config: Config) {
-    return new RedisAuthRepository(config)
+  static create() {
+    return new RedisAuthRepository()
   }
-
-  constructor(private readonly config: Config) {}
 
   async generateTokens(id: ID): Promise<AuthTokens> {
     await this.#createIndex()
@@ -126,12 +126,25 @@ export class RedisAuthRepository implements AuthRepository {
     return UserToken.create({userID: tokenRecord.userID, token: tokenRecord.token, createdAt: tokenRecord.createdAt})
   }
 
+  async sendValidationToken(userID: ID): Promise<ValidationToken> {
+    await this.#createIndex()
+
+    const validationToken = ValidationToken.create({
+      id: ID.random(),
+      token: Token.sixDigitRandom(),
+      userID
+    })
+
+    return validationToken
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 
     const client = (await Redis.create().createAndConnectClient()) as RedisClientType
 
     this.#tokenRepository = new Repository(tokenSchema, client)
+    this.#validationTokenRepository = new Repository(validationTokenSchema, client)
     this.#indexCreated = true
     return this.#tokenRepository.createIndex()
   }

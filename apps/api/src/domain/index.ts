@@ -6,10 +6,12 @@ import {Config} from './_config/index.js'
 import {DomainError} from './_kernel/DomainError.js'
 
 /** AUTH */
+import type {ValidationToken} from './auth/Models/ValidationToken.js'
 import type {AuthTokens} from './auth/Models/AuthTokens.js'
 import type {CreateTokenAuthUseCaseInput} from './auth/UseCases/CreateTokenAuthUseCase.js'
 import type {VerifyRefreshTokenAuthUseCaseInput} from './auth/UseCases/VerifyRefreshTokenAuthUseCase.js'
 import type {RemoveUserTokenAuthUseCaseInput} from './auth/UseCases/RemoveUserTokenAuthUseCase.js'
+import type {SendValidationCodeAuthUseCaseInput} from './auth/UseCases/SendValidationCodeAuthUseCase.js'
 
 /** User */
 import type {FindOneUserUseCaseInput} from './user/UseCases/FindOneUserUseCase.js'
@@ -75,6 +77,7 @@ export class Domain {
   get CreateTokenAuthUseCase() {return this.#getter<CreateTokenAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/CreateTokenAuthUseCase.js'), 'CreateTokenAuthUseCase')} // eslint-disable-line 
   get VerifyRefreshTokenAuthUseCase() {return this.#getter<VerifyRefreshTokenAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/VerifyRefreshTokenAuthUseCase.js'), 'VerifyRefreshTokenAuthUseCase')} // eslint-disable-line 
   get RemoveUserTokenAuthUseCase() {return this.#getter<RemoveUserTokenAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/RemoveUserTokenAuthUseCase.js'), 'RemoveUserTokenAuthUseCase')} // eslint-disable-line 
+  get SendValidationCodeAuthUseCase() {return this.#getter<SendValidationCodeAuthUseCaseInput, ValidationToken>(async () => import('./auth/UseCases/SendValidationCodeAuthUseCase.js'), 'SendValidationCodeAuthUseCase')} // eslint-disable-line 
 
   /** User */
   get FindByIDUserUseCase() {return this.#getter<FindByIDUserUseCaseInput, User>(async () => import('./user/UseCases/FindByIDUserUseCase.js'), 'FindByIDUserUseCase')} // eslint-disable-line 

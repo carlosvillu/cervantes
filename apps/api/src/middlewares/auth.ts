@@ -17,30 +17,37 @@ function isPayload(data: JwtPayload | string | undefined): data is Payload {
   return (data as Payload).id !== undefined
 }
 
-export const auth = () => async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const access = req.token
-    log('Auth token ->', access)
-    if (access === undefined) return res.status(401).json({error: true, message: '401 Unauthorized'})
+export const auth =
+  ({allowUnvalidate}: {allowUnvalidate?: boolean} = {}) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const access = req.token
+      log('Auth token ->', access)
+      if (access === undefined) return res.status(401).json({error: true, message: '401 Unauthorized'})
 
-    jwt.verify(access, ACCESS_TOKEN_PRIVATE_KEY, async (err, data) => {
-      log('JWT payload %O', data, err)
+      jwt.verify(access, ACCESS_TOKEN_PRIVATE_KEY, async (err, data) => {
+        log('JWT payload %O', data, err)
 
-      if (err) return res.status(403).json({error: true, message: '403 Forbidden'})
+        if (err) return res.status(403).json({error: true, message: '403 Forbidden'})
 
-      if (!isPayload(data)) return res.status(403).json({error: true, message: '403 Forbidden'})
+        if (!isPayload(data)) return res.status(403).json({error: true, message: '403 Forbidden'})
 
-      const user = await req._domain.FindByIDUserUseCase.execute({id: data.id})
-      log('User -> %s', user.email)
+        const user = await req._domain.FindByIDUserUseCase.execute({id: data.id})
+        log('User -> %s', user.email)
 
-      if (user.isEmpty()) return res.status(403).json({error: true, message: '403 Forbidden'})
-      if (!user.verified) return res.status(401).json({error: true, message: '401 User not verified'})
+        if (allowUnvalidate) {
+          req.user = user
+          return next()
+        }
 
-      req.user = user
-      next()
-    })
-  } catch (err) {
-    debug('Auth FAILED')
-    res.status(500).json({error: true, message: 'Internal Server Error'})
+        if (user.isEmpty()) return res.status(403).json({error: true, message: '403 Forbidden'})
+        if (!user.verified) return res.status(401).json({error: true, message: '401 User not verified'})
+
+        req.user = user
+        next()
+      })
+    } catch (err) {
+      debug('Auth FAILED')
+      res.status(500).json({error: true, message: 'Internal Server Error'})
+    }
   }
-}
