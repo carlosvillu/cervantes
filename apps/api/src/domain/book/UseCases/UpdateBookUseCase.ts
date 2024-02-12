@@ -14,7 +14,7 @@ export interface UpdateBookUseCaseInput {
   published: boolean
   id: string
   userID: string
-  createdAt: string
+  createdAt: number
 }
 
 export class UpdateBookUseCase implements UseCase<UpdateBookUseCaseInput, Book> {
