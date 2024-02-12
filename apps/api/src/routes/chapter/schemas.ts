@@ -39,6 +39,12 @@ export const findAllBodySchema = z.object({
   })
 })
 
+export const findRootBodySchema = z.object({
+  query: z.object({
+    bookID: z.string({required_error: 'bookID is required'})
+  })
+})
+
 export interface RequestCreate extends Request {
   body: z.infer<typeof createBodySchema>['body']
 }
@@ -55,4 +61,8 @@ export interface RequestFindByID extends Request {
 
 export interface RequestFindAll extends Request {
   query: z.infer<typeof findAllBodySchema>['query']
+}
+
+export interface RequestFindRoot extends Request {
+  query: z.infer<typeof findRootBodySchema>['query']
 }
