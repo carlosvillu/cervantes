@@ -5,9 +5,7 @@ import type {BodyJSON} from '../../domain/body/Models/Body'
 import type {BookJSON} from '../../domain/book/Models/Book'
 import type {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import type {LinkJSON} from '../../domain/link/Models/Link'
-// import type {UserJSON} from '../../domain/user/Models/User'
 import {BookPreview} from '../../ui/BookPreview'
-import {IphoneMockup} from '../../ui/IphoneMockup'
 
 interface LinkClickParams {
   bookID: String
@@ -15,7 +13,7 @@ interface LinkClickParams {
 }
 
 export const loader = async ({params}: LoaderFunctionArgs) => {
-  const {bookID, chapterID = '01HP17MPVZHZR45DX06NCND4KF'} = params as {bookID: string; chapterID: string}
+  const {bookID, chapterID} = params as {bookID: string; chapterID: string}
   const user = await window.domain.CurrentUserUseCase.execute()
 
   const [book, chapter, links, bodyCommit, rootChapter] = await Promise.all([
@@ -28,7 +26,6 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
 
   return {
     book: book.toJSON(),
-    user: user.toJSON(),
     chapter: chapter.toJSON(),
     links: links.toJSON().links,
     body: bodyCommit.toJSON(),
@@ -48,32 +45,30 @@ export const Component: FC<{}> = () => {
   }
 
   const onLinkClick = ({bookID, chapterID}: LinkClickParams) => {
-    const url = `/book/${String(bookID)}/preview/${String(chapterID)}`
+    const url = `/reader/${String(bookID)}/${String(chapterID)}`
     navigate(url)
   }
 
-  const readerUrl = `/reader/${String(book.id)}/${String(rootChapter.id)}`
+  const isPublished = book.published ?? false
+
+  if (!isPublished) {
+    return (
+      <main className="h-full fixed w-full">
+        <h1>This book is not published</h1>
+      </main>
+    )
+  }
 
   return (
-    <div className="p-4">
-      <IphoneMockup>
-        <BookPreview
-          book={book}
-          chapter={chapter}
-          body={body}
-          links={links}
-          rootChapter={rootChapter}
-          onLinkClick={onLinkClick}
-        />
-      </IphoneMockup>
-      <div className="mt-4 flex justify-center ">
-        <button
-          className="w-36 bg-indigo-600 text-white font-semibold py-2 rounded-md "
-          onClick={() => window.open(readerUrl)}
-        >
-          Share
-        </button>
-      </div>
-    </div>
+    <main className="h-full fixed w-full">
+      <BookPreview
+        book={book}
+        chapter={chapter}
+        body={body}
+        links={links}
+        rootChapter={rootChapter}
+        onLinkClick={onLinkClick}
+      />
+    </main>
   )
 }
