@@ -1,3 +1,4 @@
+import {Broker} from '../../_broker/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {TimeStamp} from '../../_kernel/TimeStamp.js'
@@ -19,13 +20,13 @@ export interface UpdateChapterUseCaseInput {
 
 export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, Chapter> {
   static create() {
-    return new UpdateChapterUseCase(RedisChapterRepository.create())
+    return new UpdateChapterUseCase(RedisChapterRepository.create(), Broker.create())
   }
 
-  constructor(private readonly repository: ChapterRepository) {}
+  constructor(private readonly repository: ChapterRepository, private readonly broker: Broker) {}
 
   async execute({title, userID, bookID, summary, id, isRoot, createdAt}: UpdateChapterUseCaseInput): Promise<Chapter> {
-    return this.repository.create(
+    const chapter = this.repository.create(
       Chapter.create({
         id: ID.create({value: id}),
         userID: ID.create({value: userID}),
@@ -36,5 +37,17 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
         createdAt: TimeStamp.create({value: +createdAt})
       })
     )
+
+    await this.broker.emit({
+      type: 'update_chapter_root',
+      payload: {
+        id: ID.create({value: id}),
+        userID: ID.create({value: userID}),
+        bookID: ID.create({value: bookID}),
+        isRoot: Boolean(isRoot)
+      }
+    })
+
+    return chapter
   }
 }
