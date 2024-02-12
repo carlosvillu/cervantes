@@ -4,7 +4,6 @@
 import jwt from 'jsonwebtoken'
 import type {RedisClientType} from 'redis'
 import {EntityId, Repository} from 'redis-om'
-import {Resend} from 'resend'
 
 import {ID} from '../../../_kernel/ID.js'
 import {Redis} from '../../../_redis/index.js'
@@ -126,7 +125,7 @@ export class RedisAuthRepository implements AuthRepository {
     return UserToken.create({userID: tokenRecord.userID, token: tokenRecord.token, createdAt: tokenRecord.createdAt})
   }
 
-  async sendValidationToken(userID: ID): Promise<ValidationToken> {
+  async createValidationToken(userID: ID): Promise<ValidationToken> {
     await this.#createIndex()
 
     const validationToken = ValidationToken.create({

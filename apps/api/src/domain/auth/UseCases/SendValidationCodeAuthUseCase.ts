@@ -20,7 +20,7 @@ export class SendValidationCodeAuthUseCase implements UseCase<SendValidationCode
   constructor(private readonly repository: AuthRepository, private readonly emailer: Emailer) {}
 
   async execute({id, email}: SendValidationCodeAuthUseCaseInput): Promise<ValidationToken> {
-    const validationToken = await this.repository.sendValidationToken(ID.create({value: id}))
+    const validationToken = await this.repository.createValidationToken(ID.create({value: id}))
 
     await this.emailer.sendValidationToken(validationToken, Email.create({value: email}))
 

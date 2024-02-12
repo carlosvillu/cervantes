@@ -12,5 +12,5 @@ export interface AuthRepository {
   findOneByUserID: (id: ID) => Promise<UserToken>
   findOneByToken: (token: Token) => Promise<UserToken>
   create: (userID: string, token: string) => Promise<UserToken>
-  sendValidationToken: (userID: ID) => Promise<ValidationToken>
+  createValidationToken: (userID: ID) => Promise<ValidationToken>
 }
