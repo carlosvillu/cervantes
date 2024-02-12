@@ -68,7 +68,7 @@ export class RedisChapterRepository implements ChapterRepository {
     await this.#createIndex()
 
     const chaptersRecords = (await this.#chapterRepository
-      ?.searchRaw(`@userID:{${userID.value} @bookID:{${bookID.value}}`)
+      ?.searchRaw(`@userID:{${userID.value}} @bookID:{${bookID.value}}`)
       .return.all()) as ChapterRecord[]
 
     if (chaptersRecords === null || chaptersRecords === undefined) return Chapters.empty()
@@ -93,7 +93,7 @@ export class RedisChapterRepository implements ChapterRepository {
     await this.#createIndex()
 
     const rootChapterRecord = (await this.#chapterRepository
-      ?.searchRaw(`@userID:{${userID.value} @bookID:{${bookID.value} @isRoot:{true`)
+      ?.searchRaw(`@userID:{${userID.value}} @bookID:{${bookID.value}} @isRoot:{true}`)
       .return.first()) as ChapterRecord
 
     if (rootChapterRecord === null || rootChapterRecord === undefined) return Chapter.empty()
