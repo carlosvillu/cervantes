@@ -24,7 +24,7 @@ router.post('/', auth(), validate(createBodySchema), async (req: RequestCreate, 
 })
 
 router.get('/', auth(), async (req: RequestFindAll, res: Response) => {
-  log(`Geting all links for user ${req.user.id!}`)
+  log(`Getting all links for user ${req.user.id!}`)
 
   const links = await req._domain.GetAllLinkUseCase.execute({from: req.query.from, userID: req.user.id!})
 

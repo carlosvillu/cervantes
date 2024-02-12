@@ -27,7 +27,7 @@ router.get('/', auth(), async (req: RequestFindAll, res: Response) => {
     return res.status(200).json(body.toJSON())
   }
 
-  log(`Geting all bodies for user %s, bookID %s and chapterID %s`, req.user.id!, req.query.bookID, req.query.chapterID)
+  log(`Getting all bodies for user %s, bookID %s and chapterID %s`, req.user.id!, req.query.bookID, req.query.chapterID)
   const bodies = await req._domain.GetAllBodyUseCase.execute({
     userID: req.user.id!,
     bookID: req.query.bookID,
