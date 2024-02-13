@@ -1,6 +1,7 @@
 import {Resend} from 'resend'
 
 import {Email} from '../_kernel/Email.js'
+import WaitlistEmail, {PlaidVerifyIdentityEmail} from '../_transactional/user/validationToken.js'
 import {ValidationToken} from '../auth/Models/ValidationToken.js'
 import {Emailer} from './Emailer.js'
 
@@ -21,7 +22,7 @@ export class ResendEmailer implements Emailer {
       from: ResendEmailer.FROM,
       to: email.value,
       subject: 'Validate your email',
-      html: `<p>Send this token <strong>${validationToken.token!}</strong>!</p>`
+      react: <PlaidVerifyIdentityEmail validationCode={validationToken.token} />
     })
     return validationToken
   }
