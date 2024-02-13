@@ -7,7 +7,7 @@ import {Emailer} from './Emailer.js'
 const {RESEND_API_KEY} = process.env
 
 export class ResendEmailer implements Emailer {
-  static FROM = 'hello@bookadventur.es'
+  static FROM = 'bookadventur.es <hello@bookadventur.es>'
   static create() {
     const resend = new Resend(RESEND_API_KEY)
 
@@ -20,7 +20,7 @@ export class ResendEmailer implements Emailer {
     await this.resend.emails.send({
       from: ResendEmailer.FROM,
       to: email.value,
-      subject: '[BOOKADVENTUR.ES] Validate your email',
+      subject: 'Validate your email',
       html: `<p>Send this token <strong>${validationToken.token!}</strong>!</p>`
     })
     return validationToken
