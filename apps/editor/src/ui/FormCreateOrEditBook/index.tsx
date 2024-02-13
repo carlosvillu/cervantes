@@ -4,12 +4,13 @@ import {Form, useActionData, useLoaderData, useNavigate} from 'react-router-dom'
 import {ulid} from 'ulid'
 
 import type {BookJSON} from '../../domain/book/Models/Book'
+import type {ChaptersJSON} from '../../domain/chapter/Models/Chapters'
 import type {UserJSON} from '../../domain/user/Models/User'
 import {Notification} from '../Notification'
 import {SubmitButton} from '../SubmitButton'
 
 export const FormCreateOrEditBook: FC<{}> = () => {
-  const {user, book} = useLoaderData() as {user: UserJSON; book?: BookJSON}
+  const {user, book, chapters} = useLoaderData() as {user: UserJSON; book?: BookJSON; chapters?: ChaptersJSON}
   const navigate = useNavigate()
   const {success} = (useActionData() ?? {}) as {success?: boolean}
 
@@ -66,6 +67,24 @@ export const FormCreateOrEditBook: FC<{}> = () => {
                 <p className="mt-3 text-sm leading-6 text-gray-600">
                   {book ? 'Write a few sentences about your book.' : 'Write a few sentences about the book.'}
                 </p>
+              </div>
+              <div className="mt-2">
+                <label htmlFor="rootChapterID" className="block text-sm font-medium leading-6 text-gray-900">
+                  Root Chapter
+                </label>
+                <select
+                  id="rootChapterID"
+                  name="rootChapterID"
+                  className="block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  defaultValue={book?.rootChapterID ?? ''}
+                >
+                  <option value="">None</option>
+                  {chapters?.chapters.map(chapter => (
+                    <option key={chapter.id} value={chapter.id}>
+                      {chapter.title}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>

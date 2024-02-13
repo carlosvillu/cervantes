@@ -119,12 +119,6 @@ export const Component: FC<{}> = () => {
             <dt className="text-sm font-medium leading-6 text-gray-900">Summary</dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{chapter.summary}</dd>
           </div>
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">Root</dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {chapter.isRoot ? 'Yes' : 'No'}
-            </dd>
-          </div>
           <div className="px-4 sm:px-0">
             <TableFullWidth
               actionButton

@@ -15,7 +15,6 @@ interface LinkClickParams {
 interface Props {
   book: BookJSON
   chapter: ChapterJSON
-  rootChapter: ChapterJSON
   body: BodyJSON
   links: LinkJSON[]
   onLinkClick: (params: LinkClickParams) => void
@@ -23,7 +22,7 @@ interface Props {
 
 const TRANSITION_DURATION = 300
 
-export const BookPreview: FC<Props> = ({book, chapter, body, rootChapter, links, onLinkClick}) => {
+export const BookPreview: FC<Props> = ({book, chapter, body, links, onLinkClick}) => {
   const [isVisible, setIsVisible] = useState(true)
   const bookID = String(book.id)
 
@@ -85,7 +84,7 @@ export const BookPreview: FC<Props> = ({book, chapter, body, rootChapter, links,
             {!links.length && (
               <li
                 className="m-2 pointer bg-slate-100/10 text-slate-100/80  px-4 py-2 rounded-lg hover:bg-slate-100/20 hover:text-slate-100 transition-all duration-200 ease-in-out w-full text-center text-2xl backdrop-blur-sm"
-                onClick={() => handleLinkClick(String(rootChapter.id))}
+                onClick={() => handleLinkClick(String(book.rootChapterID))}
               >
                 Volver a emperzar
               </li>

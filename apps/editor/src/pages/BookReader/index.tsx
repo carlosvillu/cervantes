@@ -16,13 +16,14 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
   const {bookID, chapterID} = params as {bookID: string; chapterID: string}
   const user = await window.domain.CurrentUserUseCase.execute()
 
-  const [book, chapter, links, bodyCommit, rootChapter] = await Promise.all([
+  const [book, chapter, links, bodyCommit] = await Promise.all([
     window.domain.FindByIDBookUseCase.execute({id: bookID}),
     window.domain.FindByIDChapterUseCase.execute({id: chapterID, bookID}),
     window.domain.GetAllLinkUseCase.execute({from: chapterID}),
-    window.domain.GetLastCommitBodyUseCase.execute({userID: user.id!, bookID, chapterID}),
-    window.domain.GetRootChapterUseCase.execute({bookID})
+    window.domain.GetLastCommitBodyUseCase.execute({userID: user.id!, bookID, chapterID})
   ])
+
+  const rootChapter = await window.domain.FindByIDChapterUseCase.execute({id: book.rootChapterID, bookID})
 
   return {
     book: book.toJSON(),
@@ -60,15 +61,8 @@ export const Component: FC<{}> = () => {
   }
 
   return (
-    <main className="h-full fixed w-full">
-      <BookPreview
-        book={book}
-        chapter={chapter}
-        body={body}
-        links={links}
-        rootChapter={rootChapter}
-        onLinkClick={onLinkClick}
-      />
+    <main className="h-full fixed w-full bg-gray-900">
+      <BookPreview book={book} chapter={chapter} body={body} links={links} onLinkClick={onLinkClick} />
     </main>
   )
 }

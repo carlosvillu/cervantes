@@ -27,12 +27,13 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
   const bookID = params.bookID as string
   log('Getting infromation for Book -> %o', bookID)
 
-  const [book, user, chapters, rootChapter] = await Promise.all([
+  const [book, user, chapters] = await Promise.all([
     window.domain.FindByIDBookUseCase.execute({id: bookID}),
     window.domain.CurrentUserUseCase.execute(),
-    window.domain.GetAllChapterUseCase.execute({bookID}),
-    window.domain.GetRootChapterUseCase.execute({bookID})
+    window.domain.GetAllChapterUseCase.execute({bookID})
   ])
+
+  const rootChapter = chapters.chapters.find(chapter => chapter.id === book.rootChapterID)
 
   if (book.isEmpty()) redirect('/book-not-found')
 
@@ -40,7 +41,7 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
     book: book.toJSON(),
     user: user.toJSON(),
     chapters: chapters.toJSON().chapters,
-    rootChapter: rootChapter.toJSON()
+    rootChapter: rootChapter ? rootChapter.toJSON() : null
   }
 }
 
