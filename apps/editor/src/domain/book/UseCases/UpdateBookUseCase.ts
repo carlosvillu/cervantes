@@ -17,6 +17,7 @@ export interface UpdateBookUseCaseInput {
   published: boolean
   id: string
   userID: string
+  rootChapterID?: string
   createdAt: string
 }
 
@@ -32,7 +33,15 @@ export class UpdateBookUseCase implements UseCase<UpdateBookUseCaseInput, Book> 
       return ['book:' + result.id, 'book:all']
     }
   } as const as InvalidateCacheConfig<Book>)
-  async execute({title, userID, published, summary, id, createdAt}: UpdateBookUseCaseInput): Promise<Book> {
+  async execute({
+    title,
+    userID,
+    published,
+    summary,
+    id,
+    rootChapterID,
+    createdAt
+  }: UpdateBookUseCaseInput): Promise<Book> {
     return this.repository.update(
       Book.create({
         id: ID.create({value: id}),
@@ -40,6 +49,7 @@ export class UpdateBookUseCase implements UseCase<UpdateBookUseCaseInput, Book> 
         title: Title.create({value: title}),
         summary: Summary.create({value: summary}),
         published: PublishStatus.create({value: published}),
+        rootChapterID: rootChapterID ? ID.create({value: rootChapterID}) : ID.empty(),
         createdAt: TimeStamp.create({value: +createdAt})
       })
     )

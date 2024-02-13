@@ -5,7 +5,8 @@ export const CreateResponseSchema = z.object({
   id: z.string({required_error: 'ID required'}),
   userID: z.string({required_error: 'userID required'}),
   summary: z.string({required_error: 'Summary required'}),
-  title: z.string({required_error: 'Title required'})
+  title: z.string({required_error: 'Title required'}),
+  rootChapterID: z.string().optional()
 })
 export type CreateResponseType = z.infer<typeof CreateResponseSchema>
 

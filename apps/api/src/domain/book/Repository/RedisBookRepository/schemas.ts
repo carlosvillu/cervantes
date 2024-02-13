@@ -5,6 +5,7 @@ export interface BookRecord extends Entity {
   summary: string
   userID: string
   published: boolean
+  rootChapterID: string
   createdAt: number
   updatedAt: number
 }
@@ -16,6 +17,7 @@ export const bookSchema = new Schema(
     summary: {type: 'string'},
     published: {type: 'boolean'},
     userID: {type: 'string'},
+    rootChapterID: {type: 'string'},
     createdAt: {type: 'number'},
     updatedAt: {type: 'number'}
   },

@@ -33,7 +33,7 @@ export class Chapter {
   }
 
   static empty() {
-    return new Chapter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, true)
+    return new Chapter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true)
   }
 
   constructor(
@@ -47,13 +47,33 @@ export class Chapter {
     public readonly empty?: boolean
   ) {}
 
-  get id() {return this._id?.value} // eslint-disable-line
-  get userID() {return this._userID?.value} // eslint-disable-line
-  get bookID() {return this._bookID?.value} // eslint-disable-line
-  get summary() {return this._summary?.value} // eslint-disable-line
-  get title() {return this._title?.value} // eslint-disable-line
-  get createdAt() {return this._createdAt?.value} // eslint-disable-line
-  get updatedAt() {return this._updatedAt?.value} // eslint-disable-line
+  get id() {
+    return this._id?.value
+  } // eslint-disable-line
+
+  get userID() {
+    return this._userID?.value
+  } // eslint-disable-line
+
+  get bookID() {
+    return this._bookID?.value
+  } // eslint-disable-line
+
+  get summary() {
+    return this._summary?.value
+  } // eslint-disable-line
+
+  get title() {
+    return this._title?.value
+  } // eslint-disable-line
+
+  get createdAt() {
+    return this._createdAt?.value
+  } // eslint-disable-line
+
+  get updatedAt() {
+    return this._updatedAt?.value
+  } // eslint-disable-line
 
   attributes() {
     return {

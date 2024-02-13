@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,8 +29,8 @@
   }
 
   pre {
-    background: #0D0D0D;
-    color: #FFF;
+    background: #0d0d0d;
+    color: #fff;
     font-family: 'JetBrainsMono', monospace;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
@@ -49,12 +50,12 @@
 
   blockquote {
     padding-left: 1rem;
-    border-left: 2px solid rgba(#0D0D0D, 0.1);
+    border-left: 2px solid rgba(#0d0d0d, 0.1);
   }
 
   hr {
     border: none;
-    border-top: 2px solid rgba(#0D0D0D, 0.1);
+    border-top: 2px solid rgba(#0d0d0d, 0.1);
     margin: 2rem 0;
   }
 }
@@ -90,9 +91,20 @@
     top: 8px;
     height: 64px;
   }
-  50%, 100% {
+  50%,
+  100% {
     top: 24px;
     height: 32px;
   }
 }
 
+/* Oculta la barra de desplazamiento en WebKit-based browsers */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Oculta la barra de desplazamiento en IE, Edge y Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

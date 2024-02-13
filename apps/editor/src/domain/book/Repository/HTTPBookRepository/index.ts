@@ -57,6 +57,7 @@ export class HTTPBookRepository implements BookRepository {
       summary: Summary.create({value: book.summary}),
       published: PublishStatus.create({value: book.published ?? false}),
       title: Title.create({value: book.title}),
+      rootChapterID: book.rootChapterID ? ID.create({value: book.rootChapterID}) : ID.empty(),
       createdAt: TimeStamp.create({value: book.createdAt}),
       updatedAt: TimeStamp.create({value: book.updatedAt})
     })
@@ -80,6 +81,7 @@ export class HTTPBookRepository implements BookRepository {
           summary: Summary.create({value: book.summary}),
           published: PublishStatus.create({value: book.published ?? false}),
           title: Title.create({value: book.title}),
+          rootChapterID: book.rootChapterID ? ID.create({value: book.rootChapterID}) : ID.empty(),
           createdAt: TimeStamp.create({value: book.createdAt}),
           updatedAt: TimeStamp.create({value: book.updatedAt})
         })

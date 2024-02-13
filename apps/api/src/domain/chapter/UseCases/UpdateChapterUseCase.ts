@@ -24,7 +24,7 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
   constructor(private readonly repository: ChapterRepository) {}
 
   async execute({title, userID, bookID, summary, id, createdAt}: UpdateChapterUseCaseInput): Promise<Chapter> {
-    return this.repository.create(
+    const chapter = this.repository.create(
       Chapter.create({
         id: ID.create({value: id}),
         userID: ID.create({value: userID}),
@@ -34,5 +34,7 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
         createdAt: TimeStamp.create({value: +createdAt})
       })
     )
+
+    return chapter
   }
 }

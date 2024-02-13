@@ -35,6 +35,12 @@ type FindByIDResponseType = z.infer<typeof FindByIDResponseSchema>
 const RemoveByIDResponseSchema = z.object({})
 type RemoveByIDResponseType = z.infer<typeof RemoveByIDResponseSchema>
 
+const GetRootResponseSchema = CreateResponseSchema.extend({
+  updatedAt: z.number({required_error: 'updatedAt required'}),
+  createdAt: z.number({required_error: 'CreatedAt required'})
+})
+type GetRootResponseType = z.infer<typeof GetRootResponseSchema>
+
 export class HTTPChapterRepository implements ChapterRepository {
   static create(config: Config) {
     return new HTTPChapterRepository(config, WindowFetcher.create(config))
@@ -69,6 +75,26 @@ export class HTTPChapterRepository implements ChapterRepository {
   async findByID(id: ID, bookID: ID): Promise<Chapter> {
     const [error, chapter] = await this.fetcher.get<FindByIDResponseType>(
       this.config.get('API_HOST') + '/chapter/' + id.value + `?bookID=${bookID.value as string}`,
+      {},
+      FindByIDResponseSchema
+    )
+
+    if (error) return Chapter.empty()
+
+    return Chapter.create({
+      id: ID.create({value: chapter.id}),
+      userID: ID.create({value: chapter.userID}),
+      bookID: ID.create({value: chapter.bookID}),
+      summary: Summary.create({value: chapter.summary}),
+      title: Title.create({value: chapter.title}),
+      createdAt: TimeStamp.create({value: chapter.createdAt}),
+      updatedAt: TimeStamp.create({value: chapter.updatedAt})
+    })
+  }
+
+  async getRootChapter(bookID: ID): Promise<Chapter> {
+    const [error, chapter] = await this.fetcher.get<GetRootResponseType>(
+      this.config.get('API_HOST') + '/chapter/root' + `?bookID=${bookID.value as string}`,
       {},
       FindByIDResponseSchema
     )

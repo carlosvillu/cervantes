@@ -27,7 +27,7 @@ router.post('/', auth(), validate(createBodySchema), async (req: RequestCreate, 
 })
 
 router.get('/', auth(), async (req: RequestFindAll, res: Response) => {
-  log(`Geting all chapters for user ${req.user.id!}`)
+  log(`Getting all chapters for user ${req.user.id!}`)
 
   const chapters = await req._domain.GetAllChapterUseCase.execute({bookID: req.query.bookID, userID: req.user.id!})
 
@@ -64,6 +64,7 @@ router.delete('/:chapterID', validate(findByIDBodySchema), auth(), async (req: R
 
   const link = await req._domain.RemoveByIDChapterUseCase.execute({
     id: req.params.chapterID,
+    bookID: req.query.bookID,
     userID: req.user.id!
   })
   if (!link.isEmpty()) return res.status(404).json({error: true, message: 'chapter NOT FOUND'})
