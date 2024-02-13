@@ -68,7 +68,7 @@ export class Domain {
 
   /** USER */
   get CreateUserUseCase() {return this.#getter<CreateUserUseCaseInput, User | DomainError>(async () => import('./user/UseCases/CreateUserUseCase.js'), 'CreateUserUseCase')} // eslint-disable-line 
-  get CurrentUserUseCase() {return this.#getter<void, User>(async () => import('./user/UseCases/CurrentUserUseCase.js'), 'CurrentUserUseCase')} // eslint-disable-line 
+  get CurrentUserUseCase() {return this.#getter<void, User | DomainError>(async () => import('./user/UseCases/CurrentUserUseCase.js'), 'CurrentUserUseCase')} // eslint-disable-line 
 
   /** Book */
   get FindByIDBookUseCase() {return this.#getter<FindByIDBookUseCaseInput, Book>(async () => import('./book/UseCases/FindByIDBookUseCase.js'), 'FindByIDBookUseCase')} // eslint-disable-line 

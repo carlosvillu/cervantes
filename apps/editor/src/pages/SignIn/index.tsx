@@ -5,6 +5,7 @@ import debug from 'debug'
 
 import {DomainError} from '../../domain/_kernel/DomainError'
 import {ErrorCodes} from '../../domain/_kernel/ErrorCodes'
+import {User} from '../../domain/user/Models/User'
 import logoURL from '../../statics/logobandwhite.png'
 import {SubmitButton} from '../../ui/SubmitButton'
 
@@ -13,12 +14,11 @@ const log = debug('cervantes:editor:pages:SignIn')
 export const loader = async () => {
   const currentUser = await window.domain.CurrentUserUseCase.execute()
 
-  if (
-    currentUser instanceof DomainError &&
-    currentUser.errors.find(error => error.message === ErrorCodes.USER_LOGIN_NOT_VERIFIED)
-  ) {
+  if (currentUser instanceof DomainError && currentUser.has(ErrorCodes.USER_LOGIN_NOT_VERIFIED)) {
     return redirect('/no-verified-user')
   }
+
+  if (!(currentUser instanceof User)) throw new Error('Unexpecter Error')
 
   if (!currentUser.isEmpty()) {
     log('There is an user already on the Page.')
