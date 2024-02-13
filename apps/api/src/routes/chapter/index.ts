@@ -6,11 +6,9 @@ import {validate} from '../../middlewares/validate.js'
 import {
   createBodySchema,
   findByIDBodySchema,
-  findRootBodySchema,
   RequestCreate,
   RequestFindAll,
   RequestFindByID,
-  RequestFindRoot,
   RequestUpdate,
   updateBodySchema
 } from './schemas.js'
@@ -34,14 +32,6 @@ router.get('/', auth(), async (req: RequestFindAll, res: Response) => {
   const chapters = await req._domain.GetAllChapterUseCase.execute({bookID: req.query.bookID, userID: req.user.id!})
 
   return res.status(200).json(chapters.toJSON().chapters)
-})
-
-router.get('/root', validate(findRootBodySchema), auth(), async (req: RequestFindRoot, res: Response) => {
-  log('Getting root chapter for book %o', req.query.bookID)
-
-  const chapter = await req._domain.GetRootChapterUseCase.execute({bookID: req.query.bookID, userID: req.user.id!})
-  if (chapter.isEmpty()) return res.status(404).json({error: true, message: 'chapter NOT FOUND'})
-  return res.status(200).json(chapter.toJSON())
 })
 
 router.get('/:chapterID', validate(findByIDBodySchema), auth(), async (req: RequestFindByID, res: Response) => {
@@ -74,6 +64,7 @@ router.delete('/:chapterID', validate(findByIDBodySchema), auth(), async (req: R
 
   const link = await req._domain.RemoveByIDChapterUseCase.execute({
     id: req.params.chapterID,
+    bookID: req.query.bookID,
     userID: req.user.id!
   })
   if (!link.isEmpty()) return res.status(404).json({error: true, message: 'chapter NOT FOUND'})

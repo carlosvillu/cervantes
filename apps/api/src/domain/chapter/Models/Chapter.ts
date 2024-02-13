@@ -11,30 +11,19 @@ const ChapterValidations = z.object({
   bookID: z.instanceof(ID, {message: 'bookID required'}),
   title: z.instanceof(Title, {message: 'title required'}),
   summary: z.instanceof(Summary, {message: 'Summary required'}),
-  isRoot: z.boolean().optional(),
   createdAt: z.instanceof(TimeStamp).optional(),
   updatedAt: z.instanceof(TimeStamp).optional()
 })
 
 export class Chapter {
-  static create({
-    id,
-    userID,
-    bookID,
-    title,
-    summary,
-    isRoot,
-    createdAt,
-    updatedAt
-  }: z.infer<typeof ChapterValidations>) {
-    ChapterValidations.parse({id, userID, bookID, title, summary, isRoot, createdAt, updatedAt})
+  static create({id, userID, bookID, title, summary, createdAt, updatedAt}: z.infer<typeof ChapterValidations>) {
+    ChapterValidations.parse({id, userID, bookID, title, summary, createdAt, updatedAt})
     return new Chapter(
       id,
       userID,
       bookID,
       title,
       summary,
-      isRoot ?? false,
       createdAt ?? TimeStamp.now(),
       updatedAt ?? TimeStamp.now(),
       false
@@ -42,7 +31,7 @@ export class Chapter {
   }
 
   static empty() {
-    return new Chapter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true)
+    return new Chapter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, true)
   }
 
   constructor(
@@ -51,7 +40,6 @@ export class Chapter {
     public readonly _bookID?: ID,
     public readonly _title?: Title,
     public readonly _summary?: Summary,
-    public readonly _isRoot?: boolean,
     public readonly _createdAt?: TimeStamp,
     public readonly _updatedAt?: TimeStamp,
     public readonly empty?: boolean
@@ -73,10 +61,6 @@ export class Chapter {
     return this._summary?.value
   } // eslint-disable-line
 
-  get isRoot() {
-    return this._isRoot
-  } // eslint-disable-line
-
   get title() {
     return this._title?.value
   } // eslint-disable-line
@@ -95,7 +79,6 @@ export class Chapter {
       bookID: this.bookID,
       title: this.title,
       summary: this.summary,
-      isRoot: this.isRoot,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     }

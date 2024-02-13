@@ -8,6 +8,7 @@ import {RedisChapterRepository} from '../Repositories/RedisChapterRepository/ind
 export interface RemoveByIDChapterUseCaseInput {
   id: string
   userID: string
+  bookID: string
 }
 
 export class RemoveByIDChapterUseCase implements UseCase<RemoveByIDChapterUseCaseInput, Chapter> {
@@ -17,13 +18,14 @@ export class RemoveByIDChapterUseCase implements UseCase<RemoveByIDChapterUseCas
 
   constructor(private readonly repository: ChapterRepository, private readonly broker: Broker) {}
 
-  async execute({id: sID, userID: sUserID}: RemoveByIDChapterUseCaseInput): Promise<Chapter> {
+  async execute({id: sID, userID: sUserID, bookID: sBookID}: RemoveByIDChapterUseCaseInput): Promise<Chapter> {
     const id = ID.create({value: sID})
     const userID = ID.create({value: sUserID})
+    const bookID = ID.create({value: sBookID})
 
-    const chapter = this.repository.removeByID(id, userID)
+    const chapter = await this.repository.removeByID(id, userID)
 
-    await this.broker.emit({type: 'delete_chapter', payload: {id, userID}})
+    await this.broker.emit({type: 'delete_chapter', payload: {id, userID, bookID}})
 
     return chapter
   }

@@ -16,8 +16,7 @@ const CreateResponseSchema = z.object({
   userID: z.string({required_error: 'userID required'}),
   bookID: z.string({required_error: 'bookID required'}),
   summary: z.string({required_error: 'Summary required'}),
-  title: z.string({required_error: 'Title required'}),
-  isRoot: z.boolean({required_error: 'isRoot required'})
+  title: z.string({required_error: 'Title required'})
 })
 type CreateResponseType = z.infer<typeof CreateResponseSchema>
 
@@ -87,7 +86,6 @@ export class HTTPChapterRepository implements ChapterRepository {
       userID: ID.create({value: chapter.userID}),
       bookID: ID.create({value: chapter.bookID}),
       summary: Summary.create({value: chapter.summary}),
-      isRoot: chapter.isRoot,
       title: Title.create({value: chapter.title}),
       createdAt: TimeStamp.create({value: chapter.createdAt}),
       updatedAt: TimeStamp.create({value: chapter.updatedAt})
@@ -108,7 +106,6 @@ export class HTTPChapterRepository implements ChapterRepository {
       userID: ID.create({value: chapter.userID}),
       bookID: ID.create({value: chapter.bookID}),
       summary: Summary.create({value: chapter.summary}),
-      isRoot: chapter.isRoot,
       title: Title.create({value: chapter.title}),
       createdAt: TimeStamp.create({value: chapter.createdAt}),
       updatedAt: TimeStamp.create({value: chapter.updatedAt})
@@ -133,7 +130,6 @@ export class HTTPChapterRepository implements ChapterRepository {
           bookID: ID.create({value: chapter.bookID}),
           summary: Summary.create({value: chapter.summary}),
           title: Title.create({value: chapter.title}),
-          isRoot: chapter.isRoot,
           createdAt: TimeStamp.create({value: chapter.createdAt}),
           updatedAt: TimeStamp.create({value: chapter.updatedAt})
         })

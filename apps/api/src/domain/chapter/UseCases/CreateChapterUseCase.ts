@@ -12,7 +12,6 @@ export interface CreateChapterUseCaseInput {
   id: string
   userID: string
   bookID: string
-  isRoot: boolean
 }
 
 export class CreateChapterUseCase implements UseCase<CreateChapterUseCaseInput, Chapter> {
@@ -22,15 +21,14 @@ export class CreateChapterUseCase implements UseCase<CreateChapterUseCaseInput, 
 
   constructor(private readonly repository: ChapterRepository) {}
 
-  async execute({title, userID, bookID, summary, id, isRoot}: CreateChapterUseCaseInput): Promise<Chapter> {
+  async execute({title, userID, bookID, summary, id}: CreateChapterUseCaseInput): Promise<Chapter> {
     return this.repository.create(
       Chapter.create({
         id: ID.create({value: id}),
         userID: ID.create({value: userID}),
         bookID: ID.create({value: bookID}),
         title: Title.create({value: title}),
-        summary: Summary.create({value: summary}),
-        isRoot
+        summary: Summary.create({value: summary})
       })
     )
   }

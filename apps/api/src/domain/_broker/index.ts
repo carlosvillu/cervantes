@@ -1,8 +1,8 @@
 import debug from 'debug'
 
 import {RemoveByChapterIDBodyUseCase} from '../body/UseCases/RemoveByChapterIDBodyUseCase.js'
-import {GetAllChapterUseCase} from '../chapter/UseCases/GetAllChapterUseCase.js'
-import {UpdateChapterUseCase} from '../chapter/UseCases/UpdateChapterUseCase.js'
+import {FindByIDBookUseCase} from '../book/UseCases/FindByIDBookUseCase.js'
+import {UpdateBookUseCase} from '../book/UseCases/UpdateBookUseCase.js'
 import {RemoveByChapterIDLinkUseCase} from '../link/UseCases/RemoveByChapterIDLinkUseCase.js'
 import {Event} from './events.js'
 
@@ -20,33 +20,24 @@ export class Broker {
     log('Starting to handler event %s', event.payload)
     switch (event.type) {
       case 'delete_chapter': {
-        const {id, userID} = event.payload
+        const {id, userID, bookID} = event.payload
         await RemoveByChapterIDLinkUseCase.create().execute({id: id.value, userID: userID.value})
         await RemoveByChapterIDBodyUseCase.create().execute({id: id.value, userID: userID.value})
-        log('Event %s handled successful', event.payload)
-        break
-      }
-      case 'update_chapter_root': {
-        const {id, userID, bookID, isRoot} = event.payload
+        const book = await FindByIDBookUseCase.create().execute({id: bookID.value, userID: userID.value})
 
-        if (isRoot) {
-          const {chapters} = await GetAllChapterUseCase.create().execute({userID: userID.value, bookID: bookID.value})
-          const rootChapters = chapters.filter(chapter => chapter.isRoot)
-          const prevRootChapter = rootChapters.filter(chapter => chapter.id !== id.value)[0]
-
-          if (prevRootChapter) {
-            await UpdateChapterUseCase.create().execute({
-              id: String(prevRootChapter.id),
-              bookID: String(prevRootChapter.bookID),
-              createdAt: String(prevRootChapter.createdAt),
-              summary: String(prevRootChapter.summary),
-              title: String(prevRootChapter.title),
-              userID: String(prevRootChapter.userID),
-              isRoot: false
-            })
-            log('Event %s handled successful', event.payload)
-          }
+        if (book.rootChapterID === id.value) {
+          await UpdateBookUseCase.create().execute({
+            id: String(book.id),
+            title: String(book.title),
+            userID: String(book.userID),
+            summary: String(book.summary),
+            published: Boolean(book.published),
+            rootChapterID: undefined,
+            createdAt: String(book.createdAt)
+          })
         }
+
+        log('Event %s handled successful', event.payload)
         break
       }
     }
