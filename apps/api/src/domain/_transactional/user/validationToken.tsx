@@ -1,10 +1,6 @@
 import {Body, Container, Head, Heading, Html, Img, Link, Section, Text} from '@react-email/components'
 
-interface PlaidVerifyIdentityEmailProps {
-  validationCode?: string
-}
-
-export const PlaidVerifyIdentityEmail = ({validationCode}: PlaidVerifyIdentityEmailProps) => (
+export const VerifyEmail = ({validationCode}: {validationCode: string}) => (
   <Html>
     <Head />
     <Body style={main}>
@@ -21,6 +17,7 @@ export const PlaidVerifyIdentityEmail = ({validationCode}: PlaidVerifyIdentityEm
         <Section style={codeContainer}>
           <Text style={code}>{validationCode}</Text>
         </Section>
+        <Text style={paragraph}>Your token will be valid only for 5 minutes</Text>
         <Text style={paragraph}>Not expecting this email?</Text>
         <Text style={paragraph}>
           Contact{' '}
@@ -35,7 +32,7 @@ export const PlaidVerifyIdentityEmail = ({validationCode}: PlaidVerifyIdentityEm
   </Html>
 )
 
-export default PlaidVerifyIdentityEmail
+export default VerifyEmail
 
 const main = {
   backgroundColor: '#ffffff',

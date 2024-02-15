@@ -2,6 +2,7 @@ import type {ID} from '../../_kernel/ID.js'
 import type {AuthTokens} from '../Models/AuthTokens.js'
 import type {Token} from '../Models/Token.js'
 import type {UserToken} from '../Models/UserToken.js'
+import {ValidationStatus} from '../Models/ValidationStatus.js'
 import {ValidationToken} from '../Models/ValidationToken.js'
 
 export interface AuthRepository {
@@ -13,4 +14,5 @@ export interface AuthRepository {
   findOneByToken: (token: Token) => Promise<UserToken>
   create: (userID: string, token: string) => Promise<UserToken>
   createValidationToken: (userID: ID) => Promise<ValidationToken>
+  checkValidationToken: (id: ID, userID: ID, token: Token) => Promise<ValidationStatus>
 }

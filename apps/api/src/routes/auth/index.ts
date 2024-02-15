@@ -6,8 +6,10 @@ import {Request, Response, Router} from 'express'
 import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
 import {
+  checkValidationTokenSchema,
   loginBodySchema,
   refreshTokenBodySchema,
+  RequestCheckValidationToken,
   RequestLogin,
   RequestRefresh,
   RequestSignup,
@@ -85,3 +87,22 @@ router.post('/validationToken', auth({allowUnvalidate: true}), async (req: Reque
 
   res.status(200).json(validationToken.toJSON())
 })
+
+router.post(
+  '/validationToken/:id',
+  validate(checkValidationTokenSchema),
+  auth({allowUnvalidate: true}),
+  async (req: RequestCheckValidationToken, res: Response) => {
+    log('Checking a validation token for the user %s with the code', req.user.email, req.query.code)
+
+    const status = await req._domain.CheckValidationTokenAuthUseCase.execute({
+      id: req.params.id,
+      userID: req.user.id!,
+      token: req.query.code
+    })
+
+    if (!status.isSuccess()) return res.status(400).json({error: true, message: 'Invalid code'})
+
+    res.status(200).json(status.toJSON())
+  }
+)
