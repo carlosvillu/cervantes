@@ -1,18 +1,21 @@
 import {FC} from 'react'
-import {ActionFunctionArgs, Form, Link} from 'react-router-dom'
+import {ActionFunctionArgs, Form, Link, redirect} from 'react-router-dom'
 
+import logoURL from '../../statics/logobandwhite.png'
 import {SubmitButton} from '../../ui/SubmitButton'
 
 export const action = async ({request}: ActionFunctionArgs) => {
-  debugger
+  const validationToken = await window.domain.CreateValidationTokenAuthUseCase.execute()
+
+  return redirect(`/verify-email/${validationToken.id as string}`)
 }
 
 export const Component: FC<{}> = () => {
   return (
     <>
       <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+        <img className="mx-auto w-auto" style={{height: '230px'}} src={logoURL} alt="Your Company" />
         <div className="text-center">
-          <p className="text-base font-semibold text-indigo-600">401</p>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             The user has not yet verified their email address.
           </h1>

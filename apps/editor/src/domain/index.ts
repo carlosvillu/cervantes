@@ -7,6 +7,7 @@ import {Config} from './_config/index.js'
 /** AUTH */
 import type {LoginAuthUseCaseInput} from './auth/UseCases/LoginAuthUseCase.js'
 import type {AuthTokens} from './auth/Models/AuthTokens.js'
+import type {ValidationToken} from './auth/Models/ValidationToken.js'
 
 /** USER */
 import type {CreateUserUseCaseInput} from './user/UseCases/CreateUserUseCase.js'
@@ -65,6 +66,7 @@ export class Domain {
   /** AUTH */
   get LogoutAuthUseCase() {return this.#getter<void, AuthTokens>(async () => import('./auth/UseCases/LogoutAuthUseCase.js'), 'LogoutAuthUseCase')} // eslint-disable-line 
   get LoginAuthUseCase() {return this.#getter<LoginAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/LoginAuthUseCase.js'), 'LoginAuthUseCase')} // eslint-disable-line 
+  get CreateValidationTokenAuthUseCase() {return this.#getter<void, ValidationToken>(async () => import('./auth/UseCases/CreateValidationTokenAuthUseCase.js'), 'CreateValidationTokenAuthUseCase')} // eslint-disable-line 
 
   /** USER */
   get CreateUserUseCase() {return this.#getter<CreateUserUseCaseInput, User | DomainError>(async () => import('./user/UseCases/CreateUserUseCase.js'), 'CreateUserUseCase')} // eslint-disable-line 
