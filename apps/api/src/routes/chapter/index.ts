@@ -52,7 +52,11 @@ router.put('/:chapterID', auth(), validate(updateBodySchema), async (req: Reques
   if (req.body.id !== req.params.chapterID)
     return res.status(410).json({error: true, message: 'Imposible update the chapter'})
 
-  const chapter = await req._domain.UpdateChapterUseCase.execute({...req.body, userID: req.user.id!})
+  const chapter = await req._domain.UpdateChapterUseCase.execute({
+    ...req.body,
+    createdAt: req.body.createdAt.toString(),
+    userID: req.user.id!
+  })
 
   if (chapter.isEmpty()) return res.status(410).json({error: true, message: 'Imposible update the chapter'})
 
