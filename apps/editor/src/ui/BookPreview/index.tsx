@@ -63,7 +63,7 @@ export const BookPreview: FC<Props> = ({book, chapter, body, links, onLinkClick}
           <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-gray-800/80 to-transparent"></div>
           <div
             className="z-10 relative bg-slate-100/40 p-4 my-6 mx-2 h-fit rounded-2xl text-center text-pretty backdrop-blur-sm text-2xl"
-            dangerouslySetInnerHTML={{__html: body.content.slice(1, -1)}}
+            dangerouslySetInnerHTML={{__html: body.content?.slice(1, -1) ?? ''}}
           />
         </div>
         <div className="bg-gray-800/80 z-10">
