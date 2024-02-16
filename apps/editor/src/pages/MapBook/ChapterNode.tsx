@@ -1,7 +1,7 @@
 import {FC} from 'react'
 import {Handle, Position} from 'reactflow'
 
-export const ChapterNode: FC<{data: {label: string; chapterID: string}}> = ({data}) => {
+export const ChapterNode: FC<{data: {label: string; chapterID: string}}> = () => {
   return (
     <>
       <div className="bg-white shadow sm:rounded-lg">

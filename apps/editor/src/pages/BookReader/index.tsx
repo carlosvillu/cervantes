@@ -23,26 +23,22 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
     window.domain.GetLastCommitBodyUseCase.execute({userID: user.id!, bookID, chapterID})
   ])
 
-  const rootChapter = await window.domain.FindByIDChapterUseCase.execute({id: book.rootChapterID, bookID})
-
   return {
     book: book.toJSON(),
     chapter: chapter.toJSON(),
     links: links.toJSON().links,
-    body: bodyCommit.toJSON(),
-    rootChapter: rootChapter.toJSON()
+    body: bodyCommit.toJSON()
   }
 }
 
 export const Component: FC<{}> = () => {
   const navigate = useNavigate()
 
-  const {body, book, chapter, links, rootChapter} = useLoaderData() as {
+  const {body, book, chapter, links} = useLoaderData() as {
     body: BodyJSON
     book: BookJSON
     chapter: ChapterJSON
     links: LinkJSON[]
-    rootChapter: ChapterJSON
   }
 
   const onLinkClick = ({bookID, chapterID}: LinkClickParams) => {

@@ -33,7 +33,7 @@ export class Chapter {
   }
 
   static empty() {
-    return new Chapter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, true)
+    return new Chapter(undefined, undefined, undefined, undefined, undefined, undefined, undefined, true)
   }
 
   constructor(
