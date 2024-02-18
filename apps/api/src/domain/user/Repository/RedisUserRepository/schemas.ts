@@ -4,6 +4,7 @@ export interface UserRecord extends Entity {
   username: string
   password: string
   email: string
+  verified: boolean
 }
 
 export const userSchema = new Schema(
@@ -11,7 +12,8 @@ export const userSchema = new Schema(
   {
     username: {type: 'string'},
     password: {type: 'string'},
-    email: {type: 'string'}
+    email: {type: 'string'},
+    verified: {type: 'boolean'}
   },
   {
     dataStructure: 'JSON'

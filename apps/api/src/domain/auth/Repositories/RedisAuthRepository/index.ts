@@ -5,26 +5,28 @@ import jwt from 'jsonwebtoken'
 import type {RedisClientType} from 'redis'
 import {EntityId, Repository} from 'redis-om'
 
-import type {Config} from '../../../_config/index.js'
-import type {ID} from '../../../_kernel/ID.js'
+import {ID} from '../../../_kernel/ID.js'
+import {TimeStamp} from '../../../_kernel/TimeStamp.js'
 import {Redis} from '../../../_redis/index.js'
 import {AuthTokens} from '../../Models/AuthTokens.js'
-import type {Token} from '../../Models/Token.js'
+import {Token} from '../../Models/Token.js'
 import {UserToken} from '../../Models/UserToken.js'
+import {ValidationStatus} from '../../Models/ValidationStatus.js'
+import {ValidationToken} from '../../Models/ValidationToken.js'
 import type {AuthRepository} from '../AuthRepository.js'
-import {TokenRecord, tokenSchema} from './schemas.js'
+import {TokenRecord, tokenSchema, ValidationTokenRecord, validationTokenSchema} from './schemas.js'
 
 const {ACCESS_TOKEN_PRIVATE_KEY, REFRESH_TOKEN_PRIVATE_KEY} = process.env
 
 export class RedisAuthRepository implements AuthRepository {
+  static FIVE_MINUTES_IN_SECONDS = 5 * 60
   #indexCreated = false
   #tokenRepository: Repository | undefined = undefined
+  #validationTokenRepository: Repository | undefined = undefined
 
-  static create(config: Config) {
-    return new RedisAuthRepository(config)
+  static create() {
+    return new RedisAuthRepository()
   }
-
-  constructor(private readonly config: Config) {}
 
   async generateTokens(id: ID): Promise<AuthTokens> {
     await this.#createIndex()
@@ -126,13 +128,77 @@ export class RedisAuthRepository implements AuthRepository {
     return UserToken.create({userID: tokenRecord.userID, token: tokenRecord.token, createdAt: tokenRecord.createdAt})
   }
 
+  async checkValidationToken(id: ID, userID: ID, token: Token): Promise<ValidationStatus> {
+    await this.#createIndex()
+
+    const currentValidationTokenRecord = (await this.#validationTokenRepository
+      ?.searchRaw(`@userID:{${userID.value}} @token:{${token.value}}`)
+      .return.first()) as ValidationTokenRecord
+
+    if (!currentValidationTokenRecord) return ValidationStatus.failed()
+
+    return ValidationStatus.success()
+  }
+
+  async findByIDValidationToken(id: ID, userID: ID): Promise<ValidationToken> {
+    await this.#createIndex()
+
+    const validationToken = (await this.#validationTokenRepository?.fetch(id.value)) as ValidationTokenRecord
+
+    if (!validationToken) return ValidationToken.empty()
+    if (validationToken.userID !== userID.value) return ValidationToken.empty()
+
+    return ValidationToken.create({
+      id: ID.create({value: validationToken[EntityId]!}),
+      token: Token.create({value: validationToken.token}),
+      userID: ID.create({value: validationToken.userID}),
+      ...(validationToken.createdAt && {createdAt: TimeStamp.create({value: validationToken.createdAt})})
+    })
+  }
+
+  async createValidationToken(userID: ID): Promise<ValidationToken> {
+    await this.#createIndex()
+
+    const currentValidationTokenRecord = (await this.#validationTokenRepository
+      ?.search()
+      .where('userID')
+      .equals(userID.value)
+      .return.first()) as ValidationTokenRecord
+
+    if (currentValidationTokenRecord) {
+      await this.#validationTokenRepository?.remove(currentValidationTokenRecord[EntityId] as string)
+    }
+
+    const validationToken = ValidationToken.create({
+      id: ID.random(),
+      token: Token.sixDigitRandom(),
+      createdAt: TimeStamp.now(),
+      userID
+    })
+
+    const validationTokenRecord = await this.#validationTokenRepository?.save(
+      validationToken.id!,
+      validationToken.attributes()
+    )
+
+    if (!validationTokenRecord) return ValidationToken.empty()
+    await this.#validationTokenRepository?.expire(
+      validationTokenRecord[EntityId]!,
+      RedisAuthRepository.FIVE_MINUTES_IN_SECONDS
+    )
+
+    return validationToken
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 
     const client = (await Redis.create().createAndConnectClient()) as RedisClientType
 
     this.#tokenRepository = new Repository(tokenSchema, client)
+    this.#validationTokenRepository = new Repository(validationTokenSchema, client)
     this.#indexCreated = true
-    return this.#tokenRepository.createIndex()
+    await this.#tokenRepository.createIndex()
+    await this.#validationTokenRepository.createIndex()
   }
 }

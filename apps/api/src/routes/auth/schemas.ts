@@ -41,6 +41,21 @@ export const refreshTokenBodySchema = z.object({
   })
 })
 
+export const checkValidationTokenSchema = z.object({
+  query: z.object({
+    code: z.string({required_error: 'code is required'})
+  }),
+  params: z.object({
+    id: z.string({required_error: 'id is required'})
+  })
+})
+
+export const findByIDValidationTokenSchema = z.object({
+  params: z.object({
+    id: z.string({required_error: 'id is required'})
+  })
+})
+
 export interface RequestSignup extends Request {
   body: z.infer<typeof signupBodySchema>['body']
 }
@@ -51,4 +66,13 @@ export interface RequestLogin extends Request {
 
 export interface RequestRefresh extends Request {
   body: z.infer<typeof refreshTokenBodySchema>['body']
+}
+
+export interface RequestCheckValidationToken extends Request {
+  query: z.infer<typeof checkValidationTokenSchema>['query']
+  params: z.infer<typeof checkValidationTokenSchema>['params']
+}
+
+export interface RequestFindByIDValidationToken extends Request {
+  params: z.infer<typeof checkValidationTokenSchema>['params']
 }

@@ -17,6 +17,7 @@ declare global {
       REDIS_PASSWORD: string
       REDIS_USER: string
       SALT: string
+      RESEND_API_KEY: string
     }
   }
 }

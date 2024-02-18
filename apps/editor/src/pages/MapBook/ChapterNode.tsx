@@ -3,26 +3,26 @@ import {Handle, Position} from 'reactflow'
 
 export const ChapterNode: FC<{data: {label: string; chapterID: string}}> = ({data}) => {
   return (
-    <>
-      <div className="bg-white shadow sm:rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-base font-semibold leading-6 text-gray-900">Continuous Integration</h3>
-          <div className="mt-2 max-w-xl text-sm text-gray-500">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, totam at reprehenderit maxime aut beatae
-              ad.
-            </p>
-          </div>
-          <div className="mt-3 text-sm leading-6">
-            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-              Learn more about our CI features
-              <span aria-hidden="true"> &rarr;</span>
-            </a>
+    <div aria-live="assertive" className="pointer-events-none  inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6">
+      <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
+        <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+          <div className="p-4">
+            <div className="flex items-center">
+              <div className="flex w-0 flex-1 justify-between">
+                <p className=" flex-1 text-sm font-medium text-gray-900">Discussion archived</p>
+                <button
+                  type="button"
+                  className="ml-3 flex-shrink-0 rounded-md bg-white text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Undo
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+        <Handle type="target" position={Position.Top} className="w-16 !bg-teal-500" />
+        <Handle type="source" position={Position.Bottom} className="w-16 !bg-teal-500" />
       </div>
-      <Handle type="target" position={Position.Top} className="w-16 !bg-teal-500" />
-      <Handle type="source" position={Position.Bottom} className="w-16 !bg-teal-500" />
-    </>
+    </div>
   )
 }

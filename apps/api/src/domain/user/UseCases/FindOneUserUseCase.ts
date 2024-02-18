@@ -1,4 +1,3 @@
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {Email} from '../Models/Email.js'
 import {User} from '../Models/User.js'
@@ -10,11 +9,11 @@ export interface FindOneUserUseCaseInput {
 }
 
 export class FindOneUserUseCase implements UseCase<FindOneUserUseCaseInput, User> {
-  static create({config}: {config: Config}) {
-    return new FindOneUserUseCase(config, RedisUserRepository.create(config))
+  static create() {
+    return new FindOneUserUseCase(RedisUserRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: UserRepository) {}
+  constructor(private readonly repository: UserRepository) {}
 
   async execute({email}: FindOneUserUseCaseInput): Promise<User> {
     return this.repository.findOneByEmail(Email.create({value: email}))

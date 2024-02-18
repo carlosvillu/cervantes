@@ -71,7 +71,7 @@ export const Editor: FC<{}> = () => {
                 <Buttons editor={editor} />
               </div>
               <div className="flex flex-wrap items-center space-x-1 rtl:space-x-reverse sm:ps-4">
-                <p className="hidden pl-3 text-gray-500">saving locally...</p>
+                <p className="hidden pl-3 text-gray-500">Saving text locally...</p>
               </div>
             </div>
             <button

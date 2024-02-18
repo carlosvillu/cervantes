@@ -6,6 +6,12 @@ export interface TokenRecord extends Entity {
   createdAt: number
 }
 
+export interface ValidationTokenRecord extends Entity {
+  userID: string
+  token: string
+  createdAt: number
+}
+
 export const tokenSchema = new Schema(
   'cervantes:token',
   {
@@ -16,4 +22,14 @@ export const tokenSchema = new Schema(
   {
     dataStructure: 'JSON'
   }
+)
+
+export const validationTokenSchema = new Schema(
+  'cervantes:validationToken',
+  {
+    userID: {type: 'string'},
+    token: {type: 'string'},
+    createdAt: {type: 'number'}
+  },
+  {dataStructure: 'JSON'}
 )

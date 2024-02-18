@@ -3,7 +3,6 @@
 import type {RedisClientType} from 'redis'
 import {EntityId, Repository} from 'redis-om'
 
-import {Config} from '../../../_config/index.js'
 import {ID} from '../../../_kernel/ID.js'
 import {Redis} from '../../../_redis/index.js'
 import {Email} from '../../Models/Email.js'
@@ -17,11 +16,9 @@ export class RedisUserRepository implements UserRepository {
   #indexCreated = false
   #userRepository: Repository | undefined = undefined
 
-  static create(config: Config) {
-    return new RedisUserRepository(config)
+  static create() {
+    return new RedisUserRepository()
   }
-
-  constructor(private readonly config: Config) {}
 
   async findByID(id: ID): Promise<User> {
     await this.#createIndex()
@@ -33,8 +30,28 @@ export class RedisUserRepository implements UserRepository {
       id: userRecord[EntityId] as string,
       email: userRecord.email,
       username: userRecord.username,
-      password: userRecord.password
+      password: userRecord.password,
+      verified: userRecord.verified
     }).cleanUpSensitive()
+  }
+
+  async validateEmailByID(id: ID): Promise<User> {
+    await this.#createIndex()
+    const userRecord = (await this.#userRepository?.fetch(id.value)) as UserRecord
+
+    if (userRecord === null || userRecord === undefined) return User.empty()
+
+    const user = User.create({
+      id: userRecord[EntityId] as string,
+      email: userRecord.email,
+      username: userRecord.username,
+      password: userRecord.password,
+      verified: true
+    })
+
+    await this.#userRepository?.save(user.id!, user.attributes())
+
+    return user.cleanUpSensitive()
   }
 
   async findOneByEmail(email: Email): Promise<User> {
@@ -51,7 +68,8 @@ export class RedisUserRepository implements UserRepository {
       id: userRecord[EntityId] as string,
       email: userRecord.email,
       username: userRecord.username,
-      password: userRecord.password
+      password: userRecord.password,
+      verified: userRecord.verified
     })
   }
 
