@@ -67,7 +67,7 @@ export class RedisChapterRepository implements ChapterRepository {
     await this.#createIndex()
 
     const chaptersRecords = (await this.#chapterRepository
-      ?.searchRaw(`@userID:{${userID.value} @bookID:{${bookID.value}}`)
+      ?.searchRaw(`@userID:{${userID.value}} @bookID:{${bookID.value}}`)
       .return.all()) as ChapterRecord[]
 
     if (chaptersRecords === null || chaptersRecords === undefined) return Chapters.empty()

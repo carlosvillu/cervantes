@@ -28,7 +28,7 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
 
   @InvalidateCache({
     references: (arg: UpdateChapterUseCaseInput, _response) => {
-      return ['chapter:' + arg.id, 'chapter:all:' + arg.bookID]
+      return ['chapter:' + arg.id, 'chapter:all:' + arg.bookID, 'chapter:root']
     }
   } as const as InvalidateCacheConfig<Chapter>)
   async execute({title, userID, bookID, summary, id, createdAt}: UpdateChapterUseCaseInput): Promise<Chapter> {

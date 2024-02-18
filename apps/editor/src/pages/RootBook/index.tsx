@@ -2,6 +2,7 @@ import {FC} from 'react'
 import {ActionFunctionArgs, NavLink, Outlet, useLoaderData, useNavigate, useParams} from 'react-router-dom'
 
 import {BookJSON} from '../../domain/book/Models/Book'
+import {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import {classNames} from '../../js/css'
 import {capitalizaFirstLetter} from '../../js/string'
 
@@ -9,17 +10,23 @@ export const loader = async ({params}: ActionFunctionArgs) => {
   const {bookID} = params as {bookID: string}
 
   const book = await window.domain.FindByIDBookUseCase.execute({id: bookID})
+  const rootChapter = await window.domain.FindByIDChapterUseCase.execute({id: book.rootChapterID, bookID})
 
-  return {book: book.toJSON()}
+  return {book: book.toJSON(), rootChapter: rootChapter.toJSON()}
 }
 
 export const Component: FC<{}> = () => {
-  const {book} = useLoaderData() as {book: BookJSON}
+  const {book, rootChapter} = useLoaderData() as {book: BookJSON; rootChapter: ChapterJSON}
   const {bookID} = useParams() as {bookID: string}
   const navigate = useNavigate()
   const tabs = [
     {to: `/book/${bookID}`, title: 'Info'},
-    {to: `/book/${bookID}/map`, title: 'Map'}
+    {to: `/book/${bookID}/map`, title: 'Map'},
+    {
+      to: `/book/${bookID}/preview/${String(rootChapter?.id)}`,
+      title: 'Preview',
+      disabled: !rootChapter?.id
+    }
   ]
 
   return (
@@ -66,25 +73,27 @@ export const Component: FC<{}> = () => {
           </div>
           <div className="hidden sm:block">
             <nav className="-mb-px flex space-x-8">
-              {tabs.map(tab => {
-                return (
-                  <NavLink
-                    end
-                    key={tab.to}
-                    to={tab.to}
-                    className={({isActive}) => {
-                      return classNames(
-                        isActive
-                          ? 'border-indigo-500 text-indigo-600'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                        'whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium'
-                      )
-                    }}
-                  >
-                    {tab.title}
-                  </NavLink>
-                )
-              })}
+              {tabs
+                .filter(tab => !tab.disabled)
+                .map(tab => {
+                  return (
+                    <NavLink
+                      end
+                      key={tab.to}
+                      to={tab.to}
+                      className={({isActive}) => {
+                        return classNames(
+                          isActive
+                            ? 'border-indigo-500 text-indigo-600'
+                            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                          'whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium'
+                        )
+                      }}
+                    >
+                      {tab.title}
+                    </NavLink>
+                  )
+                })}
             </nav>
           </div>
         </div>

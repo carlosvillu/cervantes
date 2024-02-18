@@ -41,7 +41,14 @@ export const action = async ({request}: ActionFunctionArgs) => {
       summary: string
     }
 
-    const chapter = await window.domain.UpdateChapterUseCase.execute({bookID, createdAt, id, summary, title, userID})
+    const chapter = await window.domain.UpdateChapterUseCase.execute({
+      bookID,
+      createdAt,
+      id,
+      summary,
+      title,
+      userID
+    })
 
     if (chapter.isEmpty()) return {success: false}
 

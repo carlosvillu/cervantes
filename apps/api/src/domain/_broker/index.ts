@@ -1,6 +1,8 @@
 import debug from 'debug'
 
 import {RemoveByChapterIDBodyUseCase} from '../body/UseCases/RemoveByChapterIDBodyUseCase.js'
+import {FindByIDBookUseCase} from '../book/UseCases/FindByIDBookUseCase.js'
+import {UpdateBookUseCase} from '../book/UseCases/UpdateBookUseCase.js'
 import {RemoveByChapterIDLinkUseCase} from '../link/UseCases/RemoveByChapterIDLinkUseCase.js'
 import {ValidateEmailByIDUserUseCase} from '../user/UseCases/ValidateEmailByIDUserUseCase.js'
 import {Event} from './events.js'
@@ -19,9 +21,23 @@ export class Broker {
     log('Starting to handler event %s', event.payload)
     switch (event.type) {
       case 'delete_chapter': {
-        const {id, userID} = event.payload
+        const {id, userID, bookID} = event.payload
         await RemoveByChapterIDLinkUseCase.create().execute({id: id.value, userID: userID.value})
         await RemoveByChapterIDBodyUseCase.create().execute({id: id.value, userID: userID.value})
+        const book = await FindByIDBookUseCase.create().execute({id: bookID.value, userID: userID.value})
+
+        if (book.rootChapterID === id.value) {
+          await UpdateBookUseCase.create().execute({
+            id: String(book.id),
+            title: String(book.title),
+            userID: String(book.userID),
+            summary: String(book.summary),
+            published: Boolean(book.published),
+            rootChapterID: undefined,
+            createdAt: String(book.createdAt)
+          })
+        }
+
         log('Event %s handled successful', event.payload)
         break
       }

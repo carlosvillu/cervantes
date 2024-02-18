@@ -33,9 +33,16 @@ export const loader = async ({params}: LoaderFunctionArgs) => {
     window.domain.GetAllChapterUseCase.execute({bookID})
   ])
 
+  const rootChapter = chapters.chapters.find(chapter => chapter.id === book.rootChapterID)
+
   if (book.isEmpty()) redirect('/book-not-found')
 
-  return {book: book.toJSON(), user: user.toJSON(), chapters: chapters.toJSON().chapters}
+  return {
+    book: book.toJSON(),
+    user: user.toJSON(),
+    chapters: chapters.toJSON().chapters,
+    rootChapter: rootChapter ? rootChapter.toJSON() : null
+  }
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -86,7 +93,12 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 export const Component: FC<{}> = () => {
-  const {book, chapters, user} = useLoaderData() as {book: BookJSON; user: UserJSON; chapters: ChapterJSON[]}
+  const {book, chapters, user, rootChapter} = useLoaderData() as {
+    book: BookJSON
+    user: UserJSON
+    chapters: ChapterJSON[]
+    rootChapter: ChapterJSON
+  }
   const {success} = (useActionData() ?? {}) as {success?: boolean}
   const [openOverlay, setOpenOVerlay] = useState(false)
 
@@ -171,6 +183,12 @@ export const Component: FC<{}> = () => {
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">Summary</dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{book.summary}</dd>
+          </div>
+          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt className="text-sm font-medium leading-6 text-gray-900">Root chapter</dt>
+            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              {rootChapter?.title ? rootChapter.title : 'None (Add root chapter to see the preview)'}
+            </dd>
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">Chapters</dt>

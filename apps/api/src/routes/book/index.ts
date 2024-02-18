@@ -26,7 +26,7 @@ router.post('/', auth(), validate(createBodySchema), async (req: RequestCreate, 
 })
 
 router.get('/', auth(), async (req: Request, res: Response) => {
-  log(`Geting all books for user ${req.user.id!}`)
+  log(`Getting all books for user ${req.user.id!}`)
 
   const books = await req._domain.GetAllBookUseCase.execute({userID: req.user.id!})
 

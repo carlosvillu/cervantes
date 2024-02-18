@@ -27,6 +27,7 @@ const router = createBrowserRouter(
       <Route path="/faqs" lazy={async () => import('./pages/FAQs')} />
       <Route path="/no-verified-user" lazy={async () => import('./pages/UserNotVerified')} />
       <Route path="/verify-email/:tokenID" lazy={async () => import('./pages/VerifyEmail')} />
+      <Route path="/reader/:bookID/:chapterID" lazy={async () => import('./pages/BookReader')} />
       <Route path="/" lazy={async () => import('./pages/Root')} errorElement={<ErrorPage />}>
         <Route index lazy={async () => import('./pages/Index')} />
         <Route path="new-book" lazy={async () => import('./pages/NewBook')} />
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
           <Route index lazy={async () => import('./pages/IndexBook')} />
           <Route path="map" lazy={async () => import('./pages/MapBook')} />
           <Route path="edit" lazy={async () => import('./pages/EditBook')} />
+          <Route path="preview/:chapterID" lazy={async () => import('./pages/BookPreview')} />
         </Route>
         <Route path="book/:bookID/chapter/:chapterID" lazy={async () => import('./pages/RootChapter')}>
           <Route index lazy={async () => import('./pages/IndexChapter')} />

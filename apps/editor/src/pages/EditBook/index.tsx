@@ -5,19 +5,26 @@ import {FormCreateOrEditBook} from '../../ui/FormCreateOrEditBook'
 
 export const loader = async ({params}: LoaderFunctionArgs) => {
   const {bookID} = params as {bookID: string}
-  const user = await window.domain.CurrentUserUseCase.execute()
-  const book = await window.domain.FindByIDBookUseCase.execute({id: bookID})
 
-  return {user, book}
+  const [book, user, chapters] = await Promise.all([
+    window.domain.FindByIDBookUseCase.execute({id: bookID}),
+    window.domain.CurrentUserUseCase.execute(),
+    window.domain.GetAllChapterUseCase.execute({bookID})
+  ])
+
+  return {user, book, chapters}
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
-  const {id, userID, title, published, summary, createdAt} = Object.fromEntries(await request.formData()) as {
+  const {id, userID, title, published, summary, rootChapterID, createdAt} = Object.fromEntries(
+    await request.formData()
+  ) as {
     id: string
     userID: string
     title: string
     summary: string
     createdAt: string
+    rootChapterID: string
     published: string
   }
 
@@ -27,6 +34,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     published: published === 'on',
     title,
     userID,
+    rootChapterID,
     createdAt
   })
 
