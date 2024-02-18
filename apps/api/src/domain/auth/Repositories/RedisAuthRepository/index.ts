@@ -140,6 +140,22 @@ export class RedisAuthRepository implements AuthRepository {
     return ValidationStatus.success()
   }
 
+  async findByIDValidationToken(id: ID, userID: ID): Promise<ValidationToken> {
+    await this.#createIndex()
+
+    const validationToken = (await this.#validationTokenRepository?.fetch(id.value)) as ValidationTokenRecord
+
+    if (!validationToken) return ValidationToken.empty()
+    if (validationToken.userID !== userID.value) return ValidationToken.empty()
+
+    return ValidationToken.create({
+      id: ID.create({value: validationToken[EntityId]!}),
+      token: Token.create({value: validationToken.token}),
+      userID: ID.create({value: validationToken.userID}),
+      ...(validationToken.createdAt && {createdAt: TimeStamp.create({value: validationToken.createdAt})})
+    })
+  }
+
   async createValidationToken(userID: ID): Promise<ValidationToken> {
     await this.#createIndex()
 

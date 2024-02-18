@@ -15,4 +15,5 @@ export interface AuthRepository {
   create: (userID: string, token: string) => Promise<UserToken>
   createValidationToken: (userID: ID) => Promise<ValidationToken>
   checkValidationToken: (id: ID, userID: ID, token: Token) => Promise<ValidationStatus>
+  findByIDValidationToken: (id: ID, userID: ID) => Promise<ValidationToken>
 }

@@ -46,7 +46,13 @@ export const checkValidationTokenSchema = z.object({
     code: z.string({required_error: 'code is required'})
   }),
   params: z.object({
-    id: z.string({required_error: 'validationTokenID is required'})
+    id: z.string({required_error: 'id is required'})
+  })
+})
+
+export const findByIDValidationTokenSchema = z.object({
+  params: z.object({
+    id: z.string({required_error: 'id is required'})
   })
 })
 
@@ -64,5 +70,9 @@ export interface RequestRefresh extends Request {
 
 export interface RequestCheckValidationToken extends Request {
   query: z.infer<typeof checkValidationTokenSchema>['query']
+  params: z.infer<typeof checkValidationTokenSchema>['params']
+}
+
+export interface RequestFindByIDValidationToken extends Request {
   params: z.infer<typeof checkValidationTokenSchema>['params']
 }

@@ -25,7 +25,7 @@ export class ValidationToken {
   constructor(
     private readonly _id?: ID,
     private readonly _userID?: ID,
-    private readonly _token?: Token,
+    private _token?: Token,
     private readonly _createdAt?: TimeStamp,
     public readonly empty?: boolean
   ) {}
@@ -34,6 +34,11 @@ export class ValidationToken {
   get userID() {return this._userID?.value} // eslint-disable-line
   get token() {return this._token?.value} // eslint-disable-line
   get createdAt() {return this._createdAt?.value} // eslint-disable-line
+
+  cleanUpSensitive() {
+    this._token = Token.create({value: '[REDACTED]'})
+    return this
+  }
 
   isEmpty() {
     return this.empty !== undefined && this.empty

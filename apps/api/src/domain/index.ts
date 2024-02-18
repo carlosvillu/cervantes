@@ -13,6 +13,7 @@ import type {VerifyRefreshTokenAuthUseCaseInput} from './auth/UseCases/VerifyRef
 import type {RemoveUserTokenAuthUseCaseInput} from './auth/UseCases/RemoveUserTokenAuthUseCase.js'
 import type {SendValidationCodeAuthUseCaseInput} from './auth/UseCases/SendValidationCodeAuthUseCase.js'
 import type {CheckValidationTokenAuthUseCaseInput} from './auth/UseCases/CheckValidationTokenAuthUseCase.js'
+import type {FindByIDValidationTokenAuthUseCaseInput} from './auth/UseCases/FindByIDValidationTokenAuthUseCase.js'
 import type {ValidationStatus} from './auth/Models/ValidationStatus.js'
 
 /** User */
@@ -81,6 +82,7 @@ export class Domain {
   get RemoveUserTokenAuthUseCase() {return this.#getter<RemoveUserTokenAuthUseCaseInput, AuthTokens>(async () => import('./auth/UseCases/RemoveUserTokenAuthUseCase.js'), 'RemoveUserTokenAuthUseCase')} // eslint-disable-line 
   get SendValidationCodeAuthUseCase() {return this.#getter<SendValidationCodeAuthUseCaseInput, ValidationToken>(async () => import('./auth/UseCases/SendValidationCodeAuthUseCase.js'), 'SendValidationCodeAuthUseCase')} // eslint-disable-line 
   get CheckValidationTokenAuthUseCase() {return this.#getter<CheckValidationTokenAuthUseCaseInput, ValidationStatus>(async () => import('./auth/UseCases/CheckValidationTokenAuthUseCase.js'), 'CheckValidationTokenAuthUseCase')} // eslint-disable-line 
+  get FindByIDValidationTokenAuthUseCase() {return this.#getter<FindByIDValidationTokenAuthUseCaseInput, ValidationToken>(async () => import('./auth/UseCases/FindByIDValidationTokenAuthUseCase.js'), 'FindByIDValidationTokenAuthUseCase')} // eslint-disable-line 
 
   /** User */
   get FindByIDUserUseCase() {return this.#getter<FindByIDUserUseCaseInput, User>(async () => import('./user/UseCases/FindByIDUserUseCase.js'), 'FindByIDUserUseCase')} // eslint-disable-line 

@@ -7,9 +7,11 @@ import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
 import {
   checkValidationTokenSchema,
+  findByIDValidationTokenSchema,
   loginBodySchema,
   refreshTokenBodySchema,
   RequestCheckValidationToken,
+  RequestFindByIDValidationToken,
   RequestLogin,
   RequestRefresh,
   RequestSignup,
@@ -104,5 +106,23 @@ router.post(
     if (!status.isSuccess()) return res.status(400).json({error: true, message: 'Invalid code'})
 
     res.status(200).json(status.toJSON())
+  }
+)
+
+router.get(
+  '/validationToken/:id',
+  validate(findByIDValidationTokenSchema),
+  auth({allowUnvalidate: true}),
+  async (req: RequestFindByIDValidationToken, res: Response) => {
+    log('Find by ID validation token for the user %s with the id', req.user.email, req.params.id)
+
+    const validationToken = await req._domain.FindByIDValidationTokenAuthUseCase.execute({
+      id: req.params.id,
+      userID: req.user.id!
+    })
+
+    if (validationToken.isEmpty()) return res.status(400).json({error: true, message: 'Invalid validation token'})
+
+    res.status(200).json(validationToken.cleanUpSensitive().toJSON())
   }
 )
