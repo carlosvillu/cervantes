@@ -12,7 +12,7 @@ export class LogoutAuthUseCase implements UseCase<void, AuthTokens> {
 
   constructor(private readonly repository: AuthRepository) {}
 
-  @InvalidateCache({references: () => ['user:*']} as const as InvalidateCacheConfig<AuthTokens>)
+  @InvalidateCache({references: () => ['*']} as const as InvalidateCacheConfig<AuthTokens>)
   async execute(): Promise<AuthTokens> {
     const authTokens = await this.repository.logout()
 
