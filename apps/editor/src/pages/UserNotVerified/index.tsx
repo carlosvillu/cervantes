@@ -1,10 +1,10 @@
 import {FC} from 'react'
-import {ActionFunctionArgs, Form, Link, redirect} from 'react-router-dom'
+import {Form, Link, redirect} from 'react-router-dom'
 
 import logoURL from '../../statics/logobandwhite.png'
 import {SubmitButton} from '../../ui/SubmitButton'
 
-export const action = async ({request}: ActionFunctionArgs) => {
+export const action = async () => {
   const validationToken = await window.domain.CreateValidationTokenAuthUseCase.execute()
 
   return redirect(`/verify-email/${validationToken.id as string}`)

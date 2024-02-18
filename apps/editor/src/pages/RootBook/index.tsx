@@ -10,7 +10,7 @@ export const loader = async ({params}: ActionFunctionArgs) => {
   const {bookID} = params as {bookID: string}
 
   const book = await window.domain.FindByIDBookUseCase.execute({id: bookID})
-  const rootChapter = await window.domain.FindByIDChapterUseCase.execute({id: book.rootChapterID, bookID})
+  const rootChapter = await window.domain.FindByIDChapterUseCase.execute({id: book.rootChapterID!, bookID})
 
   return {book: book.toJSON(), rootChapter: rootChapter.toJSON()}
 }
