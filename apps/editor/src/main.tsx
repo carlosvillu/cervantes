@@ -34,6 +34,7 @@ const router = createBrowserRouter(
         <Route path="book/:bookID" lazy={async () => import('./pages/RootBook')}>
           <Route index lazy={async () => import('./pages/IndexBook')} />
           <Route path="map" lazy={async () => import('./pages/MapBook')} />
+          <Route path="images" lazy={async () => import('./pages/ImagenesBook')} />
           <Route path="edit" lazy={async () => import('./pages/EditBook')} />
           <Route path="preview/:chapterID" lazy={async () => import('./pages/BookPreview')} />
         </Route>
