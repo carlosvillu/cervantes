@@ -22,7 +22,7 @@ export class ResendEmailer implements Emailer {
       from: ResendEmailer.FROM,
       to: email.value,
       subject: 'Validate your email',
-      react: <VerifyEmail validationCode={validationToken.token} />
+      react: <VerifyEmail validationCode={validationToken.token!} />
     })
     return validationToken
   }
