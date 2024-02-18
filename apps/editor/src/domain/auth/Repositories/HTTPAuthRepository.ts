@@ -9,6 +9,7 @@ import {AuthTokens} from '../Models/AuthTokens'
 import {Email} from '../Models/Email'
 import {PlainPassword} from '../Models/PlainPassword'
 import {Token} from '../Models/Token'
+import {ValidationStatus} from '../Models/ValidationStatus'
 import {ValidationToken} from '../Models/ValidationToken'
 import type {AuthRepository} from './AuthRepository'
 
@@ -25,6 +26,11 @@ const ValidationTokenResponseSchema = z.object({
   createdAt: z.number({required_error: 'createdAt required'})
 })
 type ValidationTokenResponseType = z.infer<typeof ValidationTokenResponseSchema>
+
+const CheckValidationTokenResponseSchema = z.object({
+  value: z.boolean({required_error: 'value is required'})
+})
+type CheckValidationTokenResponseType = z.infer<typeof ValidationTokenResponseSchema>
 
 export class HTTPAuthRepository implements AuthRepository {
   static create(config: Config) {
@@ -68,5 +74,34 @@ export class HTTPAuthRepository implements AuthRepository {
       token: Token.create({value: response.token}),
       createdAt: TimeStamp.create({value: response.createdAt})
     })
+  }
+
+  async findByIDValidationToken(id: ID): Promise<ValidationToken> {
+    const [error, response] = await this.fetcher.get<ValidationTokenResponseType>(
+      this.config.get('API_HOST') + `/auth/validationToken/${id.value as string}`,
+      {},
+      ValidationTokenResponseSchema
+    )
+
+    if (error) return ValidationToken.empty()
+
+    return ValidationToken.create({
+      id: ID.create({value: response.id}),
+      userID: ID.create({value: response.userID}),
+      token: Token.create({value: response.token}),
+      createdAt: TimeStamp.create({value: response.createdAt})
+    })
+  }
+
+  async checkValidationToken(id: ID, code: Token): Promise<ValidationStatus> {
+    const [error] = await this.fetcher.post<CheckValidationTokenResponseType>(
+      this.config.get('API_HOST') + '/auth/validationToken/' + id.value + '?code=' + code.value,
+      {body: {}},
+      CheckValidationTokenResponseSchema
+    )
+
+    if (error) return ValidationStatus.failed()
+
+    return ValidationStatus.success()
   }
 }

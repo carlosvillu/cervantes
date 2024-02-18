@@ -10,6 +10,7 @@ import {Email} from '../Models/Email'
 import {PlainPassword} from '../Models/PlainPassword'
 import {User} from '../Models/User'
 import {Username} from '../Models/Username'
+import {VerifiedStatus} from '../Models/VerifiedStatus'
 import type {UserRepository} from './UserRepository'
 
 const CreateResponseSchema = z.object({
@@ -34,7 +35,7 @@ export class HTTPUserRepository implements UserRepository {
   constructor(private readonly config: Config, private readonly fetcher: Fetcher) {}
 
   async create(id: ID, username: Username, email: Email, password: PlainPassword): Promise<User> {
-    const user = User.create({id, username, email, password})
+    const user = User.create({id, username, email, password, verified: VerifiedStatus.failed()})
 
     const [error, response] = await this.fetcher.post<CreateResponseType>(
       this.config.get('API_HOST') + '/auth/signup',
@@ -69,7 +70,8 @@ export class HTTPUserRepository implements UserRepository {
       email: Email.create({value: response.email}),
       username: Username.create({value: response.username}),
       id: ID.create({value: response.id}),
-      password: PlainPassword.create({value: '[REDACTED]'})
+      password: PlainPassword.create({value: '[REDACTED]'}),
+      ...(response.verified && {verified: VerifiedStatus.create({value: response.verified})})
     })
   }
 }

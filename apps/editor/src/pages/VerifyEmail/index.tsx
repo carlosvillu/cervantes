@@ -1,18 +1,46 @@
-import {FC, useReducer} from 'react'
-import {ActionFunctionArgs, Form, Link, LoaderFunctionArgs} from 'react-router-dom'
+import {FC, useEffect, useReducer, useState} from 'react'
+import {
+  ActionFunctionArgs,
+  Form,
+  Link,
+  LoaderFunctionArgs,
+  redirect,
+  useActionData,
+  useLoaderData
+} from 'react-router-dom'
+
+import dayjs from 'dayjs'
 
 import logoURL from '../../statics/logobandwhite.png'
+import {Notification} from '../../ui/Notification'
 import {SubmitButton} from '../../ui/SubmitButton'
 
-export const loader = ({params}: LoaderFunctionArgs) => {
+export const FIVE_MINUTES = 5 * 60 /* seconds */
+export const ONE_SECOND = 1000 /* miliseconds */
+
+export const loader = async ({params}: LoaderFunctionArgs) => {
   const {tokenID} = params as {tokenID: string}
 
-  debugger
-  return null
+  const validationToken = await window.domain.FindByIDValidationTokenAuthUseCase.execute({id: tokenID})
+
+  if (validationToken.isEmpty()) return redirect('/no-verified-user')
+
+  const created = dayjs(validationToken.createdAt)
+  const deadline = created.add(5, 'minutes')
+  const remaining = dayjs(deadline).subtract(Date.now())
+
+  return {remaining: remaining.unix()}
 }
 
-export const action = ({request}: ActionFunctionArgs) => {
-  return null
+export const action = async ({request, params}: ActionFunctionArgs) => {
+  const {tokenID} = params as {tokenID: string}
+  const {code} = Object.fromEntries(await request.formData()) as {code: string}
+
+  const status = await window.domain.CheckValidationTokenAuthUseCase.execute({id: tokenID, code})
+
+  if (!status.isSuccess()) return {success: false}
+
+  return redirect('/')
 }
 
 const STATE_INIT = {first: '', second: '', third: '', fourth: '', fifth: '', sixth: ''}
@@ -48,11 +76,28 @@ const reducer = (state: State, action: Action) => {
 }
 
 export const Component: FC<{}> = () => {
+  const {remaining} = useLoaderData() as {remaining: number}
+  const [remainingState, setRemainingState] = useState(remaining)
   const [state, dispatch] = useReducer(reducer, STATE_INIT)
   const code = Object.values(state).join('')
+  const {success} = (useActionData() ?? {}) as {success?: boolean}
+
+  const createdFailed = success === false
+
+  useEffect(() => {
+    const intervalID = setInterval(() => {
+      const nexRemaining = remainingState - 1
+      setRemainingState(nexRemaining)
+
+      if (nexRemaining === 0) redirect('/no-verified-user')
+    }, ONE_SECOND)
+
+    return () => clearInterval(intervalID)
+  })
 
   return (
     <>
+      {createdFailed ? <Notification status="error" title="Code not valid" /> : null}
       <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
         <img className="mx-auto w-auto" style={{height: '230px'}} src={logoURL} alt="Your Company" />
         <div className="text-center">
@@ -151,7 +196,8 @@ export const Component: FC<{}> = () => {
               </div>
             </div>
             <p id="helper-text-explanation" className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              remaining time XXX
+              remaining time {Math.floor(remainingState / 60)}:
+              {String(remainingState % 60).length === 1 ? '0' + (remainingState % 60) : remainingState % 60}
             </p>
 
             <div className="mt-10 flex items-center justify-center gap-x-6">
