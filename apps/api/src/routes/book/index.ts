@@ -51,7 +51,6 @@ router.put('/:bookID', auth(), validate(updateBodySchema), async (req: RequestUp
 
   const book = await req._domain.UpdateBookUseCase.execute({
     ...req.body,
-    createdAt: String(req.body.createdAt),
     userID: req.user.id!,
     id: req.params.bookID
   })
