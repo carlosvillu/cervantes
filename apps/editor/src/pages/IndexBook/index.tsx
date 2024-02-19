@@ -67,13 +67,14 @@ export const action = async ({request}: ActionFunctionArgs) => {
   }
 
   if (intent === 'toogle-publish-status') {
-    const {id, userID, title, published, summary, createdAt} = Object.fromEntries(formData) as {
+    const {id, userID, title, published, summary, createdAt, rootChapterID} = Object.fromEntries(formData) as {
       id: string
       userID: string
       title: string
       summary: string
       createdAt: string
       published: string
+      rootChapterID: string
     }
 
     const isPublished = published === 'on'
@@ -84,7 +85,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
       published: nextPublishValue,
       title,
       userID,
-      createdAt
+      createdAt,
+      rootChapterID
     })
     if (book.isEmpty()) return {success: false}
 
@@ -140,6 +142,7 @@ export const Component: FC<{}> = () => {
             <input id="title" name="title" type="hidden" value={book?.title} />
             <input id="summary" name="summary" type="hidden" value={book?.summary} />
             <input id="createdAt" name="createdAt" type="hidden" value={book?.createdAt} />
+            <input id="rootChapterID" name="rootChapterID" type="hidden" value={book?.rootChapterID} />
             <input
               id="published"
               name="published"

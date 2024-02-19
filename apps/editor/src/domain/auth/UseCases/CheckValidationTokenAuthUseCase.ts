@@ -1,5 +1,7 @@
 import {z} from 'zod'
 
+import {InvalidateCache, InvalidateCacheConfig} from '@cervantes/decorators'
+
 import {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
@@ -23,6 +25,7 @@ export class CheckValidationTokenAuthUseCase
 
   constructor(private readonly repository: AuthRepository) {}
 
+  @InvalidateCache({references: () => ['*']} as const as InvalidateCacheConfig<ValidationStatus>)
   async execute({id, code}: CheckValidationTokenAuthUseCaseInput): Promise<ValidationStatus> {
     const validationToken = await this.repository.checkValidationToken(
       ID.create({value: id}),
