@@ -1,4 +1,3 @@
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {Password} from '../Models/Password.js'
 import {User} from '../Models/User.js'
@@ -13,11 +12,11 @@ export interface CreateUserUseCaseInput {
 }
 
 export class CreateUserUseCase implements UseCase<CreateUserUseCaseInput, User> {
-  static create({config}: {config: Config}) {
-    return new CreateUserUseCase(config, RedisUserRepository.create(config))
+  static create() {
+    return new CreateUserUseCase(RedisUserRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: UserRepository) {}
+  constructor(private readonly repository: UserRepository) {}
 
   async execute({email, username, password, id}: CreateUserUseCaseInput): Promise<User> {
     const pass = await Password.create({value: password}).hash()

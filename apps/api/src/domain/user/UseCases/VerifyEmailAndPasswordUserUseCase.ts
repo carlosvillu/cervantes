@@ -1,4 +1,3 @@
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {Email} from '../Models/Email.js'
 import {PlainPassword} from '../Models/PlainPassword.js'
@@ -12,11 +11,11 @@ export interface VerifyEmailAndPasswordUserUseCaseInput {
 }
 
 export class VerifyEmailAndPasswordUserUseCase implements UseCase<VerifyEmailAndPasswordUserUseCaseInput, User> {
-  static create({config}: {config: Config}) {
-    return new VerifyEmailAndPasswordUserUseCase(config, RedisUserRepository.create(config))
+  static create() {
+    return new VerifyEmailAndPasswordUserUseCase(RedisUserRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: UserRepository) {}
+  constructor(private readonly repository: UserRepository) {}
 
   async execute({email, password}: VerifyEmailAndPasswordUserUseCaseInput): Promise<User> {
     const pass = PlainPassword.create({value: password})

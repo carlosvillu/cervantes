@@ -54,7 +54,7 @@ router.put('/:chapterID', auth(), validate(updateBodySchema), async (req: Reques
 
   const chapter = await req._domain.UpdateChapterUseCase.execute({
     ...req.body,
-    createdAt: req.body.createdAt.toString(),
+    createdAt: String(req.body.createdAt),
     userID: req.user.id!
   })
 

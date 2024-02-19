@@ -64,6 +64,7 @@ export class WindowFetcher implements Fetcher {
       }
 
       let resp = await window.fetch(url, generateOptions())
+      const respCloned = resp.clone()
 
       if (resp.status === 403) {
         await this.#revalidateCredentials()
@@ -77,7 +78,7 @@ export class WindowFetcher implements Fetcher {
         return [undefined, json]
       }
 
-      throw resp // eslint-disable-line 
+      throw respCloned // eslint-disable-line 
     } catch (resp) {
       return [resp as Response, undefined]
     }

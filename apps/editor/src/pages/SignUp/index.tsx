@@ -3,6 +3,8 @@ import {ActionFunctionArgs, Form, Link, redirect, useActionData} from 'react-rou
 
 import {ulid} from 'ulid'
 
+import {DomainError} from '../../domain/_kernel/DomainError'
+import {ErrorCodes} from '../../domain/_kernel/ErrorCodes'
 import logoURL from '../../statics/logobandwhite.png'
 import {SubmitButton} from '../../ui/SubmitButton'
 
@@ -15,6 +17,11 @@ export const action = async ({request}: ActionFunctionArgs) => {
   }
 
   const user = await window.domain.CreateUserUseCase.execute({id, email, username, password})
+
+  if (user instanceof DomainError && user.errors.find(error => error.message === ErrorCodes.USER_LOGIN_NOT_VERIFIED))
+    return redirect('/no-verified-user')
+
+  if (user instanceof DomainError) throw user
 
   if (user.isEmpty()) return {success: false}
   return redirect('/')

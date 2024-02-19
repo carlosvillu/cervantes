@@ -2,11 +2,12 @@ import {type CacheConfig, Cache} from '@cervantes/decorators'
 
 import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
+import {DomainError} from '../../_kernel/DomainError.ts'
 import {User} from '../Models/User.ts'
 import {HTTPUserRepository} from '../Repositories/HTTPUserRepository.js'
 import type {UserRepository} from '../Repositories/UserRepository.js'
 
-export class CurrentUserUseCase implements UseCase<void, User> {
+export class CurrentUserUseCase implements UseCase<void, User | DomainError> {
   static create({config}: {config: Config}) {
     return new CurrentUserUseCase(HTTPUserRepository.create(config))
   }
@@ -20,7 +21,7 @@ export class CurrentUserUseCase implements UseCase<void, User> {
       return ['user:' + result.id]
     }
   } as const as CacheConfig<User>)
-  async execute(): Promise<User> {
+  async execute(): Promise<User | DomainError> {
     return this.repository.current()
   }
 }

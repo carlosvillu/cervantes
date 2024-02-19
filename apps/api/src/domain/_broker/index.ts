@@ -4,6 +4,7 @@ import {RemoveByChapterIDBodyUseCase} from '../body/UseCases/RemoveByChapterIDBo
 import {FindByIDBookUseCase} from '../book/UseCases/FindByIDBookUseCase.js'
 import {UpdateBookUseCase} from '../book/UseCases/UpdateBookUseCase.js'
 import {RemoveByChapterIDLinkUseCase} from '../link/UseCases/RemoveByChapterIDLinkUseCase.js'
+import {ValidateEmailByIDUserUseCase} from '../user/UseCases/ValidateEmailByIDUserUseCase.js'
 import {Event} from './events.js'
 
 const log = debug('cervantes:api:domain:broker')
@@ -38,6 +39,15 @@ export class Broker {
         }
 
         log('Event %s handled successful', event.payload)
+        break
+      }
+      case 'check_validation_token': {
+        log('Event %s handled successful', event.payload)
+
+        const {userID, status} = event.payload
+        if (!status.isSuccess()) return
+
+        await ValidateEmailByIDUserUseCase.create().execute({id: userID.value})
         break
       }
     }

@@ -1,11 +1,12 @@
 import {FC} from 'react'
-import {LoaderFunctionArgs, useLoaderData, useNavigate} from 'react-router-dom'
+import {LoaderFunctionArgs, redirect, useLoaderData, useNavigate} from 'react-router-dom'
 
+import {DomainError} from '../../domain/_kernel/DomainError'
+import {ErrorCodes} from '../../domain/_kernel/ErrorCodes'
 import type {BodyJSON} from '../../domain/body/Models/Body'
 import type {BookJSON} from '../../domain/book/Models/Book'
 import type {ChapterJSON} from '../../domain/chapter/Models/Chapter'
 import type {LinkJSON} from '../../domain/link/Models/Link'
-// import type {UserJSON} from '../../domain/user/Models/User'
 import {BookPreview} from '../../ui/BookPreview'
 import {IphoneMockup} from '../../ui/IphoneMockup'
 
@@ -17,6 +18,11 @@ interface LinkClickParams {
 export const loader = async ({params}: LoaderFunctionArgs) => {
   const {bookID, chapterID} = params as {bookID: string; chapterID: string}
   const user = await window.domain.CurrentUserUseCase.execute()
+
+  if (user instanceof DomainError && user.errors.find(error => error.message === ErrorCodes.USER_LOGIN_NOT_VERIFIED))
+    return redirect('/no-verified-user')
+
+  if (user instanceof DomainError) throw user
 
   const [book, chapter, links, bodyCommit] = await Promise.all([
     window.domain.FindByIDBookUseCase.execute({id: bookID}),

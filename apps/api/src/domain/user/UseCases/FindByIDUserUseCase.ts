@@ -1,4 +1,3 @@
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {User} from '../Models/User.js'
@@ -10,11 +9,11 @@ export interface FindByIDUserUseCaseInput {
 }
 
 export class FindByIDUserUseCase implements UseCase<FindByIDUserUseCaseInput, User> {
-  static create({config}: {config: Config}) {
-    return new FindByIDUserUseCase(config, RedisUserRepository.create(config))
+  static create() {
+    return new FindByIDUserUseCase(RedisUserRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: UserRepository) {}
+  constructor(private readonly repository: UserRepository) {}
 
   async execute({id}: FindByIDUserUseCaseInput): Promise<User> {
     return this.repository.findByID(ID.create({value: id}))

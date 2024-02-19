@@ -1,4 +1,3 @@
-import type {Config} from '../../_config/index.js'
 import {UseCase} from '../../_kernel/architecture.js'
 import type {AuthTokens} from '../Models/AuthTokens.js'
 import {Token} from '../Models/Token.js'
@@ -10,11 +9,11 @@ export interface RemoveUserTokenAuthUseCaseInput {
 }
 
 export class RemoveUserTokenAuthUseCase implements UseCase<RemoveUserTokenAuthUseCaseInput, AuthTokens> {
-  static create({config}: {config: Config}) {
-    return new RemoveUserTokenAuthUseCase(config, RedisAuthRepository.create(config))
+  static create() {
+    return new RemoveUserTokenAuthUseCase(RedisAuthRepository.create())
   }
 
-  constructor(private readonly config: Config, private readonly repository: AuthRepository) {}
+  constructor(private readonly repository: AuthRepository) {}
 
   async execute({refresh}: RemoveUserTokenAuthUseCaseInput): Promise<AuthTokens> {
     return this.repository.removeByRefreshToken(Token.create({value: refresh}))

@@ -15,7 +15,7 @@ export interface UpdateBookUseCaseInput {
   id: string
   userID: string
   rootChapterID?: string
-  createdAt: string
+  createdAt: string | number
 }
 
 export class UpdateBookUseCase implements UseCase<UpdateBookUseCaseInput, Book> {
