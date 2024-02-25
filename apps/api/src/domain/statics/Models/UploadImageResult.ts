@@ -47,6 +47,7 @@ export class UploadImageResult {
       id: this.id,
       image: this.image?.toJSON(),
       result: this.result,
+      key: this.image?.key(),
       ...(this.cause && {cause: this.cause})
     }
   }
