@@ -2,6 +2,7 @@
 import debug from 'debug'
 import express, {Request, Response} from 'express'
 import bearerToken from 'express-bearer-token'
+import fileUpload from 'express-fileupload'
 import {createHttpTerminator} from 'http-terminator'
 import pino from 'pino-http'
 import type {RedisClientType} from 'redis'
@@ -16,6 +17,7 @@ import {router as bodyRouter} from './routes/body/index.js'
 import {router as bookRouter} from './routes/book/index.js'
 import {router as chapterRouter} from './routes/chapter/index.js'
 import {router as linkRouter} from './routes/link/index.js'
+import {router as uploadRouter} from './routes/upload/index.js'
 import {router as userRouter} from './routes/user/index.js'
 
 const {PORT, HOST, STAGE} = process.env
@@ -33,6 +35,7 @@ const app = express()
 
 app.use(bearerToken())
 app.use(express.json())
+app.use(fileUpload())
 app.use(healthCheckMiddleware()(app))
 STAGE === 'production' &&
   app.use(
@@ -67,6 +70,7 @@ app.use('/book', bookRouter)
 app.use('/chapter', chapterRouter)
 app.use('/link', linkRouter)
 app.use('/body', bodyRouter)
+app.use('/upload', uploadRouter)
 
 const server = app.listen(+PORT!, HOST!, () => log('app Listen in:', `http://${HOST!}:${PORT!}`)) // eslint-disable-line 
 

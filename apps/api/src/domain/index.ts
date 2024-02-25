@@ -58,6 +58,10 @@ import type {Bodies} from './body/Models/Bodies.js'
 import type {FindByHashBodyUseCaseInput} from './body/UseCases/FindByHashBodyUseCase.js'
 import type {RemoveByChapterIDBodyUseCaseInput} from './body/UseCases/RemoveByChapterIDBodyUseCase.js'
 
+/** Statics */
+import type {UploadImageStaticsUseCaseInput} from './statics/UseCases/UploadImageStaticsUseCase.js'
+import type {UploadImageResult} from './statics/Models/UploadImageResult.js'
+
 const log = debug('cervantes:api:domain:entrypoint')
 
 export class Domain {
@@ -116,6 +120,9 @@ export class Domain {
   get GetAllBodyUseCase() {return this.#getter<GetAllBodyUseCaseInput, Bodies>(async () => import('./body/UseCases/GetAllBodyUseCase.js'), 'GetAllBodyUseCase')} // eslint-disable-line
   get FindByHashBodyUseCase() {return this.#getter<FindByHashBodyUseCaseInput, Bodies>(async () => import('./body/UseCases/FindByHashBodyUseCase.js'), 'FindByHashBodyUseCase')} // eslint-disable-line
   get RemoveByChapterIDBodyUseCase() {return this.#getter<RemoveByChapterIDBodyUseCaseInput, Bodies>(async () => import('./body/UseCases/RemoveByChapterIDBodyUseCase.js'), 'RemoveByChapterIDBodyUseCase')} // eslint-disable-line
+
+  /** Statics */
+  get UploadImageStaticsUseCase() {return this.#getter<UploadImageStaticsUseCaseInput, UploadImageResult>(async () => import('./statics/UseCases/UploadImageStaticsUseCase.js'), 'UploadImageStaticsUseCase')} // eslint-disable-line
 
   #getter<I, O>(loader: Function, name: string) {
     return {
