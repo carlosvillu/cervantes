@@ -11,11 +11,13 @@ import {ulid} from 'ulid'
 import healthCheckMiddleware from '@crdtech/express-health-check-middleware'
 
 import {Redis} from './domain/_redis/index.js'
+import {cors} from './middlewares/cors.js'
 import {domain} from './middlewares/domain.js'
 import {router as authRouter} from './routes/auth/index.js'
 import {router as bodyRouter} from './routes/body/index.js'
 import {router as bookRouter} from './routes/book/index.js'
 import {router as chapterRouter} from './routes/chapter/index.js'
+import {router as imageRouter} from './routes/image/index.js'
 import {router as linkRouter} from './routes/link/index.js'
 import {router as uploadRouter} from './routes/upload/index.js'
 import {router as userRouter} from './routes/user/index.js'
@@ -33,9 +35,7 @@ log(`
 const redis = (await Redis.create().createAndConnectClient()) as RedisClientType
 const app = express()
 
-app.use(bearerToken())
-app.use(express.json())
-app.use(fileUpload())
+app.use('/upload', bearerToken(), domain(), cors(), fileUpload(), uploadRouter)
 app.use(healthCheckMiddleware()(app))
 STAGE === 'production' &&
   app.use(
@@ -51,18 +51,10 @@ STAGE === 'production' &&
       }
     })
   )
-app.use(domain)
-
-// CORS
-app.use(function (req, res, next) {
-  const ALLOW_ORIGINS = ['localhost', 'cervantes-editor.fly.dev', 'editor.bookadventur.es']
-  if (ALLOW_ORIGINS.some(origin => req.header('origin')?.includes(origin))) {
-    res.setHeader('Access-Control-Allow-Origin', req.get('origin')!)
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type, Authorization')
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
-  }
-  next()
-})
+app.use(bearerToken())
+app.use(express.json())
+app.use(domain())
+app.use(cors())
 
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
@@ -70,7 +62,7 @@ app.use('/book', bookRouter)
 app.use('/chapter', chapterRouter)
 app.use('/link', linkRouter)
 app.use('/body', bodyRouter)
-app.use('/upload', uploadRouter)
+app.use('/image', imageRouter)
 
 const server = app.listen(+PORT!, HOST!, () => log('app Listen in:', `http://${HOST!}:${PORT!}`)) // eslint-disable-line 
 

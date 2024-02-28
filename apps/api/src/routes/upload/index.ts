@@ -16,7 +16,6 @@ router.post('/image', auth(), async (req: Request, res: Response) => {
   const image = req.files?.image as UploadedFile
 
   const result = await req._domain.UploadImageStaticsUseCase.execute({file: image})
-  debugger
 
   if (!result.isSuccess()) return res.status(500).json({error: true, cause: result.cause?.message})
 
