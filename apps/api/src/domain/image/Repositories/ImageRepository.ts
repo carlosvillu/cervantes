@@ -2,6 +2,6 @@ import {ID} from '../../_kernel/ID.js'
 import {BookCover} from '../Models/BookCover.js'
 
 export interface ImageRepository {
-  setBookCover: (cover: BookCover) => Promise<BookCover>
-  getBookCover: (bookID: ID, userID: ID) => Promise<BookCover>
+  createBookCover: (cover: BookCover) => Promise<BookCover>
+  findBookCover: (bookID: ID, userID: ID) => Promise<BookCover>
 }

@@ -19,7 +19,7 @@ export class RedisImageRepository implements ImageRepository {
     return new RedisImageRepository()
   }
 
-  async setBookCover(cover: BookCover): Promise<BookCover> {
+  async createBookCover(cover: BookCover): Promise<BookCover> {
     if (cover.isEmpty()) return cover
 
     await this.#createIndex()
@@ -36,10 +36,9 @@ export class RedisImageRepository implements ImageRepository {
     return cover
   }
 
-  async getBookCover(bookID: ID, userID: ID): Promise<BookCover> {
+  async findBookCover(bookID: ID, userID: ID): Promise<BookCover> {
     await this.#createIndex()
 
-    debugger
     const bookCoverRecord = (await this.#bookCoverRepository
       ?.searchRaw(`@userID:{${userID.value}} @bookID:{${bookID.value}}`)
       .return.first()) as BookCoverRecord

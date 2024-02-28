@@ -63,8 +63,8 @@ import type {UploadImageStaticsUseCaseInput} from './statics/UseCases/UploadImag
 import type {UploadImageResult} from './statics/Models/UploadImageResult.js'
 
 /** Image */
-import type {GetBookCoverByBookIDImageUseCaseInput} from './image/UseCases/GetBookCoverByBookIDImageUseCase.js'
-import type {SetBookCoverImageUseCaseInput} from './image/UseCases/SetBookCoverImageUseCase.js'
+import type {FindBookCoverByBookIDImageUseCaseInput} from './image/UseCases/FindBookCoverByBookIDImageUseCase.js'
+import type {CreateBookCoverImageUseCaseInput} from './image/UseCases/CreateBookCoverImageUseCase.js'
 import type {BookCover} from './image/Models/BookCover.js'
 
 const log = debug('cervantes:api:domain:entrypoint')
@@ -130,8 +130,8 @@ export class Domain {
   get UploadImageStaticsUseCase() {return this.#getter<UploadImageStaticsUseCaseInput, UploadImageResult>(async () => import('./statics/UseCases/UploadImageStaticsUseCase.js'), 'UploadImageStaticsUseCase')} // eslint-disable-line
 
   /** Image */
-  get GetBookCoverByBookIDImageUseCase() {return this.#getter<GetBookCoverByBookIDImageUseCaseInput, BookCover>(async () => import('./image/UseCases/GetBookCoverByBookIDImageUseCase.js'), 'GetBookCoverByBookIDImageUseCase')} // eslint-disable-line
-  get SetBookCoverImageUseCase() {return this.#getter<SetBookCoverImageUseCaseInput, BookCover>(async () => import('./image/UseCases/SetBookCoverImageUseCase.js'), 'SetBookCoverImageUseCase')} // eslint-disable-line
+  get FindBookCoverByBookIDImageUseCase() {return this.#getter<FindBookCoverByBookIDImageUseCaseInput, BookCover>(async () => import('./image/UseCases/FindBookCoverByBookIDImageUseCase.js'), 'FindBookCoverByBookIDImageUseCase')} // eslint-disable-line
+  get CreateBookCoverImageUseCase() {return this.#getter<CreateBookCoverImageUseCaseInput, BookCover>(async () => import('./image/UseCases/CreateBookCoverImageUseCase.js'), 'CreateBookCoverImageUseCase')} // eslint-disable-line
 
   #getter<I, O>(loader: Function, name: string) {
     return {

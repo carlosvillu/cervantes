@@ -20,7 +20,7 @@ router.get(
   async (req: RequestGetCoverImageByBookID, res: Response) => {
     log('Getting cover image by bookID and userID')
 
-    const bookcover = await req._domain.GetBookCoverByBookIDImageUseCase.execute({
+    const bookcover = await req._domain.FindBookCoverByBookIDImageUseCase.execute({
       bookID: req.query.bookID,
       userID: req.user.id!
     })
@@ -38,7 +38,7 @@ router.post(
   async (req: RequestSetCoverImage, res: Response) => {
     log(`Setting cover image by bookID and userID with KEY -> ${req.body.key}`)
 
-    const bookcover = await req._domain.SetBookCoverImageUseCase.execute({
+    const bookcover = await req._domain.CreateBookCoverImageUseCase.execute({
       id: req.body.id,
       bookID: req.body.bookID,
       userID: req.user.id!,
