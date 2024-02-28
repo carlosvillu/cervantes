@@ -48,6 +48,10 @@ import type {GetLastCommitBodyUseCaseInput} from './body/UseCases/GetLastCommitB
 import type {GetLastBodyUseCaseInput} from './body/UseCases/GetLastBodyUseCase.js'
 import type {SaveBodyUseCaseInput} from './body/UseCases/SaveBodyUseCase.js'
 
+/** Statics */
+import type {UploadImageStaticsUseCaseInput} from './statics/UseCases/UploadImageStaticsUseCase.js'
+import type {UploadImageResult} from './statics/Models/UploadImageResult.js'
+
 const log = debug('cervantes:editor:domain:entrypoint')
 
 export class Domain {
@@ -103,6 +107,9 @@ export class Domain {
   get GetLastCommitBodyUseCase() {return this.#getter<GetLastCommitBodyUseCaseInput, Body>(async () => import('./body/UseCases/GetLastCommitBodyUseCase.js'), 'GetLastCommitBodyUseCase')} // eslint-disable-line
   get GetLastBodyUseCase() {return this.#getter<GetLastBodyUseCaseInput, Body>(async () => import('./body/UseCases/GetLastBodyUseCase.js'), 'GetLastBodyUseCase')} // eslint-disable-line
   get SaveBodyUseCase() {return this.#getter<SaveBodyUseCaseInput, Body>(async () => import('./body/UseCases/SaveBodyUseCase.js'), 'SaveBodyUseCase')} // eslint-disable-line
+
+  /** Statics */
+  get UploadImageStaticsUseCase() {return this.#getter<UploadImageStaticsUseCaseInput, UploadImageResult>(async () => import('./statics/UseCases/UploadImageStaticsUseCase.js'), 'UploadImageStaticsUseCase')} // eslint-disable-line
 
   #getter<I, O>(loader: Function, name: string) {
     return {

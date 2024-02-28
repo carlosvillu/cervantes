@@ -1,21 +1,12 @@
 import {FC, useCallback, useState} from 'react'
 import {useDropzone} from 'react-dropzone'
-import {ActionFunctionArgs, Form, useParams, useSubmit} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 
 import {PhotoIcon} from '@heroicons/react/24/solid'
 
 const _10_MB = 10000000
 
-export const action = async ({request}: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const {tenant, bookID, file} = Object.fromEntries(formData)
-  debugger
-
-  return null
-}
-
 export const Component: FC<{}> = () => {
-  const submit = useSubmit()
   const [forbiddenFileState, setForbiddenFileState] = useState(false)
   const [imageURL, setImageURL] = useState('')
   const [fileIMG, setFileIMG] = useState<File>()
@@ -46,12 +37,10 @@ export const Component: FC<{}> = () => {
 
   return (
     <>
-      <Form
-        method="post"
-        action={`/book/${bookID as string}/images`}
-        encType="multipart/form-data"
-        onSubmit={evt => {
-          console.log(fileIMG)
+      <form
+        onSubmit={async evt => {
+          evt.preventDefault()
+          const imageUploaded = await window.domain.UploadImageStaticsUseCase.execute({file: fileIMG!})
           debugger
         }}
       >
@@ -128,7 +117,7 @@ export const Component: FC<{}> = () => {
             </button>
           </div>
         </div>
-      </Form>
+      </form>
     </>
   )
 }
