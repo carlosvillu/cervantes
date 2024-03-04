@@ -22,11 +22,7 @@ export const Component: FC<{}> = () => {
     {to: `/book/${bookID}`, title: 'Info'},
     {to: `/book/${bookID}/map`, title: 'Map'},
     {to: `/book/${bookID}/images`, title: 'Images'},
-    {
-      to: `/book/${bookID}/preview/${String(book?.rootChapterID)}`,
-      title: 'Preview',
-      disabled: !book?.rootChapterID
-    }
+    {to: `/book/${bookID}/preview/${String(book?.rootChapterID)}`, title: 'Preview', disabled: !book?.rootChapterID} // eslint-disable-line 
   ]
 
   return (
