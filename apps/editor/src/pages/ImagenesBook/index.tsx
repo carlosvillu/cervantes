@@ -1,17 +1,76 @@
-import {FC, useCallback, useState} from 'react'
+import {FC, FormEventHandler, useCallback, useReducer} from 'react'
 import {useDropzone} from 'react-dropzone'
-import {useParams} from 'react-router-dom'
+import {ActionFunctionArgs, useLoaderData, useParams, useRevalidator} from 'react-router-dom'
 
 import {PhotoIcon} from '@heroicons/react/24/solid'
 
+import {Notification} from '../../ui/Notification'
+import {SubmitButton} from '../../ui/SubmitButton'
+
 const _10_MB = 10000000
+interface FormState {
+  image: File | undefined
+  imageURL: string | undefined
+  showError: boolean
+  submitting: boolean
+  forbiddenFile: boolean
+}
+type FormAction =
+  | {type: 'error'}
+  | {type: 'submitting'}
+  | {type: 'changeFile'; payload: {file: File}}
+  | {type: 'submitted'}
+  | {type: 'forbiddenFile'}
+  | {type: 'reset'}
+
+export const loader = async ({params}: ActionFunctionArgs) => {
+  const {bookID} = params as {bookID: string}
+
+  const coverBook = await window.domain.FindBookCoverByBookIDImageUseCase.execute({bookID})
+
+  return {imageURL: coverBook.url()}
+}
+
+const formReducer = (state: FormState, action: FormAction) => {
+  const {type} = action
+  switch (type) {
+    case 'error':
+      return {...state, showError: true, submitting: false}
+    case 'submitting':
+      return {...state, showError: false, submitting: true}
+    case 'submitted':
+      return {...state, submitting: false}
+    case 'changeFile':
+      return {
+        ...state,
+        image: action.payload.file,
+        imageURL: URL.createObjectURL(action.payload.file),
+        forbiddenFile: false
+      }
+    case 'forbiddenFile':
+      return {...state, forbiddenFile: true}
+    case 'reset':
+      return {
+        image: undefined,
+        imageURL: undefined,
+        showError: false,
+        submitting: false,
+        forbiddenFile: false
+      }
+  }
+}
 
 export const Component: FC<{}> = () => {
-  const [forbiddenFileState, setForbiddenFileState] = useState(false)
-  const [imageURL, setImageURL] = useState('')
-  const [fileIMG, setFileIMG] = useState<File>()
-
+  const {imageURL} = useLoaderData() as Awaited<ReturnType<typeof loader>>
+  const revalidator = useRevalidator()
   const {bookID} = useParams()
+  const [formState, dispatch] = useReducer(formReducer, {
+    image: undefined,
+    imageURL,
+    showError: false,
+    submitting: false,
+    forbiddenFile: false
+  })
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return
@@ -19,11 +78,9 @@ export const Component: FC<{}> = () => {
     const [file] = acceptedFiles ?? []
     const {size = 0} = file ?? {}
 
-    if (size > _10_MB) return setForbiddenFileState(true)
+    if (size > _10_MB) return dispatch({type: 'forbiddenFile'})
 
-    setForbiddenFileState(false)
-    setImageURL(URL.createObjectURL(file))
-    setFileIMG(file)
+    dispatch({type: 'changeFile', payload: {file}})
   }, [])
 
   const {getRootProps, getInputProps, isDragAccept, isDragReject} = useDropzone({
@@ -32,20 +89,43 @@ export const Component: FC<{}> = () => {
     onDrop
   })
 
-  const uploaderDisplay = imageURL !== '' ? 'hidden' : 'flex'
-  const previewDisplay = imageURL === '' ? 'hidden' : 'grid'
+  const handlerSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+    async evt => {
+      evt.preventDefault()
+      dispatch({type: 'submitting'})
+      const {intent} = Object.fromEntries(new FormData(evt.currentTarget)) as {intent: 'create' | 'remove'}
+
+      if (intent === 'remove' && bookID) {
+        await window.domain.DeleteBookCoverByBookIDImageUseCase.execute({bookID})
+        dispatch({type: 'reset'})
+      }
+
+      if (intent === 'create' && formState.image && bookID) {
+        const imageUploaded = await window.domain.UploadImageStaticsUseCase.execute({file: formState.image})
+        if (imageUploaded.isEmpty()) {return dispatch({type: 'error'})} // eslint-disable-line 
+
+        const bookCover = await window.domain.CreateBookCoverImageUseCase.execute({
+          bookID,
+          key: imageUploaded.key!
+        })
+        if (bookCover.isEmpty()) {return dispatch({type: 'error'})} // eslint-disable-line 
+      }
+
+      dispatch({type: 'submitted'})
+      revalidator.revalidate()
+    },
+    [formState.image, bookID, revalidator]
+  )
+
+  const uploaderDisplay = formState.imageURL ? 'hidden' : 'flex'
+  const previewDisplay = formState.imageURL ? 'grid' : 'hidden'
+  const submitButtoncolor = imageURL ? 'bg-red-600 hover:bg-red-500' : 'bg-indigo-600 hover:bg-indigo-500'
 
   return (
     <>
-      <form
-        onSubmit={async evt => {
-          evt.preventDefault()
-          const imageUploaded = await window.domain.UploadImageStaticsUseCase.execute({file: fileIMG!})
-          debugger
-        }}
-      >
-        <input type="hidden" name="bookID" value={bookID} />
-        <input type="hidden" name="tenant" value="upload-cover-imageURL" />
+      {formState.showError && <Notification status="error" title="Error creating or Updating the cover" />}
+      <form onSubmit={handlerSubmit}>
+        <input type="hidden" name="intent" value={imageURL ? 'remove' : 'create'} />
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">Image cover</h2>
@@ -83,7 +163,7 @@ export const Component: FC<{}> = () => {
                     </div>
                     {isDragAccept && <p className="pl-1">The file will be accepted</p>}
                     {isDragReject && <p className="pl-1">The file will be rejected</p>}
-                    {forbiddenFileState && <p className="pl-1 text-red-300">The file is bigger than 10Mb</p>}
+                    {formState.forbiddenFile && <p className="pl-1 text-red-300">The file is bigger than 10Mb</p>}
                     <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF</p>
                   </div>
                 </div>
@@ -92,10 +172,10 @@ export const Component: FC<{}> = () => {
             <div className={`${previewDisplay} flex items-center justify-center`}>
               <img
                 className="aspect-[1/1.5] h-[430px] rounded-2xl object-cover"
-                src={imageURL}
+                src={formState.imageURL}
                 alt=""
                 onLoad={() => {
-                  URL.revokeObjectURL(imageURL)
+                  URL.revokeObjectURL(formState.imageURL!)
                 }}
               />
             </div>
@@ -103,18 +183,18 @@ export const Component: FC<{}> = () => {
 
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <button
+              hidden={Boolean(imageURL)}
               type="button"
               className="text-sm font-semibold leading-6 text-gray-900"
-              onClick={() => setImageURL('')}
+              onClick={() => dispatch({type: 'reset'})}
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Save
-            </button>
+            <SubmitButton
+              show={formState.submitting}
+              className={`${submitButtoncolor} rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+              label={imageURL ? 'Delete' : 'Save'}
+            />
           </div>
         </div>
       </form>

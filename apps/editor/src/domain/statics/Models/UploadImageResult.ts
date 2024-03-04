@@ -35,6 +35,10 @@ export class UploadImageResult {
     return Boolean(this.result)
   }
 
+  isEmpty() {
+    return this.empty !== undefined && this.empty
+  }
+
   toJSON() {
     return {
       id: this.id,
