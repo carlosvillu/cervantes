@@ -55,6 +55,20 @@ export class RedisImageRepository implements ImageRepository {
     })
   }
 
+  async deleteBookCover(bookID: ID, userID: ID): Promise<BookCover> {
+    await this.#createIndex()
+
+    const bookCoverRecord = (await this.#bookCoverRepository
+      ?.searchRaw(`@userID:{${userID.value}} @bookID:{${bookID.value}}`)
+      .return.first()) as BookCoverRecord
+
+    if (!bookCoverRecord) return BookCover.empty()
+
+    await this.#bookCoverRepository?.remove(bookCoverRecord[EntityId]!)
+
+    return BookCover.empty()
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 

@@ -5,7 +5,9 @@ import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
 import {
   getCoverImageByBookIDBodySchema,
+  removeCoverImageByBookIDBodySchema,
   RequestGetCoverImageByBookID,
+  RequestRemoveCoverImageByBookID,
   RequestSetCoverImage,
   setCoverImageBodySchema
 } from './schemas.js'
@@ -26,6 +28,22 @@ router.get(
     })
 
     if (bookcover.isEmpty()) return res.status(410).json({error: true, message: 'Imposible find the Image'})
+
+    return res.status(200).json(bookcover.toJSON())
+  }
+)
+
+router.delete(
+  '/bookcover',
+  auth(),
+  validate(removeCoverImageByBookIDBodySchema),
+  async (req: RequestRemoveCoverImageByBookID, res: Response) => {
+    log('Removing cover image by bookID and userID')
+
+    const bookcover = await req._domain.DeleteBookCoverByBookIDImageUseCase.execute({
+      bookID: req.query.bookID,
+      userID: req.user.id!
+    })
 
     return res.status(200).json(bookcover.toJSON())
   }

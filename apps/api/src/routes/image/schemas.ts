@@ -7,6 +7,12 @@ export const getCoverImageByBookIDBodySchema = z.object({
   })
 })
 
+export const removeCoverImageByBookIDBodySchema = z.object({
+  query: z.object({
+    bookID: z.string({required_error: 'bookID is required'})
+  })
+})
+
 export const setCoverImageBodySchema = z.object({
   body: z.object({
     id: z.string({required_error: 'id is required'}),
@@ -16,6 +22,10 @@ export const setCoverImageBodySchema = z.object({
 })
 
 export interface RequestGetCoverImageByBookID extends Request {
+  query: z.infer<typeof getCoverImageByBookIDBodySchema>['query']
+}
+
+export interface RequestRemoveCoverImageByBookID extends Request {
   query: z.infer<typeof getCoverImageByBookIDBodySchema>['query']
 }
 

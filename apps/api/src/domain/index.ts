@@ -63,6 +63,7 @@ import type {UploadImageStaticsUseCaseInput} from './statics/UseCases/UploadImag
 import type {UploadImageResult} from './statics/Models/UploadImageResult.js'
 
 /** Image */
+import type {DeleteBookCoverByBookIDImageUseCaseInput} from './image/UseCases/DeleteBookCoverByBookIDImageUseCase.js'
 import type {FindBookCoverByBookIDImageUseCaseInput} from './image/UseCases/FindBookCoverByBookIDImageUseCase.js'
 import type {CreateBookCoverImageUseCaseInput} from './image/UseCases/CreateBookCoverImageUseCase.js'
 import type {BookCover} from './image/Models/BookCover.js'
@@ -130,6 +131,7 @@ export class Domain {
   get UploadImageStaticsUseCase() {return this.#getter<UploadImageStaticsUseCaseInput, UploadImageResult>(async () => import('./statics/UseCases/UploadImageStaticsUseCase.js'), 'UploadImageStaticsUseCase')} // eslint-disable-line
 
   /** Image */
+  get DeleteBookCoverByBookIDImageUseCase() {return this.#getter<DeleteBookCoverByBookIDImageUseCaseInput, BookCover>(async () => import('./image/UseCases/DeleteBookCoverByBookIDImageUseCase.js'), 'DeleteBookCoverByBookIDImageUseCase')} // eslint-disable-line
   get FindBookCoverByBookIDImageUseCase() {return this.#getter<FindBookCoverByBookIDImageUseCaseInput, BookCover>(async () => import('./image/UseCases/FindBookCoverByBookIDImageUseCase.js'), 'FindBookCoverByBookIDImageUseCase')} // eslint-disable-line
   get CreateBookCoverImageUseCase() {return this.#getter<CreateBookCoverImageUseCaseInput, BookCover>(async () => import('./image/UseCases/CreateBookCoverImageUseCase.js'), 'CreateBookCoverImageUseCase')} // eslint-disable-line
 
