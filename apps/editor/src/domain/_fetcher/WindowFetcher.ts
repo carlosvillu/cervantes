@@ -31,7 +31,8 @@ export class WindowFetcher implements Fetcher {
     options: RequestFetcher,
     schema: AnyZodObject | ZodArray<AnyZodObject>
   ): Promise<ResponseFetcher<O>> => {
-    return this.#request<O>(url, {...options, method: 'post', body: JSON.stringify(options.body)}, schema)
+    const body = options.body instanceof FormData ? options.body : JSON.stringify(options.body)
+    return this.#request<O>(url, {...options, method: 'post', body}, schema)
   }
 
   put = async <O>(
@@ -49,6 +50,7 @@ export class WindowFetcher implements Fetcher {
   ): Promise<ResponseFetcher<O>> => {
     try {
       const generateOptions = () => {
+        const isForm = options.body instanceof FormData
         const {access} = JSON.parse(window.localStorage.getItem('AUTH_CREDENTIALS') ?? '{}') as {
           access?: string
           refresh?: string
@@ -57,7 +59,7 @@ export class WindowFetcher implements Fetcher {
           ...options,
           headers: {
             ...options.headers,
-            'Content-Type': 'application/json; charset=utf-8',
+            ...(!isForm && {'Content-Type': 'application/json; charset=utf-8'}),
             ...(access && {Authorization: `Bearer ${access}`})
           }
         }

@@ -7,6 +7,7 @@ declare global {
   namespace NodeJS {
     export interface ProcessEnv {
       [key: string]: string | undefined
+      STAGE: 'development' | 'production'
       PORT: string
       HOST: string
       ACCESS_TOKEN_PRIVATE_KEY: string

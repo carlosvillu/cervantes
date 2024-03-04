@@ -21,6 +21,7 @@ export const Component: FC<{}> = () => {
   const tabs = [
     {to: `/book/${bookID}`, title: 'Info'},
     {to: `/book/${bookID}/map`, title: 'Map'},
+    {to: `/book/${bookID}/images`, title: 'Images'},
     {
       to: `/book/${bookID}/preview/${String(book?.rootChapterID)}`,
       title: 'Preview',

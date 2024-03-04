@@ -6,7 +6,8 @@ export interface InnerContext {
   domain: Domain
 }
 
-window.domain = window.domain ?? Domain.create({API_HOST: import.meta.env.VITE_API_HOST})
+window.domain =
+  window.domain ?? Domain.create({API_HOST: import.meta.env.VITE_API_HOST, IMAGE_CDN: import.meta.env.VITE_IMAGE_CDN})
 
 const innerContext: InnerContext = {
   domain: window.domain
