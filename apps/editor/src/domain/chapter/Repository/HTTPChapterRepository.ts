@@ -62,7 +62,7 @@ export class HTTPChapterRepository implements ChapterRepository {
 
   async update(chapter: Chapter): Promise<Chapter> {
     const [error] = await this.fetcher.put<CreateResponseType>(
-      this.config.get('API_HOST') + `/chapter/${chapter.id as string}`,
+      this.config.get('API_HOST') + `/chapter/${chapter.id}`,
       {body: chapter.toJSON()},
       CreateResponseSchema
     )
