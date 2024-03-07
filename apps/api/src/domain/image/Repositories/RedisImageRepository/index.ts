@@ -7,13 +7,15 @@ import {ID} from '../../../_kernel/ID.js'
 import {TimeStamp} from '../../../_kernel/TimeStamp.js'
 import {Redis} from '../../../_redis/index.js'
 import {BookCover} from '../../Models/BookCover.js'
+import {ChapterCover} from '../../Models/ChapterCover.js'
 import {Key} from '../../Models/Key.js'
 import {ImageRepository} from '../ImageRepository.js'
-import {BookCoverRecord, bookCoverSchema} from './schemas.js'
+import {BookCoverRecord, bookCoverSchema, ChapterCoverRecord, chapterCoverSchema} from './schemas.js'
 
 export class RedisImageRepository implements ImageRepository {
   #indexCreated = false
   #bookCoverRepository: Repository | undefined = undefined
+  #chapterCoverRepository: Repository | undefined = undefined
 
   static create() {
     return new RedisImageRepository()
@@ -36,6 +38,26 @@ export class RedisImageRepository implements ImageRepository {
     return cover
   }
 
+  async createChapterCover(cover: ChapterCover): Promise<ChapterCover> {
+    if (cover.isEmpty()) return cover
+
+    await this.#createIndex()
+
+    const currentchapterCoverRecord = (await this.#chapterCoverRepository
+      ?.searchRaw(`@userID:{${cover.userID!}} @bookID:{${cover.bookID!}} @chapterID:{${cover.chapterID!}}`)
+      .return.first()) as BookCoverRecord
+
+    if (currentchapterCoverRecord) return ChapterCover.empty()
+
+    const chapterCoverRecord = (await this.#chapterCoverRepository?.save(
+      cover.id!,
+      cover.attributes()
+    )) as ChapterCoverRecord
+
+    if (chapterCoverRecord === null || chapterCoverRecord === undefined) return ChapterCover.empty()
+    return cover
+  }
+
   async findBookCover(bookID: ID, userID: ID): Promise<BookCover> {
     await this.#createIndex()
 
@@ -55,6 +77,26 @@ export class RedisImageRepository implements ImageRepository {
     })
   }
 
+  async findChapterCover(chapterID: ID, bookID: ID, userID: ID): Promise<ChapterCover> {
+    await this.#createIndex()
+
+    const chapterCoverRecord = (await this.#chapterCoverRepository
+      ?.searchRaw(`@userID:{${userID.value}} @bookID:{${bookID.value}} @chapterID:{${chapterID.value}}`)
+      .return.first()) as ChapterCoverRecord
+
+    if (!chapterCoverRecord) return ChapterCover.empty()
+
+    return ChapterCover.create({
+      id: ID.create({value: chapterCoverRecord[EntityId] as string}),
+      bookID: ID.create({value: chapterCoverRecord.bookID}),
+      chapterID: ID.create({value: chapterCoverRecord.chapterID}),
+      userID: ID.create({value: chapterCoverRecord.userID}),
+      key: Key.create({value: chapterCoverRecord.key}),
+      createdAt: TimeStamp.create({value: chapterCoverRecord.createdAt}),
+      updatedAt: TimeStamp.create({value: chapterCoverRecord.updatedAt})
+    })
+  }
+
   async deleteBookCover(bookID: ID, userID: ID): Promise<BookCover> {
     await this.#createIndex()
 
@@ -69,13 +111,29 @@ export class RedisImageRepository implements ImageRepository {
     return BookCover.empty()
   }
 
+  async deleteChapterCover(chapterID: ID, bookID: ID, userID: ID): Promise<ChapterCover> {
+    await this.#createIndex()
+
+    const chaperCoverRecord = (await this.#chapterCoverRepository
+      ?.searchRaw(`@userID:{${userID.value}} @bookID:{${bookID.value}} @chapterID:{${chapterID.value}}`)
+      .return.first()) as ChapterCoverRecord
+
+    if (!chaperCoverRecord) return ChapterCover.empty()
+
+    await this.#chapterCoverRepository?.remove(chaperCoverRecord[EntityId]!)
+
+    return ChapterCover.empty()
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 
     const client = (await Redis.create().createAndConnectClient()) as RedisClientType
 
     this.#bookCoverRepository = new Repository(bookCoverSchema, client)
+    this.#chapterCoverRepository = new Repository(chapterCoverSchema, client)
     this.#indexCreated = true
-    return this.#bookCoverRepository.createIndex()
+    await this.#bookCoverRepository.createIndex()
+    await this.#chapterCoverRepository.createIndex()
   }
 }

@@ -21,3 +21,27 @@ export const bookCoverSchema = new Schema(
     dataStructure: 'JSON'
   }
 )
+
+export interface ChapterCoverRecord extends Entity {
+  key: string
+  userID: string
+  bookID: string
+  chapterID: string
+  createdAt: number
+  updatedAt: number
+}
+
+export const chapterCoverSchema = new Schema(
+  'cervantes:chaptercover',
+  {
+    userID: {type: 'string'},
+    bookID: {type: 'string'},
+    chapterID: {type: 'string'},
+    key: {type: 'string'},
+    createdAt: {type: 'number'},
+    updatedAt: {type: 'number'}
+  },
+  {
+    dataStructure: 'JSON'
+  }
+)
