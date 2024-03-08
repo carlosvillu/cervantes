@@ -57,7 +57,8 @@ const formReducer = (state: FormState, action: FormAction) => {
 export const FormCreateOrDeleteCoverImage: FC<{
   handlerDelete: () => Promise<unknown>
   handlerCreate: (image: UploadImageResult) => Promise<BookCover>
-}> = ({handlerDelete, handlerCreate}) => {
+  title: string
+}> = ({handlerDelete, handlerCreate, title}) => {
   const revalidator = useRevalidator()
   const {imageURL} = useLoaderData() as {imageURL: string}
   const [formState, dispatch] = useReducer(formReducer, {
@@ -121,7 +122,7 @@ export const FormCreateOrDeleteCoverImage: FC<{
         <input type="hidden" name="intent" value={imageURL ? 'remove' : 'create'} />
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">Image cover</h2>
+            <h2 className="text-base font-semibold leading-7 text-gray-900">{title}</h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
               Enhance your book's visual appeal by adding a captivating cover image. Ensure your image has an aspect
               ratio of 1:1.5 for a flawless fit.

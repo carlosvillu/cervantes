@@ -4,15 +4,22 @@ import {WindowFetcher} from '../../../_fetcher/WindowFetcher'
 import {ID} from '../../../_kernel/ID'
 import {TimeStamp} from '../../../_kernel/TimeStamp'
 import {BookCover} from '../../Models/BookCover'
+import {ChapterCover} from '../../Models/ChapterCover'
 import {Key} from '../../Models/Key'
 import {ImageRepository} from '../ImageRepository'
 import {
   CreateBookCoverResponseSchema,
   CreateBookCoverResponseType,
+  CreateChapterCoverResponseSchema,
+  CreateChapterCoverResponseType,
   FindBookCoverByBookIDResponseSchema,
   FindBookCoverByBookIDResponseType,
+  FindChapterCoverByChapterIDResponseSchema,
+  FindChapterCoverByChapterIDResponseType,
   RemoveBookCoverByBookIDResponseSchema,
-  RemoveBookCoverByBookIDResponseType
+  RemoveBookCoverByBookIDResponseType,
+  RemoveChapterCoverByChapterIDResponseSchema,
+  RemoveChapterCoverByChapterIDResponseType
 } from './schemas'
 
 export class HTTPImageRepository implements ImageRepository {
@@ -40,6 +47,25 @@ export class HTTPImageRepository implements ImageRepository {
     })
   }
 
+  async createChapterCover(cover: ChapterCover): Promise<ChapterCover> {
+    const [error, resp] = await this.fetcher.post<CreateChapterCoverResponseType>(
+      this.config.get('API_HOST') + '/image/chaptercover',
+      {body: cover.toJSON()},
+      CreateChapterCoverResponseSchema
+    )
+
+    if (error) return ChapterCover.empty()
+
+    return ChapterCover.create({
+      id: ID.create({value: resp.id}),
+      key: Key.create({value: resp.key}),
+      bookID: ID.create({value: resp.bookID}),
+      chapterID: ID.create({value: resp.chapterID}),
+      createdAt: TimeStamp.create({value: +resp.createdAt}),
+      updatedAt: TimeStamp.create({value: +resp.updatedAt})
+    })
+  }
+
   async findBookCoverByBookID(bookID: ID): Promise<BookCover> {
     const [error, resp] = await this.fetcher.get<FindBookCoverByBookIDResponseType>(
       this.config.get('API_HOST') + '/image/bookcover?bookID=' + bookID.value + '&_c=' + Math.random(),
@@ -58,6 +84,25 @@ export class HTTPImageRepository implements ImageRepository {
     })
   }
 
+  async findChapterCoverByChapterID(chapterID: ID, bookID: ID): Promise<ChapterCover> {
+    const [error, resp] = await this.fetcher.get<FindChapterCoverByChapterIDResponseType>(
+      this.config.get('API_HOST') + '/image/chaptercover?bookID=' + bookID.value + '&chapterID=' + chapterID.value + '&_c=' + Math.random(), // eslint-disable-line
+      {},
+      FindChapterCoverByChapterIDResponseSchema
+    )
+
+    if (error) return ChapterCover.empty()
+
+    return ChapterCover.create({
+      id: ID.create({value: resp.id}),
+      key: Key.create({value: resp.key}),
+      bookID: ID.create({value: resp.bookID}),
+      chapterID: ID.create({value: resp.chapterID}),
+      createdAt: TimeStamp.create({value: +resp.createdAt}),
+      updatedAt: TimeStamp.create({value: +resp.updatedAt})
+    })
+  }
+
   async deleteBookCoverByBookID(bookID: ID): Promise<BookCover> {
     const [error] = await this.fetcher.del<RemoveBookCoverByBookIDResponseType>(
       this.config.get('API_HOST') + '/image/bookcover?bookID=' + bookID.value,
@@ -68,5 +113,17 @@ export class HTTPImageRepository implements ImageRepository {
     if (error) return BookCover.empty()
 
     return BookCover.empty()
+  }
+
+  async deleteChapterCoverByChapterID(chapterID: ID, bookID: ID): Promise<ChapterCover> {
+    const [error] = await this.fetcher.del<RemoveChapterCoverByChapterIDResponseType>(
+      this.config.get('API_HOST') + '/image/chaptercover?bookID=' + bookID.value + '&chapterID=' + chapterID.value,
+      {},
+      RemoveChapterCoverByChapterIDResponseSchema
+    )
+
+    if (error) return ChapterCover.empty()
+
+    return ChapterCover.empty()
   }
 }
