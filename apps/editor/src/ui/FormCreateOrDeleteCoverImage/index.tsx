@@ -2,7 +2,7 @@ import {FC, FormEventHandler, useCallback, useReducer} from 'react'
 import {useDropzone} from 'react-dropzone'
 import {useLoaderData, useRevalidator} from 'react-router-dom'
 
-import {PhotoIcon} from '@heroicons/react/20/solid'
+import {BarsArrowUpIcon, PhotoIcon, SparklesIcon, UsersIcon} from '@heroicons/react/20/solid'
 
 import {BookCover} from '../../domain/image/Models/BookCover'
 import {UploadImageResult} from '../../domain/statics/Models/UploadImageResult'
@@ -127,8 +127,39 @@ export const FormCreateOrDeleteCoverImage: FC<{
               Enhance your book's visual appeal by adding a captivating cover image. Ensure your image has an aspect
               ratio of 1:1.5 for a flawless fit.
             </p>
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="col-span-full">
+            <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="col-span-3 flex justify-center items-center border-b sm:border-b-0 sm:border-r border-gray-300">
+                <div className="w-full p-6">
+                  <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                    Prompt
+                  </label>
+                  <div className="mt-2 flex rounded-md shadow-sm">
+                    <div className="relative flex flex-grow items-stretch focus-within:z-10">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <PhotoIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </div>
+                      <input
+                        type="text"
+                        name="prompt"
+                        id="prompt"
+                        className="block w-full rounded-none rounded-l-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        placeholder="Prompt of your image"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    >
+                      <SparklesIcon className="-ml-0.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+                      Generate
+                    </button>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500" id="email-description">
+                    Choose your image wisely, as it will be universally applied for all users.
+                  </p>
+                </div>
+              </div>
+              <div className="col-span-3">
                 <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900 sr-only">
                   Cover photo
                 </label>
