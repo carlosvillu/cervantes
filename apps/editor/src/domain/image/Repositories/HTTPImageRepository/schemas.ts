@@ -8,6 +8,11 @@ const BookCoverBodySchema = z.object({
   updatedAt: z.number({required_error: 'id required'})
 })
 
+const ChapterCoverBodySchema = BookCoverBodySchema.extend({
+  chapterID: z.string({required_error: 'chapterID required'})
+})
+
+/** BookCover */
 export const CreateBookCoverResponseSchema = BookCoverBodySchema
 export type CreateBookCoverResponseType = z.infer<typeof CreateBookCoverResponseSchema>
 
@@ -16,3 +21,13 @@ export type FindBookCoverByBookIDResponseType = z.infer<typeof FindBookCoverByBo
 
 export const RemoveBookCoverByBookIDResponseSchema = z.object({})
 export type RemoveBookCoverByBookIDResponseType = z.infer<typeof RemoveBookCoverByBookIDResponseSchema>
+
+/** ChapterCover */
+export const CreateChapterCoverResponseSchema = ChapterCoverBodySchema
+export type CreateChapterCoverResponseType = z.infer<typeof CreateChapterCoverResponseSchema>
+
+export const FindChapterCoverByChapterIDResponseSchema = ChapterCoverBodySchema
+export type FindChapterCoverByChapterIDResponseType = z.infer<typeof FindChapterCoverByChapterIDResponseSchema>
+
+export const RemoveChapterCoverByChapterIDResponseSchema = z.object({})
+export type RemoveChapterCoverByChapterIDResponseType = z.infer<typeof RemoveChapterCoverByChapterIDResponseSchema>

@@ -19,6 +19,7 @@ export const Component: FC<{}> = () => {
   const navigate = useNavigate()
   const tabs = [
     {to: `/book/${bookID}/chapter/${chapterID}`, title: 'Info'},
+    {to: `/book/${bookID}/chapter/${chapterID}/imagenes`, title: 'Images'},
     {to: `/book/${bookID}/chapter/${chapterID}/editor`, title: 'Editor'}
   ]
 
