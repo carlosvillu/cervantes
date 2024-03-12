@@ -2,10 +2,12 @@ import {FC, FormEventHandler, useCallback, useReducer} from 'react'
 import {useDropzone} from 'react-dropzone'
 import {useLoaderData, useRevalidator} from 'react-router-dom'
 
-import {BarsArrowUpIcon, PhotoIcon, SparklesIcon, UsersIcon} from '@heroicons/react/20/solid'
+import {PhotoIcon, SparklesIcon} from '@heroicons/react/20/solid'
 
 import {BookCover} from '../../domain/image/Models/BookCover'
 import {UploadImageResult} from '../../domain/statics/Models/UploadImageResult'
+import {fromURLtoFile} from '../../js/file'
+import {LoaderGenerateImage} from '../LoaderGenerateImage'
 import {Notification} from '../Notification'
 import {SubmitButton} from '../SubmitButton'
 
@@ -16,6 +18,9 @@ interface FormState {
   showError: boolean
   submitting: boolean
   forbiddenFile: boolean
+  generating: boolean
+  generatedFiles: File[] | undefined
+  generatedURLs: string[] | undefined
 }
 type FormAction =
   | {type: 'error'}
@@ -24,6 +29,8 @@ type FormAction =
   | {type: 'submitted'}
   | {type: 'forbiddenFile'}
   | {type: 'reset'}
+  | {type: 'generating'}
+  | {type: 'generatedImages'; payload: {generatedFiles: File[]}}
 
 const formReducer = (state: FormState, action: FormAction) => {
   const {type} = action
@@ -43,13 +50,27 @@ const formReducer = (state: FormState, action: FormAction) => {
       }
     case 'forbiddenFile':
       return {...state, forbiddenFile: true}
+    case 'generating':
+      return {...state, generating: true}
+    case 'generatedImages':
+      return {
+        ...state,
+        generatedFiles: action.payload.generatedFiles,
+        generatedURLs: action.payload.generatedFiles.map(file => URL.createObjectURL(file)),
+        imageURL: undefined,
+        generating: false,
+        forbiddenFile: false
+      }
     case 'reset':
       return {
         image: undefined,
         imageURL: undefined,
         showError: false,
         submitting: false,
-        forbiddenFile: false
+        forbiddenFile: false,
+        generating: false,
+        generatedFiles: undefined,
+        generatedURLs: undefined
       }
   }
 }
@@ -66,7 +87,10 @@ export const FormCreateOrDeleteCoverImage: FC<{
     imageURL,
     showError: false,
     submitting: false,
-    forbiddenFile: false
+    forbiddenFile: false,
+    generating: false,
+    generatedFiles: undefined,
+    generatedURLs: undefined
   })
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -111,6 +135,18 @@ export const FormCreateOrDeleteCoverImage: FC<{
     [formState.image, revalidator, handlerCreate, handlerDelete]
   )
 
+  const handlerClickPrompt = useCallback(async () => {
+    dispatch({type: 'generating'})
+    const input = document.getElementById('prompt') as HTMLInputElement
+    const imagesURLSs = await window.domain.GenerateFromPromptImageUseCase.execute({prompt: input.value})
+    const files = await Promise.all(imagesURLSs.urls().map(url => fromURLtoFile(url)))
+
+    dispatch({type: 'generatedImages', payload: {generatedFiles: files}})
+  }, [])
+
+  const previewGeneratedImages = formState.generatedURLs ? 'flex' : 'hidden'
+  const placeHolderGenerationDisplay = !formState.generatedURLs && formState.generating ? 'flex' : 'hidden'
+  const inputPromptDisplay = !formState.generatedURLs && !formState.generating ? 'block' : 'hidden'
   const uploaderDisplay = formState.imageURL ? 'hidden' : 'flex'
   const previewDisplay = formState.imageURL ? 'grid' : 'hidden'
   const submitButtoncolor = imageURL ? 'bg-red-600 hover:bg-red-500' : 'bg-indigo-600 hover:bg-indigo-500'
@@ -121,15 +157,32 @@ export const FormCreateOrDeleteCoverImage: FC<{
       <form onSubmit={handlerSubmit}>
         <input type="hidden" name="intent" value={imageURL ? 'remove' : 'create'} />
         <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
+          <div className=" border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">{title}</h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
               Enhance your book's visual appeal by adding a captivating cover image. Ensure your image has an aspect
               ratio of 1:1.5 for a flawless fit.
             </p>
-            <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className={`${uploaderDisplay} mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6`}>
               <div className="col-span-3 flex justify-center items-center border-b sm:border-b-0 sm:border-r border-gray-300">
-                <div className="w-full p-6">
+                <div className={`${previewGeneratedImages} w-full justify-around mb-6 sm:mb-0 sm:justify-evenly`}>
+                  {formState.generatedURLs?.map(url => {
+                    return (
+                      <img
+                        className="aspect-[1/1.5] h-[215px] rounded-2xl object-cover"
+                        src={url}
+                        alt=""
+                        onLoad={() => {
+                          URL.revokeObjectURL(url)
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+                <div className={`${placeHolderGenerationDisplay} w-full px-6 py-6 mt-2  justify-center items-center`}>
+                  <LoaderGenerateImage />
+                </div>
+                <div className={`${inputPromptDisplay} w-full p-6`}>
                   <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                     Prompt
                   </label>
@@ -144,10 +197,14 @@ export const FormCreateOrDeleteCoverImage: FC<{
                         id="prompt"
                         className="block w-full rounded-none rounded-l-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         placeholder="Prompt of your image"
+                        autoComplete="off"
+                        autoCapitalize="off"
+                        onKeyDown={async e => e.key === 'Enter' && handlerClickPrompt()}
                       />
                     </div>
                     <button
                       type="button"
+                      onClick={handlerClickPrompt}
                       className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                     >
                       <SparklesIcon className="-ml-0.5 h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -159,12 +216,12 @@ export const FormCreateOrDeleteCoverImage: FC<{
                   </p>
                 </div>
               </div>
-              <div className="col-span-3">
+              <div className="col-span-3 flex items-center justify-center">
                 <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900 sr-only">
                   Cover photo
                 </label>
                 <div
-                  className={`${uploaderDisplay} mt-2 justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10`}
+                  className={`${uploaderDisplay} mt-2 justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 w-full`}
                   {...getRootProps()}
                 >
                   <div className="text-center">
@@ -194,13 +251,13 @@ export const FormCreateOrDeleteCoverImage: FC<{
                 </div>
               </div>
             </div>
-            <div className={`${previewDisplay} flex items-center justify-center`}>
+            <div className={`${previewDisplay} mt-10 flex items-center justify-center`}>
               <img
                 className="aspect-[1/1.5] h-[430px] rounded-2xl object-cover"
                 src={formState.imageURL}
                 alt=""
                 onLoad={() => {
-                  URL.revokeObjectURL(formState.imageURL!)
+                  URL.revokeObjectURL(formState.imageURL)
                 }}
               />
             </div>

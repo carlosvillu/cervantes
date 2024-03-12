@@ -1,6 +1,8 @@
 import {ID} from '../../_kernel/ID'
 import {BookCover} from '../Models/BookCover'
 import {ChapterCover} from '../Models/ChapterCover'
+import {ImagesURLs} from '../Models/ImagesURLs'
+import {Prompt} from '../Models/Prompt'
 
 export interface ImageRepository {
   createBookCover: (cover: BookCover) => Promise<BookCover>
@@ -9,4 +11,5 @@ export interface ImageRepository {
   findChapterCoverByChapterID: (chapterID: ID, bookID: ID) => Promise<ChapterCover>
   deleteBookCoverByBookID: (bookID: ID) => Promise<BookCover>
   deleteChapterCoverByChapterID: (chapterID: ID, bookID: ID) => Promise<ChapterCover>
+  generateFromPrompt: (prompt: Prompt) => Promise<ImagesURLs>
 }

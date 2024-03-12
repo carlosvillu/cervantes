@@ -31,3 +31,12 @@ export type FindChapterCoverByChapterIDResponseType = z.infer<typeof FindChapter
 
 export const RemoveChapterCoverByChapterIDResponseSchema = z.object({})
 export type RemoveChapterCoverByChapterIDResponseType = z.infer<typeof RemoveChapterCoverByChapterIDResponseSchema>
+
+/** Generate Image */
+export const GenerateImageResponseSchema = z.object({
+  result: z.object({
+    '1': z.string({required_error: '1 required'}),
+    '2': z.string({required_error: '2 required'})
+  })
+})
+export type GenerateImageResponseType = z.infer<typeof GenerateImageResponseSchema>
