@@ -31,6 +31,7 @@ type FormAction =
   | {type: 'reset'}
   | {type: 'generating'}
   | {type: 'generatedImages'; payload: {generatedFiles: File[]}}
+  | {type: 'resetGenerateImages'}
 
 const formReducer = (state: FormState, action: FormAction) => {
   const {type} = action
@@ -63,15 +64,20 @@ const formReducer = (state: FormState, action: FormAction) => {
       }
     case 'reset':
       return {
+        ...state,
         image: undefined,
         imageURL: undefined,
         showError: false,
         submitting: false,
         forbiddenFile: false,
-        generating: false,
-        generatedFiles: undefined,
-        generatedURLs: undefined
+        generating: false
       }
+    case 'resetGenerateImages': {
+      state.generatedURLs?.forEach(url => URL.revokeObjectURL(url))
+      const input = document.getElementById('prompt') as HTMLInputElement
+      input.value = ''
+      return {...state, generatedURLs: undefined, generatedFiles: undefined}
+    }
   }
 }
 
@@ -144,9 +150,24 @@ export const FormCreateOrDeleteCoverImage: FC<{
     dispatch({type: 'generatedImages', payload: {generatedFiles: files}})
   }, [])
 
+  const handlerSelectGenerateImage = useCallback(
+    (evt: React.MouseEvent<HTMLImageElement>) => {
+      if (!(evt.target instanceof HTMLImageElement)) return
+      dispatch({type: 'changeFile', payload: {file: formState.generatedFiles![+evt.target.dataset.idx!]}})
+    },
+    [formState]
+  )
+
+  const handlerResetGenerateImages = useCallback((evt: React.MouseEvent<HTMLParagraphElement>) => {
+    if (!(evt.target instanceof HTMLParagraphElement)) return
+
+    dispatch({type: 'resetGenerateImages'})
+  }, [])
+
   const previewGeneratedImages = formState.generatedURLs ? 'flex' : 'hidden'
   const placeHolderGenerationDisplay = !formState.generatedURLs && formState.generating ? 'flex' : 'hidden'
   const inputPromptDisplay = !formState.generatedURLs && !formState.generating ? 'block' : 'hidden'
+  const paragraphResetImagenesGenerated = !formState.generatedURLs && !formState.generating ? 'hidden' : 'block'
   const uploaderDisplay = formState.imageURL ? 'hidden' : 'flex'
   const previewDisplay = formState.imageURL ? 'grid' : 'hidden'
   const submitButtoncolor = imageURL ? 'bg-red-600 hover:bg-red-500' : 'bg-indigo-600 hover:bg-indigo-500'
@@ -164,12 +185,15 @@ export const FormCreateOrDeleteCoverImage: FC<{
               ratio of 1:1.5 for a flawless fit.
             </p>
             <div className={`${uploaderDisplay} mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-6`}>
-              <div className="col-span-3 flex justify-center items-center border-b sm:border-b-0 sm:border-r border-gray-300">
+              <div className="col-span-3 flex flex-col justify-center items-center border-b sm:border-b-0 sm:border-r border-gray-300">
                 <div className={`${previewGeneratedImages} w-full justify-around mb-6 sm:mb-0 sm:justify-evenly`}>
-                  {formState.generatedURLs?.map(url => {
+                  {formState.generatedURLs?.map((url, index) => {
                     return (
                       <img
-                        className="aspect-[1/1.5] h-[215px] rounded-2xl object-cover"
+                        key={index}
+                        data-idx={index}
+                        className="aspect-[1/1.5] h-[215px] rounded-2xl object-cover cursor-pointer hover:scale-110 transition-all duration-500"
+                        onClick={handlerSelectGenerateImage}
                         src={url}
                         alt=""
                         onLoad={() => {
@@ -179,6 +203,12 @@ export const FormCreateOrDeleteCoverImage: FC<{
                     )
                   })}
                 </div>
+                <p
+                  onClick={handlerResetGenerateImages}
+                  className={`${paragraphResetImagenesGenerated} w-full mb-5 sm:mb-0 sm:mt-5 text-sm text-center cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500`}
+                >
+                  Generate other images
+                </p>
                 <div className={`${placeHolderGenerationDisplay} w-full px-6 py-6 mt-2  justify-center items-center`}>
                   <LoaderGenerateImage />
                 </div>
@@ -257,7 +287,7 @@ export const FormCreateOrDeleteCoverImage: FC<{
                 src={formState.imageURL}
                 alt=""
                 onLoad={() => {
-                  URL.revokeObjectURL(formState.imageURL)
+                  URL.revokeObjectURL(formState.imageURL!)
                 }}
               />
             </div>
