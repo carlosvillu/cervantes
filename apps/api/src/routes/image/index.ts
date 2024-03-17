@@ -1,13 +1,16 @@
 import debug from 'debug'
 import {Response, Router} from 'express'
+import {ulid} from 'ulid'
 
 import {auth} from '../../middlewares/auth.js'
 import {validate} from '../../middlewares/validate.js'
 import {
+  generateImageBodySchema,
   getBookCoverImageByBookIDBodySchema,
   getChapterCoverImageByChapterIDBodySchema,
   removeBookCoverImageByBookIDBodySchema,
   removeChapterCoverImageByChapterIDBodySchema,
+  RequestGenerateImage,
   RequestGetBookCoverImageByBookID,
   RequestGetChapterCoverImageByChapterID,
   RequestRemoveBookCoverImageByBookID,
@@ -129,5 +132,36 @@ router.post(
     if (chaptercover.isEmpty()) return res.status(410).json({error: true, message: 'Imposible create the Image'})
 
     return res.status(201).json(chaptercover.toJSON())
+  }
+)
+
+router.post(
+  '/generate',
+  auth(),
+  validate(generateImageBodySchema),
+  async (req: RequestGenerateImage, res: Response) => {
+    log(`Generating image with prompt %s`, req.body.prompt)
+
+    const images = await req._domain.GenerateWithIAImageUseCase.execute({prompt: req.body.prompt, userID: req.user.id!})
+
+    const files = await Promise.all(
+      images.urls.map(async url => {
+        const fimg = await fetch(url)
+        return Buffer.from(await fimg.arrayBuffer())
+      })
+    )
+
+    const uploads = await Promise.all(
+      files.map(async img => {
+        const result = await req._domain.UploadImageStaticsUseCase.execute({
+          file: {name: ulid() + '.png', data: img, mimetype: 'image/png'}
+        })
+        return result
+      })
+    )
+
+    if (images.isEmpty()) return res.status(410).json({error: true, message: 'Imposible create the Image'})
+
+    res.status(200).json({images: uploads.map(upload => upload.image?.key())})
   }
 )

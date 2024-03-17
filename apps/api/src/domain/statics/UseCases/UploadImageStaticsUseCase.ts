@@ -1,5 +1,3 @@
-import {UploadedFile} from 'express-fileupload'
-
 import {UseCase} from '../../_kernel/architecture.js'
 import {ID} from '../../_kernel/ID.js'
 import {Stage} from '../../_kernel/Stage.js'
@@ -12,7 +10,7 @@ import {Name} from '../Models/Name.js'
 import {UploadImageResult} from '../Models/UploadImageResult.js'
 
 export interface UploadImageStaticsUseCaseInput {
-  file: UploadedFile
+  file: {name: string; data: Buffer; mimetype: string}
 }
 
 export class UploadImageStaticsUseCase implements UseCase<UploadImageStaticsUseCaseInput, UploadImageResult> {

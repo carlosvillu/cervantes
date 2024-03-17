@@ -44,6 +44,16 @@ export const setChapterCoverImageBodySchema = z.object({
   })
 })
 
+export const generateImageBodySchema = z.object({
+  body: z.object({
+    prompt: z.string({required_error: 'prompt is required'})
+  })
+})
+
+export interface RequestGenerateImage extends Request {
+  body: z.infer<typeof generateImageBodySchema>['body']
+}
+
 export interface RequestGetBookCoverImageByBookID extends Request {
   query: z.infer<typeof getBookCoverImageByBookIDBodySchema>['query']
 }

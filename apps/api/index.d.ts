@@ -19,6 +19,7 @@ declare global {
       REDIS_USER: string
       SALT: string
       RESEND_API_KEY: string
+      FOOOCUS_API_URL: string
     }
   }
 }
