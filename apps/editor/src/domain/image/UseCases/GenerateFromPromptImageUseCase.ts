@@ -22,11 +22,11 @@ export class GenerateFromPromptImageUseCase implements UseCase<GenerateFromPromp
       urls: [
         ImageURL.create({
           value:
-            'https://cdn.leonardo.ai/users/347d4213-ef52-4140-9d56-e456b4ba01d4/generations/12cbc9c1-6993-4072-8e19-6c0021582665/Default_Scifi_films_film_from_the_60s_full_body_visible_robot_1.jpg'
+            'https://cervantes.imglab-cdn.net/development/01HS1J14NBGY56R2AJ26V5WK0S.jpeg?height=430&aspect-ratio=1%3A1.5&mode=crop&format=webp'
         }),
         ImageURL.create({
           value:
-            'https://cdn.leonardo.ai/users/347d4213-ef52-4140-9d56-e456b4ba01d4/generations/12cbc9c1-6993-4072-8e19-6c0021582665/Default_Scifi_films_film_from_the_60s_full_body_visible_robot_0.jpg'
+            'https://cervantes.imglab-cdn.net/development/01HS1J26G5AZEHR9ESYE1PDTYM.jpeg?height=430&aspect-ratio=1%3A1.5&mode=crop&format=webp'
         })
       ]
     })
