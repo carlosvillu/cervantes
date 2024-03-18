@@ -62,7 +62,7 @@ import type {FindBookCoverByBookIDImageUseCaseInput} from './image/UseCases/Find
 import type {FindChapterCoverByChapterIDImageUseCaseInput} from './image/UseCases/FindChapterCoverByChapterIDImageUseCase.js'
 import type {BookCover} from './image/Models/BookCover.js'
 import type {ChapterCover} from './image/Models/ChapterCover.js'
-import {ImagesURLs} from './image/Models/ImagesURLs.js'
+import {ListKey} from './image/Models/ListKey.js'
 
 const log = debug('cervantes:editor:domain:entrypoint')
 
@@ -124,7 +124,7 @@ export class Domain {
   get UploadImageStaticsUseCase() {return this.#getter<UploadImageStaticsUseCaseInput, UploadImageResult>(async () => import('./statics/UseCases/UploadImageStaticsUseCase.js'), 'UploadImageStaticsUseCase')} // eslint-disable-line
 
   /** Image */
-  get GenerateFromPromptImageUseCase() {return this.#getter<GenerateFromPromptImageUseCaseInput, ImagesURLs>(async () => import('./image/UseCases/GenerateFromPromptImageUseCase.js'), 'GenerateFromPromptImageUseCase')} // eslint-disable-line
+  get GenerateFromPromptImageUseCase() {return this.#getter<GenerateFromPromptImageUseCaseInput, ListKey>(async () => import('./image/UseCases/GenerateFromPromptImageUseCase.js'), 'GenerateFromPromptImageUseCase')} // eslint-disable-line
   get DeleteBookCoverByBookIDImageUseCase() {return this.#getter<DeleteBookCoverByBookIDImageUseCaseInput, BookCover>(async () => import('./image/UseCases/DeleteBookCoverByBookIDImageUseCase.js'), 'DeleteBookCoverByBookIDImageUseCase')} // eslint-disable-line
   get DeleteChapterCoverByChapterIDImageUseCase() {return this.#getter<DeleteChapterCoverByChapterIDImageUseCaseInput, ChapterCover>(async () => import('./image/UseCases/DeleteChapterCoverByChapterIDImageUseCase.js'), 'DeleteChapterCoverByChapterIDImageUseCase')} // eslint-disable-line
   get CreateBookCoverImageUseCase() {return this.#getter<CreateBookCoverImageUseCaseInput, BookCover>(async () => import('./image/UseCases/CreateBookCoverImageUseCase.js'), 'CreateBookCoverImageUseCase')} // eslint-disable-line

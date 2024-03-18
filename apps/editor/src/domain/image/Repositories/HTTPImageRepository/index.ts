@@ -5,9 +5,8 @@ import {ID} from '../../../_kernel/ID'
 import {TimeStamp} from '../../../_kernel/TimeStamp'
 import {BookCover} from '../../Models/BookCover'
 import {ChapterCover} from '../../Models/ChapterCover'
-import {ImagesURLs} from '../../Models/ImagesURLs'
-import {ImageURL} from '../../Models/ImageURL'
 import {Key} from '../../Models/Key'
+import {ListKey} from '../../Models/ListKey'
 import {Prompt} from '../../Models/Prompt'
 import {ImageRepository} from '../ImageRepository'
 import {
@@ -132,7 +131,7 @@ export class HTTPImageRepository implements ImageRepository {
     return ChapterCover.empty()
   }
 
-  async generateFromPrompt(prompt: Prompt): Promise<ImagesURLs> {
+  async generateFromPrompt(prompt: Prompt): Promise<ListKey> {
     const [error, resp] = await this.fetcher.post<GenerateImageResponseType>(
       this.config.get('API_HOST') + '/image/generate',
       {
@@ -141,10 +140,10 @@ export class HTTPImageRepository implements ImageRepository {
       GenerateImageResponseSchema
     )
 
-    if (error) return ImagesURLs.empty()
+    if (error) return ListKey.empty()
 
-    return ImagesURLs.create({
-      urls: resp.images.map(url => ImageURL.create({value: url}))
+    return ListKey.create({
+      keys: resp.images.map(url => Key.create({value: url}))
     })
   }
 }

@@ -52,7 +52,7 @@ const formReducer = (state: FormState, action: FormAction) => {
     case 'forbiddenFile':
       return {...state, forbiddenFile: true}
     case 'generating':
-      return {...state, generating: true}
+      return {...state, generating: true, generatedURLs: undefined, generatedFiles: undefined}
     case 'generatedImages':
       return {
         ...state,
@@ -144,8 +144,15 @@ export const FormCreateOrDeleteCoverImage: FC<{
   const handlerClickPrompt = useCallback(async () => {
     dispatch({type: 'generating'})
     const input = document.getElementById('prompt') as HTMLInputElement
-    const imagesURLSs = await window.domain.GenerateFromPromptImageUseCase.execute({prompt: input.value})
-    const files = await Promise.all(imagesURLSs.urls().map(url => fromURLtoFile(url)))
+    const keys = await window.domain.GenerateFromPromptImageUseCase.execute({prompt: input.value})
+
+    if (keys.isEmpty()) {
+      dispatch({type: 'reset'})
+      dispatch({type: 'error'})
+      return dispatch({type: 'resetGenerateImages'})
+    }
+
+    const files = await Promise.all(keys.urls().map(url => fromURLtoFile(url)))
 
     dispatch({type: 'generatedImages', payload: {generatedFiles: files}})
   }, [])
@@ -167,7 +174,7 @@ export const FormCreateOrDeleteCoverImage: FC<{
   const previewGeneratedImages = formState.generatedURLs ? 'flex' : 'hidden'
   const placeHolderGenerationDisplay = !formState.generatedURLs && formState.generating ? 'flex' : 'hidden'
   const inputPromptDisplay = !formState.generatedURLs && !formState.generating ? 'block' : 'hidden'
-  const paragraphResetImagenesGenerated = !formState.generatedURLs && !formState.generating ? 'hidden' : 'block'
+  const paragraphResetImagenesGenerated = !formState.generating && formState.generatedURLs ? 'block' : 'hidden'
   const uploaderDisplay = formState.imageURL ? 'hidden' : 'flex'
   const previewDisplay = formState.imageURL ? 'grid' : 'hidden'
   const submitButtoncolor = imageURL ? 'bg-red-600 hover:bg-red-500' : 'bg-indigo-600 hover:bg-indigo-500'
