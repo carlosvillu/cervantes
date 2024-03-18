@@ -11,4 +11,8 @@ export class Key {
   }
 
   constructor(public readonly value: string) {}
+
+  url() {
+    return import.meta.env.VITE_IMAGE_CDN + '/' + this.value + '?height=430&aspect-ratio=1%3A1.5&mode=crop&format=webp'
+  }
 }

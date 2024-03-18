@@ -3,6 +3,20 @@ services:
     image: registry.digitalocean.com/carlosvillu/ds:latest
     ports:
       - '3002:3002'
+
+  fooocus:
+    build:
+      dockerfile: $PWD/apps/fooocus/Dockerfile
+      context: $PWD/apps/fooocus
+    volumes:
+      - fooocus:/app/repositories
+    networks:
+      - net
+    ports:
+      - '8888:8888'
+    environment:
+      - START_FLAGS=--always-cpu --attention-split
+
   redis:
     image: redis/redis-stack-server:latest
     restart: always
@@ -14,6 +28,7 @@ services:
       - net
 volumes:
   redis_data:
+  fooocus:
 
 networks:
   net:

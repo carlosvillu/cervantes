@@ -6,6 +6,8 @@ import {TimeStamp} from '../../../_kernel/TimeStamp'
 import {BookCover} from '../../Models/BookCover'
 import {ChapterCover} from '../../Models/ChapterCover'
 import {Key} from '../../Models/Key'
+import {ListKey} from '../../Models/ListKey'
+import {Prompt} from '../../Models/Prompt'
 import {ImageRepository} from '../ImageRepository'
 import {
   CreateBookCoverResponseSchema,
@@ -16,6 +18,8 @@ import {
   FindBookCoverByBookIDResponseType,
   FindChapterCoverByChapterIDResponseSchema,
   FindChapterCoverByChapterIDResponseType,
+  GenerateImageResponseSchema,
+  GenerateImageResponseType,
   RemoveBookCoverByBookIDResponseSchema,
   RemoveBookCoverByBookIDResponseType,
   RemoveChapterCoverByChapterIDResponseSchema,
@@ -125,5 +129,21 @@ export class HTTPImageRepository implements ImageRepository {
     if (error) return ChapterCover.empty()
 
     return ChapterCover.empty()
+  }
+
+  async generateFromPrompt(prompt: Prompt): Promise<ListKey> {
+    const [error, resp] = await this.fetcher.post<GenerateImageResponseType>(
+      this.config.get('API_HOST') + '/image/generate',
+      {
+        body: {prompt: prompt.value}
+      },
+      GenerateImageResponseSchema
+    )
+
+    if (error) return ListKey.empty()
+
+    return ListKey.create({
+      keys: resp.images.map(url => Key.create({value: url}))
+    })
   }
 }

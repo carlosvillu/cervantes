@@ -63,6 +63,7 @@ import type {UploadImageStaticsUseCaseInput} from './statics/UseCases/UploadImag
 import type {UploadImageResult} from './statics/Models/UploadImageResult.js'
 
 /** Image */
+import type {GenerateWithIAImageUseCaseInput} from './image/UseCases/GenerateWithIAImageUseCase.js'
 import type {DeleteBookCoverByBookIDImageUseCaseInput} from './image/UseCases/DeleteBookCoverByBookIDImageUseCase.js'
 import type {DeleteChapterCoverByChapterIDImageUseCaseInput} from './image/UseCases/DeleteChapterCoverByChapterIDImageUseCase.js'
 import type {FindBookCoverByBookIDImageUseCaseInput} from './image/UseCases/FindBookCoverByBookIDImageUseCase.js'
@@ -71,6 +72,7 @@ import type {CreateBookCoverImageUseCaseInput} from './image/UseCases/CreateBook
 import type {CreateChapterCoverImageUseCaseInput} from './image/UseCases/CreateChapterCoverImageUseCase.js'
 import type {BookCover} from './image/Models/BookCover.js'
 import type {ChapterCover} from './image/Models/ChapterCover.js'
+import {ListURL} from './image/Models/ListURL.js'
 
 const log = debug('cervantes:api:domain:entrypoint')
 
@@ -135,6 +137,7 @@ export class Domain {
   get UploadImageStaticsUseCase() {return this.#getter<UploadImageStaticsUseCaseInput, UploadImageResult>(async () => import('./statics/UseCases/UploadImageStaticsUseCase.js'), 'UploadImageStaticsUseCase')} // eslint-disable-line
 
   /** Image */
+  get GenerateWithIAImageUseCase() {return this.#getter<GenerateWithIAImageUseCaseInput, ListURL>(async () => import('./image/UseCases/GenerateWithIAImageUseCase.js'), 'GenerateWithIAImageUseCase')} // eslint-disable-line
   get DeleteBookCoverByBookIDImageUseCase() {return this.#getter<DeleteBookCoverByBookIDImageUseCaseInput, BookCover>(async () => import('./image/UseCases/DeleteBookCoverByBookIDImageUseCase.js'), 'DeleteBookCoverByBookIDImageUseCase')} // eslint-disable-line
   get DeleteChapterCoverByChapterIDImageUseCase() {return this.#getter<DeleteChapterCoverByChapterIDImageUseCaseInput, ChapterCover>(async () => import('./image/UseCases/DeleteChapterCoverByChapterIDImageUseCase.js'), 'DeleteChapterCoverByChapterIDImageUseCase')} // eslint-disable-line
   get FindBookCoverByBookIDImageUseCase() {return this.#getter<FindBookCoverByBookIDImageUseCaseInput, BookCover>(async () => import('./image/UseCases/FindBookCoverByBookIDImageUseCase.js'), 'FindBookCoverByBookIDImageUseCase')} // eslint-disable-line

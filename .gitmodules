@@ -1,0 +1,3 @@
+[submodule "apps/fooocus/Fooocus-API"]
+	path = apps/fooocus/Fooocus-API
+	url = https://github.com/mrhan1993/Fooocus-API.git
