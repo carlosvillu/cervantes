@@ -3,6 +3,7 @@ import {Response, Router} from 'express'
 import {ulid} from 'ulid'
 
 import {auth} from '../../middlewares/auth.js'
+import {ratelimiterByUserID} from '../../middlewares/reateLimit.js'
 import {validate} from '../../middlewares/validate.js'
 import {
   generateImageBodySchema,
@@ -138,6 +139,7 @@ router.post(
 router.post(
   '/generate',
   auth(),
+  ratelimiterByUserID(),
   validate(generateImageBodySchema),
   async (req: RequestGenerateImage, res: Response) => {
     log(`Generating image with prompt %s`, req.body.prompt)
