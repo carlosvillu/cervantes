@@ -9,6 +9,7 @@ import {Redis} from '../../../_redis/index.js'
 import {BookCover} from '../../Models/BookCover.js'
 import {ChapterCover} from '../../Models/ChapterCover.js'
 import {Key} from '../../Models/Key.js'
+import {ListURL} from '../../Models/ListURL.js'
 import {ImageRepository} from '../ImageRepository.js'
 import {BookCoverRecord, bookCoverSchema, ChapterCoverRecord, chapterCoverSchema} from './schemas.js'
 
@@ -135,5 +136,9 @@ export class RedisImageRepository implements ImageRepository {
     this.#indexCreated = true
     await this.#bookCoverRepository.createIndex()
     await this.#chapterCoverRepository.createIndex()
+  }
+
+  async generateimage() {
+    return ListURL.empty()
   }
 }
