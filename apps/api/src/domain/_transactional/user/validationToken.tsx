@@ -6,7 +6,7 @@ export const VerifyEmail = ({validationCode}: {validationCode: string}) => (
     <Body style={main}>
       <Container style={container}>
         <Img
-          src="https://editor.bookadventur.es/assets/logobandwhite-d_1PieDf.png"
+          src="https://fly.storage.tigris.dev/cervantes-bucket/production/01HSB9SQST2EXJQJCJ6X02PEEY.png"
           width="115"
           height="115"
           alt="Plaid"
