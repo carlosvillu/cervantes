@@ -9,7 +9,7 @@ export const VerifyEmail = ({validationCode}: {validationCode: string}) => (
           src="https://fly.storage.tigris.dev/cervantes-bucket/production/01HSB9SQST2EXJQJCJ6X02PEEY.png"
           width="115"
           height="115"
-          alt="Plaid"
+          alt="Bookadventur.es"
           style={logo}
         />
         <Text style={tertiary}>Verify Your Email</Text>
