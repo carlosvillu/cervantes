@@ -23,7 +23,7 @@ dev: ## develop the application
 	docker compose -f ./.docker/compose.yaml up -d --remove-orphans
 	npx ultra-runner --raw --recursive dev
 
-build_dev: clean ## build and then start de env
+build_dev: ## build and then start de env
 		npx ultra-runner --recursive --build
 		make dev
 

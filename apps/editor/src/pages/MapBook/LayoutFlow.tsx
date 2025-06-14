@@ -191,7 +191,6 @@ export const LayoutFlow: FC<{}> = () => {
               .filter(node => node.type === 'remove')
               .forEach(node => {
                 const formData = new FormData()
-                // @ts-expect-error
                 formData.append('chapterID', node.id)
                 formData.append('bookID', book.id!)
                 formData.append('intent', 'remove-chapter')
@@ -207,7 +206,6 @@ export const LayoutFlow: FC<{}> = () => {
             .filter(edge => edge.type === 'remove')
             .forEach(edge => {
               const formData = new FormData()
-              // @ts-expect-error
               formData.append('linkID', edge.id)
               formData.append('intent', 'remove-link')
               fetcherRemoveLink.submit(formData, {method: 'post'})
