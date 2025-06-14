@@ -1,0 +1,28 @@
+name: PR Description Generator
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  generate-description:
+    runs-on: ubuntu-latest
+    
+    # Skip if PR has "NO-IA-DESCRIPTION" label
+    if: "!contains(github.event.pull_request.labels.*.name, 'NO-IA-DESCRIPTION')"
+    
+    permissions:
+      contents: read
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Generate PR Description
+        uses: carlosvillu/pr-descriptor-ia@v1.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          claude-api-key: ${{ secrets.CLAUDE_API_KEY }}
