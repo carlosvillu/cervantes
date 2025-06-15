@@ -6,7 +6,13 @@ import fileUpload from 'express-fileupload'
 import {createHttpTerminator} from 'http-terminator'
 import pino from 'pino-http'
 import type {RedisClientType} from 'redis'
+import swaggerJSDoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
 import {ulid} from 'ulid'
+import {readFileSync} from 'fs'
+import {join, dirname} from 'path'
+import {fileURLToPath} from 'url'
+import yaml from 'js-yaml'
 
 import healthCheckMiddleware from '@crdtech/express-health-check-middleware'
 
@@ -32,11 +38,28 @@ log(`
 ================================================
 `)
 
+// Load OpenAPI specification
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const openApiPath = join(__dirname, '..', 'openapi.yaml')
+const openApiSpec = yaml.load(readFileSync(openApiPath, 'utf8')) as object
+
 const redis = (await Redis.create().createAndConnectClient()) as RedisClientType
 const app = express()
 
 app.use('/upload', bearerToken(), domain(), cors(), fileUpload(), uploadRouter)
 app.use(healthCheckMiddleware()(app))
+
+// Swagger UI setup
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(openApiSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Cervantes API Documentation'
+  })
+)
+
 STAGE === 'production' &&
   app.use(
     // @ts-expect-error
@@ -64,7 +87,7 @@ app.use('/link', linkRouter)
 app.use('/body', bodyRouter)
 app.use('/image', imageRouter)
 
-const server = app.listen(+PORT!, HOST!, () => log('app Listen in:', `http://${HOST!}:${PORT!}`)) // eslint-disable-line 
+const server = app.listen(+PORT!, HOST!, () => log('app Listen in:', `http://${HOST!}:${PORT!}`)) // eslint-disable-line
 
 const httpTerminator = createHttpTerminator({server})
 
