@@ -119,6 +119,55 @@ Organized around business domains:
 - **Image**: AI-generated covers and file uploads
 - **Statics**: File management and AWS S3 integration
 
+## 📚 API Documentation
+
+Cervantes provides a comprehensive REST API documented with OpenAPI 3.0 specification. The API enables full programmatic access to all platform features including authentication, content management, and AI services.
+
+### Interactive API Documentation
+
+Access the **Swagger UI** documentation when running the development server:
+
+- **Local Development**: http://localhost:3000/api-docs
+- **Production**: https://api.bookadventur.es/api-docs
+
+The interactive documentation provides:
+- **Complete API Reference**: All endpoints with request/response schemas
+- **Authentication Testing**: Built-in JWT token management
+- **Try It Out**: Execute API calls directly from the browser
+- **Code Examples**: Auto-generated code samples in multiple languages
+
+### API Features
+
+#### Authentication & Security
+- **JWT Bearer Authentication**: Secure token-based authentication
+- **Email Verification**: Account validation workflow
+- **Token Refresh**: Automatic session management
+
+#### Content Management
+- **Books**: Create, update, and manage interactive story collections
+- **Chapters**: Rich text content with versioning support
+- **Links**: Define story branching and reader choices
+- **Bodies**: Hash-based content versioning system
+
+#### Media & AI Services
+- **Image Generation**: AI-powered cover creation via Fooocus
+- **File Uploads**: Direct S3 integration for custom media
+- **Rate Limiting**: 10 requests/hour for AI generation per user
+
+#### Data Formats
+- **Request/Response**: JSON with comprehensive validation
+- **File Uploads**: Multipart form data for images
+- **Error Handling**: Standardized error responses with details
+
+### Production API
+
+The production API is available at:
+```
+https://api.bookadventur.es
+```
+
+All endpoints require authentication except for signup, login, and token refresh operations.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -152,6 +201,7 @@ Organized around business domains:
 4. **Access the application**
    - **Editor**: http://localhost:3001
    - **API**: http://localhost:3000
+   - **API Documentation**: http://localhost:3000/api-docs
    - **AI Service**: http://localhost:3002
 
 ### Development Commands

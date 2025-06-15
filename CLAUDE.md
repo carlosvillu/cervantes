@@ -76,6 +76,7 @@ Code is organized around business domains:
 - **Runtime**: Node.js 21 with ESM modules (requires Node 21+)
 - **Framework**: Express.js with TypeScript
 - **Database**: Redis with Redis-OM for modeling
+- **API Documentation**: OpenAPI 3.0 specification with Swagger UI
 - **Development**: tsx with --watch flag for hot reloading
 
 ### Frontend (Editor)
@@ -107,11 +108,19 @@ Image generation integrated via Docker-based Fooocus API service for automatic b
 ### Interactive Flow Mapping
 ReactFlow visualizes chapter relationships with drag-and-drop editing for creating branching narratives.
 
+### API Documentation
+- **OpenAPI Specification**: Located at `apps/api/openapi.yaml`
+- **Swagger UI**: Available at `/api-docs` endpoint when API is running
+- **Documentation Format**: OpenAPI 3.0 with comprehensive schemas and examples
+- **Live Documentation**: Interactive API testing interface
+- **Production URL**: https://api.bookadventur.es/api-docs
+
 ## Development Notes
 
 - All apps require **Node.js 21+**
 - Use `make dev` for full development environment with all services
 - API runs with debugging enabled in development mode
+- **API Documentation**: Access Swagger UI at http://localhost:3000/api-docs during development
 - Frontend supports hot module replacement via Vite
 - Packages use tshy for dual ESM/CommonJS builds
 - Redis Stack provides development database (no external dependencies)

@@ -1,0 +1,1889 @@
+openapi: 3.0.3
+info:
+  title: Cervantes API
+  description: Interactive book/story editor API for creating choose-your-own-adventure style books with AI-generated cover images, rich text editing, and visual flow mapping of chapter relationships.
+  version: 1.0.0
+  contact:
+    name: Cervantes API Support
+    url: https://github.com/carlosvillu/cervantes
+
+servers:
+  - url: https://api.bookadventur.es
+    description: Production server
+  - url: http://localhost:3000
+    description: Development server
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Bearer token for authentication
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique user identifier
+        username:
+          type: string
+          description: User's username
+        email:
+          type: string
+          format: email
+          description: User's email address
+        password:
+          type: string
+          description: User's password (redacted in responses)
+          example: "[REDACTED]"
+        verified:
+          type: boolean
+          description: Whether the user's email is verified
+      required:
+        - id
+        - username
+        - email
+        - password
+        - verified
+
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique book identifier
+        userID:
+          type: string
+          description: ID of the user who owns the book
+        title:
+          type: string
+          description: Book title
+        summary:
+          type: string
+          description: Book summary/description
+        published:
+          type: boolean
+          description: Whether the book is published
+        rootChapterID:
+          type: string
+          description: ID of the root/starting chapter
+          nullable: true
+        createdAt:
+          type: number
+          description: Creation timestamp
+        updatedAt:
+          type: number
+          description: Last update timestamp
+      required:
+        - id
+        - userID
+        - title
+        - summary
+        - published
+        - createdAt
+        - updatedAt
+
+    Chapter:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique chapter identifier
+        userID:
+          type: string
+          description: ID of the user who owns the chapter
+        bookID:
+          type: string
+          description: ID of the book this chapter belongs to
+        title:
+          type: string
+          description: Chapter title
+        summary:
+          type: string
+          description: Chapter summary/description
+        createdAt:
+          type: number
+          description: Creation timestamp
+        updatedAt:
+          type: number
+          description: Last update timestamp
+      required:
+        - id
+        - userID
+        - bookID
+        - title
+        - summary
+        - createdAt
+        - updatedAt
+
+    Link:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique link identifier
+        userID:
+          type: string
+          description: ID of the user who owns the link
+        bookID:
+          type: string
+          description: ID of the book this link belongs to
+        from:
+          type: string
+          description: Source chapter ID
+        to:
+          type: string
+          description: Target chapter ID
+        kind:
+          type: string
+          enum: [options, direct]
+          description: Type of link connection
+        body:
+          type: string
+          description: Link text/description
+        createdAt:
+          type: number
+          description: Creation timestamp
+      required:
+        - id
+        - userID
+        - bookID
+        - from
+        - to
+        - kind
+        - body
+        - createdAt
+
+    Body:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique body identifier
+        userID:
+          type: string
+          description: ID of the user who owns the body
+        bookID:
+          type: string
+          description: ID of the book this body belongs to
+        chapterID:
+          type: string
+          description: ID of the chapter this body belongs to
+        content:
+          type: string
+          description: Rich text content of the chapter
+        hash:
+          type: string
+          description: Content hash for versioning
+        createdAt:
+          type: number
+          description: Creation timestamp
+      required:
+        - id
+        - userID
+        - bookID
+        - chapterID
+        - content
+        - hash
+        - createdAt
+
+    BookCover:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique book cover identifier
+        bookID:
+          type: string
+          description: ID of the book this cover belongs to
+        key:
+          type: string
+          description: S3 key for the cover image
+      required:
+        - id
+        - bookID
+        - key
+
+    ChapterCover:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique chapter cover identifier
+        bookID:
+          type: string
+          description: ID of the book this cover belongs to
+        chapterID:
+          type: string
+          description: ID of the chapter this cover belongs to
+        key:
+          type: string
+          description: S3 key for the cover image
+      required:
+        - id
+        - bookID
+        - chapterID
+        - key
+
+    AuthTokens:
+      type: object
+      properties:
+        access:
+          type: string
+          description: JWT access token
+        refresh:
+          type: string
+          description: JWT refresh token
+      required:
+        - access
+        - refresh
+
+    ValidationToken:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Validation token identifier
+        userID:
+          type: string
+          description: ID of the user this token belongs to
+        code:
+          type: string
+          description: Validation code (removed in responses)
+        createdAt:
+          type: number
+          description: Creation timestamp
+        validatedAt:
+          type: number
+          description: Validation timestamp
+          nullable: true
+      required:
+        - id
+        - userID
+        - createdAt
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: boolean
+          example: true
+        message:
+          type: string
+          description: Error description
+      required:
+        - error
+        - message
+
+    SignupRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique user identifier
+        username:
+          type: string
+          description: Desired username
+        password:
+          type: string
+          description: User password
+        email:
+          type: string
+          format: email
+          description: User email address
+      required:
+        - id
+        - username
+        - password
+        - email
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+        password:
+          type: string
+          description: User password
+      required:
+        - email
+        - password
+
+    RefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          description: Refresh token
+      required:
+        - refresh
+
+    CreateBookRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique book identifier
+        title:
+          type: string
+          description: Book title
+        summary:
+          type: string
+          description: Book summary/description
+      required:
+        - id
+        - title
+        - summary
+
+    UpdateBookRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Book identifier
+        title:
+          type: string
+          description: Book title
+        summary:
+          type: string
+          description: Book summary/description
+        published:
+          type: boolean
+          description: Whether the book is published
+        createdAt:
+          type: number
+          description: Creation timestamp
+      required:
+        - id
+        - title
+        - summary
+        - published
+        - createdAt
+
+    CreateChapterRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique chapter identifier
+        bookID:
+          type: string
+          description: ID of the book this chapter belongs to
+        title:
+          type: string
+          description: Chapter title
+        summary:
+          type: string
+          description: Chapter summary/description
+      required:
+        - id
+        - bookID
+        - title
+        - summary
+
+    UpdateChapterRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Chapter identifier
+        bookID:
+          type: string
+          description: ID of the book this chapter belongs to
+        title:
+          type: string
+          description: Chapter title
+        summary:
+          type: string
+          description: Chapter summary/description
+        createdAt:
+          oneOf:
+            - type: string
+            - type: number
+          description: Creation timestamp
+      required:
+        - id
+        - bookID
+        - title
+        - summary
+        - createdAt
+
+    CreateLinkRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique link identifier
+        from:
+          type: string
+          description: Source chapter ID
+        to:
+          type: string
+          description: Target chapter ID
+        kind:
+          type: string
+          enum: [options, direct]
+          description: Type of link connection
+        body:
+          type: string
+          description: Link text/description
+        bookID:
+          type: string
+          description: ID of the book this link belongs to
+      required:
+        - id
+        - from
+        - to
+        - kind
+        - body
+        - bookID
+
+    CreateBodyRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique body identifier
+        bookID:
+          type: string
+          description: ID of the book this body belongs to
+        userID:
+          type: string
+          description: ID of the user who owns the body
+        chapterID:
+          type: string
+          description: ID of the chapter this body belongs to
+        content:
+          type: string
+          description: Rich text content of the chapter
+      required:
+        - id
+        - bookID
+        - userID
+        - chapterID
+        - content
+
+    CreateBookCoverRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique book cover identifier
+        bookID:
+          type: string
+          description: ID of the book this cover belongs to
+        key:
+          type: string
+          description: S3 key from uploaded file
+      required:
+        - id
+        - bookID
+        - key
+
+    CreateChapterCoverRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique chapter cover identifier
+        bookID:
+          type: string
+          description: ID of the book this cover belongs to
+        chapterID:
+          type: string
+          description: ID of the chapter this cover belongs to
+        key:
+          type: string
+          description: S3 key from uploaded file
+      required:
+        - id
+        - bookID
+        - chapterID
+        - key
+
+    GenerateImageRequest:
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: AI image generation prompt
+      required:
+        - prompt
+
+    GenerateImageResponse:
+      type: array
+      items:
+        type: string
+        description: S3 key for generated image
+      description: Array of generated image keys
+
+    UploadImageResponse:
+      type: object
+      properties:
+        key:
+          type: string
+          description: S3 key for uploaded image
+      required:
+        - key
+
+    SuccessMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Success message
+      required:
+        - message
+
+paths:
+  # Authentication Endpoints
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Create new user account
+      description: Register a new user account with username, email, and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate user with email and password to get access and refresh tokens
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '400':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      description: Get new access and refresh tokens using a valid refresh token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '400':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Authentication
+      summary: Logout user
+      description: Invalidate refresh token and logout user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/validationToken:
+    post:
+      tags:
+        - Authentication
+      summary: Send email validation code
+      description: Send validation code to user's email for email verification
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Validation code sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationToken'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/validationToken/{id}:
+    post:
+      tags:
+        - Authentication
+      summary: Verify email validation code
+      description: Verify the validation code sent to user's email
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Validation token ID
+          schema:
+            type: string
+        - name: code
+          in: query
+          required: true
+          description: Validation code
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Invalid validation code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Authentication
+      summary: Get validation token by ID
+      description: Retrieve validation token information (sensitive data removed)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Validation token ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Validation token retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationToken'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Validation token not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # User Endpoints
+  /user/current:
+    get:
+      tags:
+        - User
+      summary: Get current user
+      description: Retrieve information about the currently authenticated user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Book Endpoints
+  /book:
+    post:
+      tags:
+        - Book
+      summary: Create new book
+      description: Create a new book with title and summary
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookRequest'
+      responses:
+        '201':
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Book
+      summary: Get all user books
+      description: Retrieve all books belonging to the authenticated user
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Books retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /book/{bookID}:
+    get:
+      tags:
+        - Book
+      summary: Get book by ID
+      description: Retrieve a specific book by its ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: bookID
+          in: path
+          required: true
+          description: Book ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Book retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Book
+      summary: Update book
+      description: Update an existing book's information
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: bookID
+          in: path
+          required: true
+          description: Book ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookRequest'
+      responses:
+        '200':
+          description: Book updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Chapter Endpoints
+  /chapter:
+    post:
+      tags:
+        - Chapter
+      summary: Create new chapter
+      description: Create a new chapter within a book
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChapterRequest'
+      responses:
+        '201':
+          description: Chapter created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chapter'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Chapter
+      summary: Get all chapters for a book
+      description: Retrieve all chapters belonging to a specific book
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: bookID
+          in: query
+          required: true
+          description: Book ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chapters retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chapter'
+        '400':
+          description: Missing bookID parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chapter/{chapterID}:
+    get:
+      tags:
+        - Chapter
+      summary: Get chapter by ID
+      description: Retrieve a specific chapter by its ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: chapterID
+          in: path
+          required: true
+          description: Chapter ID
+          schema:
+            type: string
+        - name: bookID
+          in: query
+          required: true
+          description: Book ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chapter retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chapter'
+        '400':
+          description: Missing bookID parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chapter not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Chapter
+      summary: Update chapter
+      description: Update an existing chapter's information
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: chapterID
+          in: path
+          required: true
+          description: Chapter ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChapterRequest'
+      responses:
+        '200':
+          description: Chapter updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chapter'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chapter not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Chapter
+      summary: Delete chapter
+      description: Delete a chapter by its ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: chapterID
+          in: path
+          required: true
+          description: Chapter ID
+          schema:
+            type: string
+        - name: bookID
+          in: query
+          required: true
+          description: Book ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chapter deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Missing bookID parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chapter not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Link Endpoints
+  /link:
+    post:
+      tags:
+        - Link
+      summary: Create new link
+      description: Create a new link between chapters for interactive narratives
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLinkRequest'
+      responses:
+        '201':
+          description: Link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Link
+      summary: Get all links from a chapter
+      description: Retrieve all links originating from a specific chapter
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: from
+          in: query
+          required: true
+          description: Source chapter ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Links retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+        '400':
+          description: Missing from parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /link/{linkID}:
+    get:
+      tags:
+        - Link
+      summary: Get link by ID
+      description: Retrieve a specific link by its ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: linkID
+          in: path
+          required: true
+          description: Link ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Link retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Link not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Link
+      summary: Delete link
+      description: Delete a link by its ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: linkID
+          in: path
+          required: true
+          description: Link ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Link deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Link not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Body/Content Endpoints
+  /body:
+    post:
+      tags:
+        - Body
+      summary: Create new body/content
+      description: Create new content version for a chapter with hash-based versioning
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBodyRequest'
+      responses:
+        '201':
+          description: Body created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Body'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Body
+      summary: Get body by hash or chapter
+      description: Retrieve body by content hash OR get all bodies for a chapter
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: hash
+          in: query
+          required: false
+          description: Content hash for specific body lookup
+          schema:
+            type: string
+        - name: bookID
+          in: query
+          required: false
+          description: Book ID (required if not using hash)
+          schema:
+            type: string
+        - name: chapterID
+          in: query
+          required: false
+          description: Chapter ID (required if not using hash)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Body/Bodies retrieved successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Body'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Body'
+        '400':
+          description: Missing required parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Body not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /body/{bodyID}:
+    get:
+      tags:
+        - Body
+      summary: Get body by ID
+      description: Retrieve a specific body by its ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: bodyID
+          in: path
+          required: true
+          description: Body ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Body retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Body'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Body not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Image Endpoints
+  /image/bookcover:
+    get:
+      tags:
+        - Image
+      summary: Get book cover
+      description: Retrieve book cover image information
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: bookID
+          in: query
+          required: true
+          description: Book ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Book cover retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCover'
+        '400':
+          description: Missing bookID parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Book cover not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Image
+      summary: Set book cover from upload
+      description: Set book cover image from uploaded file
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookCoverRequest'
+      responses:
+        '201':
+          description: Book cover set successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookCover'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Image
+      summary: Delete book cover
+      description: Delete book cover image
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: bookID
+          in: query
+          required: true
+          description: Book ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Book cover deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Missing bookID parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Book cover not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /image/chaptercover:
+    get:
+      tags:
+        - Image
+      summary: Get chapter cover
+      description: Retrieve chapter cover image information
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: bookID
+          in: query
+          required: true
+          description: Book ID
+          schema:
+            type: string
+        - name: chapterID
+          in: query
+          required: true
+          description: Chapter ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chapter cover retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChapterCover'
+        '400':
+          description: Missing required parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chapter cover not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Image
+      summary: Set chapter cover from upload
+      description: Set chapter cover image from uploaded file
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChapterCoverRequest'
+      responses:
+        '201':
+          description: Chapter cover set successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChapterCover'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Image
+      summary: Delete chapter cover
+      description: Delete chapter cover image
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: bookID
+          in: query
+          required: true
+          description: Book ID
+          schema:
+            type: string
+        - name: chapterID
+          in: query
+          required: true
+          description: Chapter ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chapter cover deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Missing required parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chapter cover not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /image/generate:
+    post:
+      tags:
+        - Image
+      summary: Generate images with AI
+      description: Generate images using AI (Fooocus) - Rate limited to 10 requests per hour per user
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateImageRequest'
+      responses:
+        '200':
+          description: Images generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateImageResponse'
+        '400':
+          description: Invalid input or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (10 requests per hour)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # Upload Endpoints
+  /upload/image:
+    post:
+      tags:
+        - Upload
+      summary: Upload image file
+      description: Upload image file to S3/CDN storage
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Image file to upload
+              required:
+                - image
+      responses:
+        '201':
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadImageResponse'
+        '400':
+          description: Invalid file or validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
