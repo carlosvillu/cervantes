@@ -1,0 +1,83 @@
+{
+  "name": "@cervantes/client",
+  "version": "0.1.0",
+  "description": "Official TypeScript client for Cervantes API - Interactive book/story editor",
+  "sideEffects": false,
+  "engines": {
+    "node": "21"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "npx tshy --watch",
+    "build": "npx tshy",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "cervantes",
+    "api-client",
+    "typescript",
+    "interactive-books",
+    "stories",
+    "clean-architecture"
+  ],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carlosvillu/cervantes.git",
+    "directory": "packages/client"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "openapi-typescript": "^6.7.1",
+    "tshy": "^1.8.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4",
+    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/ui": "^1.0.4"
+  },
+  "peerDependencies": {
+    "typescript": ">=4.5.0"
+  },
+  "tshy": {
+    "dialects": [
+      "esm",
+      "commonjs"
+    ],
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "source": "./src/index.ts",
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "source": "./src/index.ts",
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    }
+  },
+  "type": "module",
+  "main": "./dist/commonjs/index.js",
+  "types": "./dist/commonjs/index.d.ts",
+  "module": "./dist/esm/index.js"
+}

@@ -5,7 +5,9 @@
   "workspaces": [
     "apps/editor",
     "apps/api",
-    "packages/decorators"
+    "packages/decorators",
+    "packages/literals",
+    "packages/client"
   ],
   "engines": {
     "node": "21"
