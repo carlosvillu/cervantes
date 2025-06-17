@@ -5,20 +5,20 @@
 
 // Base domain primitives
 export interface UseCase<Input = unknown, Output = unknown> {
-  execute(input: Input): Promise<Output>
+  execute: (input: Input) => Promise<Output>
 }
 
 export interface Repository<Entity, ID = string> {
-  findById(id: ID): Promise<Entity | null>
-  save(entity: Entity): Promise<Entity>
-  delete(id: ID): Promise<void>
+  findById: (id: ID) => Promise<Entity | null>
+  save: (entity: Entity) => Promise<Entity>
+  delete: (id: ID) => Promise<void>
 }
 
 // Base domain error
 export abstract class DomainError extends Error {
   abstract readonly code: string
   abstract readonly statusCode: number
-  
+
   constructor(message: string, public readonly cause?: Error) {
     super(message)
     this.name = this.constructor.name
@@ -28,11 +28,11 @@ export abstract class DomainError extends Error {
 // Common value objects
 export abstract class ValueObject<T> {
   constructor(protected readonly value: T) {}
-  
+
   getValue(): T {
     return this.value
   }
-  
+
   equals(other: ValueObject<T>): boolean {
     return this.value === other.value
   }
@@ -41,11 +41,11 @@ export abstract class ValueObject<T> {
 // Base entity
 export abstract class Entity<ID = string> {
   constructor(protected readonly id: ID) {}
-  
+
   getId(): ID {
     return this.id
   }
-  
+
   equals(other: Entity<ID>): boolean {
     return this.id === other.id
   }

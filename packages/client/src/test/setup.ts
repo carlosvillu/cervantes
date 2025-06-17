@@ -1,6 +1,6 @@
 /**
  * Vitest setup file for @cervantes/client
- * 
+ *
  * This file is executed before any test files and can be used to:
  * - Configure global test environment
  * - Setup mocks and stubs
@@ -8,15 +8,15 @@
  */
 
 // Global test configuration
-import { beforeEach, vi } from 'vitest'
+import {beforeEach, vi} from 'vitest'
 
 // Mock console methods in test environment to reduce noise
-const originalConsole = console
+const originalConsole = console // eslint-disable-line @typescript-eslint/no-unused-vars
 
-beforeEach(() => {
+beforeEach((): void => {
   // Reset all mocks before each test
   vi.clearAllMocks()
-  
+
   // Optionally suppress console.log in tests (uncomment if needed)
   // console.log = vi.fn()
   // console.warn = vi.fn()

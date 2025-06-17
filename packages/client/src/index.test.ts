@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
-import { VERSION } from './index.js'
+import {describe, expect, it} from 'vitest'
+
+import {VERSION} from './index.js'
 
 describe('@cervantes/client', () => {
   it('should export VERSION constant', () => {

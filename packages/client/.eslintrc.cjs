@@ -8,7 +8,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: './tsconfig.lint.json',
   },
   rules: {
     // Inherit root rules with client-specific overrides
@@ -28,5 +28,13 @@ module.exports = {
     'dist/',
     'node_modules/',
     '*.js', // Allow this config file
+  ],
+  overrides: [
+    {
+      files: ['**/*.test.ts', '**/*.spec.ts'],
+      rules: {
+        '@typescript-eslint/explicit-function-return-type': 'off',
+      },
+    },
   ],
 }
