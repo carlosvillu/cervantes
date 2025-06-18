@@ -28,6 +28,7 @@ module.exports = {
     'dist/',
     'node_modules/',
     '*.js', // Allow this config file
+    'src/generated/api-types.ts', // Generated file, always regenerated
   ],
   overrides: [
     {

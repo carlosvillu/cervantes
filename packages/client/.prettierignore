@@ -1,0 +1,6 @@
+# Generated files
+src/generated/api-types.ts
+
+# Build artifacts
+dist/
+node_modules/
