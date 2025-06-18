@@ -13,12 +13,15 @@
   "scripts": {
     "dev": "npx tshy --watch",
     "build": "npx tshy",
+    "generate:types": "openapi-typescript ../../apps/api/openapi.yaml --output src/generated/api-types.ts",
+    "prebuild": "npm run generate:types",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "type-check": "tsc --noEmit",
+    "validate:types": "npm run generate:types && npm run type-check",
     "clean": "rm -rf dist"
   },
   "keywords": [
