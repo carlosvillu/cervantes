@@ -61,7 +61,7 @@ export class Chapter extends Entity<string> {
   }
 
   hasValidStructure(): boolean {
-    return this.title.trim().length > 0 && this.summary.trim().length >= 0
+    return this.title.trim().length > 0 && this.summary.trim().length > 0
   }
 
   canBeDeleted(): boolean {

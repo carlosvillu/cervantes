@@ -2,6 +2,7 @@ import {z} from 'zod'
 
 import type {components} from '../../generated/api-types.js'
 import {Entity} from '../_kernel/types.js'
+import {ValidationUtils} from '../_shared/validation-utils.js'
 
 type UserSchema = components['schemas']['User']
 
@@ -30,10 +31,6 @@ export class User extends Entity<string> {
 
   getEmail(): string {
     return this.email
-  }
-
-  getPassword(): string {
-    return this.password
   }
 
   isVerified(): boolean {
@@ -65,13 +62,11 @@ export class User extends Entity<string> {
   }
 
   isEmailValid(): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(this.email)
+    return ValidationUtils.isValidEmail(this.email)
   }
 
   isUsernameValid(): boolean {
-    const usernameRegex = /^[a-zA-Z0-9_]{3,50}$/
-    return usernameRegex.test(this.username)
+    return ValidationUtils.isValidUsername(this.username)
   }
 
   needsEmailVerification(): boolean {

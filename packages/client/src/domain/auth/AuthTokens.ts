@@ -23,7 +23,12 @@ export class AuthTokens extends ValueObject<AuthTokensSchema> {
     return this.refresh
   }
 
+  private isValidJWT(token: string): boolean {
+    return Boolean(token && token.split('.').length === 3)
+  }
+
   isAccessTokenExpired(): boolean {
+    if (!this.isValidJWT(this.access)) return true
     try {
       const payload = JSON.parse(atob(this.access.split('.')[1]))
       const exp = payload.exp * 1000
@@ -34,6 +39,7 @@ export class AuthTokens extends ValueObject<AuthTokensSchema> {
   }
 
   isRefreshTokenExpired(): boolean {
+    if (!this.isValidJWT(this.refresh)) return true
     try {
       const payload = JSON.parse(atob(this.refresh.split('.')[1]))
       const exp = payload.exp * 1000

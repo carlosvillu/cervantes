@@ -2,6 +2,7 @@ import {z} from 'zod'
 
 import type {components} from '../../generated/api-types.js'
 import {ValueObject} from '../_kernel/types.js'
+import {generateUUID, ValidationUtils} from '../_shared/validation-utils.js'
 
 type SignupRequestSchema = components['schemas']['SignupRequest']
 
@@ -39,23 +40,15 @@ export class SignupRequest extends ValueObject<SignupRequestSchema> {
   }
 
   isValidEmail(): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(this.email)
+    return ValidationUtils.isValidEmail(this.email)
   }
 
   isStrongPassword(): boolean {
-    const hasMinLength = this.password.length >= 8
-    const hasUpperCase = /[A-Z]/.test(this.password)
-    const hasLowerCase = /[a-z]/.test(this.password)
-    const hasNumbers = /\d/.test(this.password)
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(this.password)
-
-    return hasMinLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar
+    return ValidationUtils.isStrongPassword(this.password)
   }
 
   isValidUsername(): boolean {
-    const usernameRegex = /^[a-zA-Z0-9_]{3,50}$/
-    return usernameRegex.test(this.username)
+    return ValidationUtils.isValidUsername(this.username)
   }
 
   validate(): {isValid: boolean; errors: string[]} {
@@ -79,7 +72,7 @@ export class SignupRequest extends ValueObject<SignupRequestSchema> {
   }
 
   static create(data: Omit<SignupRequestSchema, 'id'>): SignupRequest {
-    const id = crypto.randomUUID()
+    const id = generateUUID()
     return SignupRequest.fromAPI({...data, id})
   }
 
