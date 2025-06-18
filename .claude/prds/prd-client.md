@@ -173,11 +173,11 @@ Establecer la base del cliente con autenticación funcional y arquitectura core.
 ### **Tareas Principales**
 
 #### **1.1 Configuración del Proyecto**
-- [ ] **1.1** Configuración del Proyecto
-  - [ ] **1.1.1** Inicializar proyecto TypeScript con tshy
-  - [ ] **1.1.2** Configurar herramientas de desarrollo (ESLint, Prettier, Vitest)
-  - [ ] **1.1.3** Configurar CI/CD pipeline (GitHub Actions)
-  - [ ] **1.1.4** Establecer estructura de directorios Clean Architecture
+- [x] **1.1** Configuración del Proyecto
+  - [x] **1.1.1** Inicializar proyecto TypeScript con tshy
+  - [x] **1.1.2** Configurar herramientas de desarrollo (ESLint, Prettier, Vitest)
+  - [x] **1.1.3** Configurar CI/CD pipeline (GitHub Actions)
+  - [x] **1.1.4** Establecer estructura de directorios Clean Architecture
 
 #### **1.2 Generación de Tipos**
 - [ ] **1.2** Generación de Tipos
