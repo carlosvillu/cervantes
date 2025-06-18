@@ -3,9 +3,8 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/auth/signup": {
+  '/auth/signup': {
     /**
      * Create new user account
      * @description Register a new user account with username, email, and password
@@ -13,32 +12,32 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["SignupRequest"];
-        };
-      };
+          'application/json': components['schemas']['SignupRequest']
+        }
+      }
       responses: {
         /** @description User created successfully */
         201: {
           content: {
-            "application/json": components["schemas"]["SuccessMessage"];
-          };
-        };
+            'application/json': components['schemas']['SuccessMessage']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/auth/login": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/auth/login': {
     /**
      * User login
      * @description Authenticate user with email and password to get access and refresh tokens
@@ -46,32 +45,32 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["LoginRequest"];
-        };
-      };
+          'application/json': components['schemas']['LoginRequest']
+        }
+      }
       responses: {
         /** @description Login successful */
         200: {
           content: {
-            "application/json": components["schemas"]["AuthTokens"];
-          };
-        };
+            'application/json': components['schemas']['AuthTokens']
+          }
+        }
         /** @description Invalid credentials */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/auth/refresh": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/auth/refresh': {
     /**
      * Refresh access token
      * @description Get new access and refresh tokens using a valid refresh token
@@ -79,30 +78,30 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["RefreshRequest"];
-        };
-      };
+          'application/json': components['schemas']['RefreshRequest']
+        }
+      }
       responses: {
         /** @description Token refreshed successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["AuthTokens"];
-          };
-        };
+            'application/json': components['schemas']['AuthTokens']
+          }
+        }
         /** @description Invalid refresh token */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Logout user
      * @description Invalidate refresh token and logout user
@@ -110,32 +109,32 @@ export interface paths {
     delete: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["RefreshRequest"];
-        };
-      };
+          'application/json': components['schemas']['RefreshRequest']
+        }
+      }
       responses: {
         /** @description Logout successful */
         200: {
           content: {
-            "application/json": components["schemas"]["SuccessMessage"];
-          };
-        };
+            'application/json': components['schemas']['SuccessMessage']
+          }
+        }
         /** @description Invalid refresh token */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/auth/validationToken": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/auth/validationToken': {
     /**
      * Send email validation code
      * @description Send validation code to user's email for email verification
@@ -145,25 +144,25 @@ export interface paths {
         /** @description Validation code sent successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["ValidationToken"];
-          };
-        };
+            'application/json': components['schemas']['ValidationToken']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/auth/validationToken/{id}": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/auth/validationToken/{id}': {
     /**
      * Get validation token by ID
      * @description Retrieve validation token information (sensitive data removed)
@@ -172,36 +171,36 @@ export interface paths {
       parameters: {
         path: {
           /** @description Validation token ID */
-          id: string;
-        };
-      };
+          id: string
+        }
+      }
       responses: {
         /** @description Validation token retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["ValidationToken"];
-          };
-        };
+            'application/json': components['schemas']['ValidationToken']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Validation token not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Verify email validation code
      * @description Verify the validation code sent to user's email
@@ -210,42 +209,42 @@ export interface paths {
       parameters: {
         query: {
           /** @description Validation code */
-          code: string;
-        };
+          code: string
+        }
         path: {
           /** @description Validation token ID */
-          id: string;
-        };
-      };
+          id: string
+        }
+      }
       responses: {
         /** @description Email verified successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["SuccessMessage"];
-          };
-        };
+            'application/json': components['schemas']['SuccessMessage']
+          }
+        }
         /** @description Invalid validation code */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/user/current": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/user/current': {
     /**
      * Get current user
      * @description Retrieve information about the currently authenticated user
@@ -255,25 +254,25 @@ export interface paths {
         /** @description User information retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["User"];
-          };
-        };
+            'application/json': components['schemas']['User']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/book": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/book': {
     /**
      * Get all user books
      * @description Retrieve all books belonging to the authenticated user
@@ -283,23 +282,23 @@ export interface paths {
         /** @description Books retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Book"][];
-          };
-        };
+            'application/json': Array<components['schemas']['Book']>
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Create new book
      * @description Create a new book with title and summary
@@ -307,38 +306,38 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateBookRequest"];
-        };
-      };
+          'application/json': components['schemas']['CreateBookRequest']
+        }
+      }
       responses: {
         /** @description Book created successfully */
         201: {
           content: {
-            "application/json": components["schemas"]["Book"];
-          };
-        };
+            'application/json': components['schemas']['Book']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/book/{bookID}": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/book/{bookID}': {
     /**
      * Get book by ID
      * @description Retrieve a specific book by its ID
@@ -347,36 +346,36 @@ export interface paths {
       parameters: {
         path: {
           /** @description Book ID */
-          bookID: string;
-        };
-      };
+          bookID: string
+        }
+      }
       responses: {
         /** @description Book retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Book"];
-          };
-        };
+            'application/json': components['schemas']['Book']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Book not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Update book
      * @description Update an existing book's information
@@ -385,49 +384,49 @@ export interface paths {
       parameters: {
         path: {
           /** @description Book ID */
-          bookID: string;
-        };
-      };
+          bookID: string
+        }
+      }
       requestBody: {
         content: {
-          "application/json": components["schemas"]["UpdateBookRequest"];
-        };
-      };
+          'application/json': components['schemas']['UpdateBookRequest']
+        }
+      }
       responses: {
         /** @description Book updated successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Book"];
-          };
-        };
+            'application/json': components['schemas']['Book']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Book not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/chapter": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/chapter': {
     /**
      * Get all chapters for a book
      * @description Retrieve all chapters belonging to a specific book
@@ -436,36 +435,36 @@ export interface paths {
       parameters: {
         query: {
           /** @description Book ID */
-          bookID: string;
-        };
-      };
+          bookID: string
+        }
+      }
       responses: {
         /** @description Chapters retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Chapter"][];
-          };
-        };
+            'application/json': Array<components['schemas']['Chapter']>
+          }
+        }
         /** @description Missing bookID parameter */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Create new chapter
      * @description Create a new chapter within a book
@@ -473,38 +472,38 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateChapterRequest"];
-        };
-      };
+          'application/json': components['schemas']['CreateChapterRequest']
+        }
+      }
       responses: {
         /** @description Chapter created successfully */
         201: {
           content: {
-            "application/json": components["schemas"]["Chapter"];
-          };
-        };
+            'application/json': components['schemas']['Chapter']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/chapter/{chapterID}": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/chapter/{chapterID}': {
     /**
      * Get chapter by ID
      * @description Retrieve a specific chapter by its ID
@@ -513,46 +512,46 @@ export interface paths {
       parameters: {
         query: {
           /** @description Book ID */
-          bookID: string;
-        };
+          bookID: string
+        }
         path: {
           /** @description Chapter ID */
-          chapterID: string;
-        };
-      };
+          chapterID: string
+        }
+      }
       responses: {
         /** @description Chapter retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Chapter"];
-          };
-        };
+            'application/json': components['schemas']['Chapter']
+          }
+        }
         /** @description Missing bookID parameter */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Chapter not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Update chapter
      * @description Update an existing chapter's information
@@ -561,47 +560,47 @@ export interface paths {
       parameters: {
         path: {
           /** @description Chapter ID */
-          chapterID: string;
-        };
-      };
+          chapterID: string
+        }
+      }
       requestBody: {
         content: {
-          "application/json": components["schemas"]["UpdateChapterRequest"];
-        };
-      };
+          'application/json': components['schemas']['UpdateChapterRequest']
+        }
+      }
       responses: {
         /** @description Chapter updated successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Chapter"];
-          };
-        };
+            'application/json': components['schemas']['Chapter']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Chapter not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Delete chapter
      * @description Delete a chapter by its ID
@@ -610,48 +609,48 @@ export interface paths {
       parameters: {
         query: {
           /** @description Book ID */
-          bookID: string;
-        };
+          bookID: string
+        }
         path: {
           /** @description Chapter ID */
-          chapterID: string;
-        };
-      };
+          chapterID: string
+        }
+      }
       responses: {
         /** @description Chapter deleted successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["SuccessMessage"];
-          };
-        };
+            'application/json': components['schemas']['SuccessMessage']
+          }
+        }
         /** @description Missing bookID parameter */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Chapter not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/link": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/link': {
     /**
      * Get all links from a chapter
      * @description Retrieve all links originating from a specific chapter
@@ -660,36 +659,36 @@ export interface paths {
       parameters: {
         query: {
           /** @description Source chapter ID */
-          from: string;
-        };
-      };
+          from: string
+        }
+      }
       responses: {
         /** @description Links retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Link"][];
-          };
-        };
+            'application/json': Array<components['schemas']['Link']>
+          }
+        }
         /** @description Missing from parameter */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Create new link
      * @description Create a new link between chapters for interactive narratives
@@ -697,38 +696,38 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateLinkRequest"];
-        };
-      };
+          'application/json': components['schemas']['CreateLinkRequest']
+        }
+      }
       responses: {
         /** @description Link created successfully */
         201: {
           content: {
-            "application/json": components["schemas"]["Link"];
-          };
-        };
+            'application/json': components['schemas']['Link']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/link/{linkID}": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/link/{linkID}': {
     /**
      * Get link by ID
      * @description Retrieve a specific link by its ID
@@ -737,36 +736,36 @@ export interface paths {
       parameters: {
         path: {
           /** @description Link ID */
-          linkID: string;
-        };
-      };
+          linkID: string
+        }
+      }
       responses: {
         /** @description Link retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Link"];
-          };
-        };
+            'application/json': components['schemas']['Link']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Link not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Delete link
      * @description Delete a link by its ID
@@ -775,38 +774,38 @@ export interface paths {
       parameters: {
         path: {
           /** @description Link ID */
-          linkID: string;
-        };
-      };
+          linkID: string
+        }
+      }
       responses: {
         /** @description Link deleted successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["SuccessMessage"];
-          };
-        };
+            'application/json': components['schemas']['SuccessMessage']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Link not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/body": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/body': {
     /**
      * Get body by hash or chapter
      * @description Retrieve body by content hash OR get all bodies for a chapter
@@ -815,46 +814,46 @@ export interface paths {
       parameters: {
         query?: {
           /** @description Content hash for specific body lookup */
-          hash?: string;
+          hash?: string
           /** @description Book ID (required if not using hash) */
-          bookID?: string;
+          bookID?: string
           /** @description Chapter ID (required if not using hash) */
-          chapterID?: string;
-        };
-      };
+          chapterID?: string
+        }
+      }
       responses: {
         /** @description Body/Bodies retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Body"] | components["schemas"]["Body"][];
-          };
-        };
+            'application/json': components['schemas']['Body'] | Array<components['schemas']['Body']>
+          }
+        }
         /** @description Missing required parameters */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Body not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Create new body/content
      * @description Create new content version for a chapter with hash-based versioning
@@ -862,38 +861,38 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateBodyRequest"];
-        };
-      };
+          'application/json': components['schemas']['CreateBodyRequest']
+        }
+      }
       responses: {
         /** @description Body created successfully */
         201: {
           content: {
-            "application/json": components["schemas"]["Body"];
-          };
-        };
+            'application/json': components['schemas']['Body']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/body/{bodyID}": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/body/{bodyID}': {
     /**
      * Get body by ID
      * @description Retrieve a specific body by its ID
@@ -902,38 +901,38 @@ export interface paths {
       parameters: {
         path: {
           /** @description Body ID */
-          bodyID: string;
-        };
-      };
+          bodyID: string
+        }
+      }
       responses: {
         /** @description Body retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["Body"];
-          };
-        };
+            'application/json': components['schemas']['Body']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Body not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/image/bookcover": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/image/bookcover': {
     /**
      * Get book cover
      * @description Retrieve book cover image information
@@ -942,42 +941,42 @@ export interface paths {
       parameters: {
         query: {
           /** @description Book ID */
-          bookID: string;
-        };
-      };
+          bookID: string
+        }
+      }
       responses: {
         /** @description Book cover retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["BookCover"];
-          };
-        };
+            'application/json': components['schemas']['BookCover']
+          }
+        }
         /** @description Missing bookID parameter */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Book cover not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Set book cover from upload
      * @description Set book cover image from uploaded file
@@ -985,36 +984,36 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateBookCoverRequest"];
-        };
-      };
+          'application/json': components['schemas']['CreateBookCoverRequest']
+        }
+      }
       responses: {
         /** @description Book cover set successfully */
         201: {
           content: {
-            "application/json": components["schemas"]["BookCover"];
-          };
-        };
+            'application/json': components['schemas']['BookCover']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Delete book cover
      * @description Delete book cover image
@@ -1023,44 +1022,44 @@ export interface paths {
       parameters: {
         query: {
           /** @description Book ID */
-          bookID: string;
-        };
-      };
+          bookID: string
+        }
+      }
       responses: {
         /** @description Book cover deleted successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["SuccessMessage"];
-          };
-        };
+            'application/json': components['schemas']['SuccessMessage']
+          }
+        }
         /** @description Missing bookID parameter */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Book cover not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/image/chaptercover": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/image/chaptercover': {
     /**
      * Get chapter cover
      * @description Retrieve chapter cover image information
@@ -1069,44 +1068,44 @@ export interface paths {
       parameters: {
         query: {
           /** @description Book ID */
-          bookID: string;
+          bookID: string
           /** @description Chapter ID */
-          chapterID: string;
-        };
-      };
+          chapterID: string
+        }
+      }
       responses: {
         /** @description Chapter cover retrieved successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["ChapterCover"];
-          };
-        };
+            'application/json': components['schemas']['ChapterCover']
+          }
+        }
         /** @description Missing required parameters */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Chapter cover not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Set chapter cover from upload
      * @description Set chapter cover image from uploaded file
@@ -1114,36 +1113,36 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["CreateChapterCoverRequest"];
-        };
-      };
+          'application/json': components['schemas']['CreateChapterCoverRequest']
+        }
+      }
       responses: {
         /** @description Chapter cover set successfully */
         201: {
           content: {
-            "application/json": components["schemas"]["ChapterCover"];
-          };
-        };
+            'application/json': components['schemas']['ChapterCover']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
     /**
      * Delete chapter cover
      * @description Delete chapter cover image
@@ -1152,46 +1151,46 @@ export interface paths {
       parameters: {
         query: {
           /** @description Book ID */
-          bookID: string;
+          bookID: string
           /** @description Chapter ID */
-          chapterID: string;
-        };
-      };
+          chapterID: string
+        }
+      }
       responses: {
         /** @description Chapter cover deleted successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["SuccessMessage"];
-          };
-        };
+            'application/json': components['schemas']['SuccessMessage']
+          }
+        }
         /** @description Missing required parameters */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Chapter cover not found */
         404: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/image/generate": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/image/generate': {
     /**
      * Generate images with AI
      * @description Generate images using AI (Fooocus) - Rate limited to 10 requests per hour per user
@@ -1199,44 +1198,44 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": components["schemas"]["GenerateImageRequest"];
-        };
-      };
+          'application/json': components['schemas']['GenerateImageRequest']
+        }
+      }
       responses: {
         /** @description Images generated successfully */
         200: {
           content: {
-            "application/json": components["schemas"]["GenerateImageResponse"];
-          };
-        };
+            'application/json': components['schemas']['GenerateImageResponse']
+          }
+        }
         /** @description Invalid input or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Rate limit exceeded (10 requests per hour) */
         429: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
-  "/upload/image": {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/upload/image': {
     /**
      * Upload image file
      * @description Upload image file to S3/CDN storage
@@ -1244,319 +1243,319 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "multipart/form-data": {
+          'multipart/form-data': {
             /**
              * Format: binary
              * @description Image file to upload
              */
-            image: string;
-          };
-        };
-      };
+            image: string
+          }
+        }
+      }
       responses: {
         /** @description Image uploaded successfully */
         201: {
           content: {
-            "application/json": components["schemas"]["UploadImageResponse"];
-          };
-        };
+            'application/json': components['schemas']['UploadImageResponse']
+          }
+        }
         /** @description Invalid file or validation error */
         400: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Unauthorized */
         401: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
+            'application/json': components['schemas']['Error']
+          }
+        }
         /** @description Internal server error */
         500: {
           content: {
-            "application/json": components["schemas"]["Error"];
-          };
-        };
-      };
-    };
-  };
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
 }
 
-export type webhooks = Record<string, never>;
+export type webhooks = Record<string, never>
 
 export interface components {
   schemas: {
     User: {
       /** @description Unique user identifier */
-      id: string;
+      id: string
       /** @description User's username */
-      username: string;
+      username: string
       /**
        * Format: email
        * @description User's email address
        */
-      email: string;
+      email: string
       /**
        * @description User's password (redacted in responses)
        * @example [REDACTED]
        */
-      password: string;
+      password: string
       /** @description Whether the user's email is verified */
-      verified: boolean;
-    };
+      verified: boolean
+    }
     Book: {
       /** @description Unique book identifier */
-      id: string;
+      id: string
       /** @description ID of the user who owns the book */
-      userID: string;
+      userID: string
       /** @description Book title */
-      title: string;
+      title: string
       /** @description Book summary/description */
-      summary: string;
+      summary: string
       /** @description Whether the book is published */
-      published: boolean;
+      published: boolean
       /** @description ID of the root/starting chapter */
-      rootChapterID?: string | null;
+      rootChapterID?: string | null
       /** @description Creation timestamp */
-      createdAt: number;
+      createdAt: number
       /** @description Last update timestamp */
-      updatedAt: number;
-    };
+      updatedAt: number
+    }
     Chapter: {
       /** @description Unique chapter identifier */
-      id: string;
+      id: string
       /** @description ID of the user who owns the chapter */
-      userID: string;
+      userID: string
       /** @description ID of the book this chapter belongs to */
-      bookID: string;
+      bookID: string
       /** @description Chapter title */
-      title: string;
+      title: string
       /** @description Chapter summary/description */
-      summary: string;
+      summary: string
       /** @description Creation timestamp */
-      createdAt: number;
+      createdAt: number
       /** @description Last update timestamp */
-      updatedAt: number;
-    };
+      updatedAt: number
+    }
     Link: {
       /** @description Unique link identifier */
-      id: string;
+      id: string
       /** @description ID of the user who owns the link */
-      userID: string;
+      userID: string
       /** @description ID of the book this link belongs to */
-      bookID: string;
+      bookID: string
       /** @description Source chapter ID */
-      from: string;
+      from: string
       /** @description Target chapter ID */
-      to: string;
+      to: string
       /**
        * @description Type of link connection
        * @enum {string}
        */
-      kind: "options" | "direct";
+      kind: 'options' | 'direct'
       /** @description Link text/description */
-      body: string;
+      body: string
       /** @description Creation timestamp */
-      createdAt: number;
-    };
+      createdAt: number
+    }
     Body: {
       /** @description Unique body identifier */
-      id: string;
+      id: string
       /** @description ID of the user who owns the body */
-      userID: string;
+      userID: string
       /** @description ID of the book this body belongs to */
-      bookID: string;
+      bookID: string
       /** @description ID of the chapter this body belongs to */
-      chapterID: string;
+      chapterID: string
       /** @description Rich text content of the chapter */
-      content: string;
+      content: string
       /** @description Content hash for versioning */
-      hash: string;
+      hash: string
       /** @description Creation timestamp */
-      createdAt: number;
-    };
+      createdAt: number
+    }
     BookCover: {
       /** @description Unique book cover identifier */
-      id: string;
+      id: string
       /** @description ID of the book this cover belongs to */
-      bookID: string;
+      bookID: string
       /** @description S3 key for the cover image */
-      key: string;
-    };
+      key: string
+    }
     ChapterCover: {
       /** @description Unique chapter cover identifier */
-      id: string;
+      id: string
       /** @description ID of the book this cover belongs to */
-      bookID: string;
+      bookID: string
       /** @description ID of the chapter this cover belongs to */
-      chapterID: string;
+      chapterID: string
       /** @description S3 key for the cover image */
-      key: string;
-    };
+      key: string
+    }
     AuthTokens: {
       /** @description JWT access token */
-      access: string;
+      access: string
       /** @description JWT refresh token */
-      refresh: string;
-    };
+      refresh: string
+    }
     ValidationToken: {
       /** @description Validation token identifier */
-      id: string;
+      id: string
       /** @description ID of the user this token belongs to */
-      userID: string;
+      userID: string
       /** @description Validation code (removed in responses) */
-      code?: string;
+      code?: string
       /** @description Creation timestamp */
-      createdAt: number;
+      createdAt: number
       /** @description Validation timestamp */
-      validatedAt?: number | null;
-    };
+      validatedAt?: number | null
+    }
     Error: {
       /** @example true */
-      error: boolean;
+      error: boolean
       /** @description Error description */
-      message: string;
-    };
+      message: string
+    }
     SignupRequest: {
       /** @description Unique user identifier */
-      id: string;
+      id: string
       /** @description Desired username */
-      username: string;
+      username: string
       /** @description User password */
-      password: string;
+      password: string
       /**
        * Format: email
        * @description User email address
        */
-      email: string;
-    };
+      email: string
+    }
     LoginRequest: {
       /**
        * Format: email
        * @description User email address
        */
-      email: string;
+      email: string
       /** @description User password */
-      password: string;
-    };
+      password: string
+    }
     RefreshRequest: {
       /** @description Refresh token */
-      refresh: string;
-    };
+      refresh: string
+    }
     CreateBookRequest: {
       /** @description Unique book identifier */
-      id: string;
+      id: string
       /** @description Book title */
-      title: string;
+      title: string
       /** @description Book summary/description */
-      summary: string;
-    };
+      summary: string
+    }
     UpdateBookRequest: {
       /** @description Book identifier */
-      id: string;
+      id: string
       /** @description Book title */
-      title: string;
+      title: string
       /** @description Book summary/description */
-      summary: string;
+      summary: string
       /** @description Whether the book is published */
-      published: boolean;
+      published: boolean
       /** @description Creation timestamp */
-      createdAt: number;
-    };
+      createdAt: number
+    }
     CreateChapterRequest: {
       /** @description Unique chapter identifier */
-      id: string;
+      id: string
       /** @description ID of the book this chapter belongs to */
-      bookID: string;
+      bookID: string
       /** @description Chapter title */
-      title: string;
+      title: string
       /** @description Chapter summary/description */
-      summary: string;
-    };
+      summary: string
+    }
     UpdateChapterRequest: {
       /** @description Chapter identifier */
-      id: string;
+      id: string
       /** @description ID of the book this chapter belongs to */
-      bookID: string;
+      bookID: string
       /** @description Chapter title */
-      title: string;
+      title: string
       /** @description Chapter summary/description */
-      summary: string;
+      summary: string
       /** @description Creation timestamp */
-      createdAt: string | number;
-    };
+      createdAt: string | number
+    }
     CreateLinkRequest: {
       /** @description Unique link identifier */
-      id: string;
+      id: string
       /** @description Source chapter ID */
-      from: string;
+      from: string
       /** @description Target chapter ID */
-      to: string;
+      to: string
       /**
        * @description Type of link connection
        * @enum {string}
        */
-      kind: "options" | "direct";
+      kind: 'options' | 'direct'
       /** @description Link text/description */
-      body: string;
+      body: string
       /** @description ID of the book this link belongs to */
-      bookID: string;
-    };
+      bookID: string
+    }
     CreateBodyRequest: {
       /** @description Unique body identifier */
-      id: string;
+      id: string
       /** @description ID of the book this body belongs to */
-      bookID: string;
+      bookID: string
       /** @description ID of the user who owns the body */
-      userID: string;
+      userID: string
       /** @description ID of the chapter this body belongs to */
-      chapterID: string;
+      chapterID: string
       /** @description Rich text content of the chapter */
-      content: string;
-    };
+      content: string
+    }
     CreateBookCoverRequest: {
       /** @description Unique book cover identifier */
-      id: string;
+      id: string
       /** @description ID of the book this cover belongs to */
-      bookID: string;
+      bookID: string
       /** @description S3 key from uploaded file */
-      key: string;
-    };
+      key: string
+    }
     CreateChapterCoverRequest: {
       /** @description Unique chapter cover identifier */
-      id: string;
+      id: string
       /** @description ID of the book this cover belongs to */
-      bookID: string;
+      bookID: string
       /** @description ID of the chapter this cover belongs to */
-      chapterID: string;
+      chapterID: string
       /** @description S3 key from uploaded file */
-      key: string;
-    };
+      key: string
+    }
     GenerateImageRequest: {
       /** @description AI image generation prompt */
-      prompt: string;
-    };
+      prompt: string
+    }
     /** @description Array of generated image keys */
-    GenerateImageResponse: string[];
+    GenerateImageResponse: string[]
     UploadImageResponse: {
       /** @description S3 key for uploaded image */
-      key: string;
-    };
+      key: string
+    }
     SuccessMessage: {
       /** @description Success message */
-      message: string;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+      message: string
+    }
+  }
+  responses: never
+  parameters: never
+  requestBodies: never
+  headers: never
+  pathItems: never
 }
 
-export type $defs = Record<string, never>;
+export type $defs = Record<string, never>
 
-export type external = Record<string, never>;
+export type external = Record<string, never>
 
-export type operations = Record<string, never>;
+export type operations = Record<string, never>
