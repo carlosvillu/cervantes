@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type CreateBookRequestSchema = components['schemas']['CreateBookRequest']
 
@@ -11,12 +12,8 @@ export const CreateBookRequestValidationSchema = z.object({
 })
 
 export class CreateBookRequest extends ValueObject<CreateBookRequestSchema> {
-  constructor(
-    private readonly id: string,
-    private readonly title: string,
-    private readonly summary: string
-  ) {
-    super({ id, title, summary })
+  constructor(private readonly id: string, private readonly title: string, private readonly summary: string) {
+    super({id, title, summary})
   }
 
   getId(): string {
@@ -51,7 +48,7 @@ export class CreateBookRequest extends ValueObject<CreateBookRequestSchema> {
     return this.title.split(/\s+/).filter(word => word.length > 0).length
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.hasValidTitle()) {
@@ -66,21 +63,17 @@ export class CreateBookRequest extends ValueObject<CreateBookRequestSchema> {
       errors.push('Title cannot be empty')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static create(data: Omit<CreateBookRequestSchema, 'id'>): CreateBookRequest {
     const id = crypto.randomUUID()
-    return CreateBookRequest.fromAPI({ ...data, id })
+    return CreateBookRequest.fromAPI({...data, id})
   }
 
   static fromAPI(data: CreateBookRequestSchema): CreateBookRequest {
     const validated = CreateBookRequestValidationSchema.parse(data)
-    return new CreateBookRequest(
-      validated.id,
-      validated.title,
-      validated.summary
-    )
+    return new CreateBookRequest(validated.id, validated.title, validated.summary)
   }
 
   toAPI(): CreateBookRequestSchema {

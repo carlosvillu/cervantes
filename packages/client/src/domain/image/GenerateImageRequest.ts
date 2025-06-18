@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type GenerateImageRequestSchema = components['schemas']['GenerateImageRequest']
 
@@ -10,10 +11,12 @@ export const GenerateImageRequestValidationSchema = z.object({
 
 export class GenerateImageRequest extends ValueObject<GenerateImageRequestSchema> {
   constructor(private readonly prompt: string) {
-    super({ prompt })
+    super({prompt})
   }
 
-  getPrompt(): string { return this.prompt }
+  getPrompt(): string {
+    return this.prompt
+  }
 
   hasValidPrompt(): boolean {
     return this.prompt.trim().length > 0 && this.prompt.length <= 1000

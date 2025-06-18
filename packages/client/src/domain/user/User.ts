@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { Entity } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {Entity} from '../_kernel/types'
 
 type UserSchema = components['schemas']['User']
 
@@ -94,7 +95,7 @@ export class User extends Entity<string> {
     }
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isUsernameValid()) {
@@ -105,18 +106,12 @@ export class User extends Entity<string> {
       errors.push('Email must be a valid email address')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static fromAPI(data: UserSchema): User {
     const validated = UserValidationSchema.parse(data)
-    return new User(
-      validated.id,
-      validated.username,
-      validated.email,
-      validated.password,
-      validated.verified
-    )
+    return new User(validated.id, validated.username, validated.email, validated.password, validated.verified)
   }
 
   toAPI(): UserSchema {
@@ -130,9 +125,4 @@ export class User extends Entity<string> {
   }
 }
 
-export type UserAction = 
-  | 'CREATE_BOOK'
-  | 'PUBLISH_BOOK'
-  | 'UPLOAD_IMAGE'
-  | 'GENERATE_IMAGE'
-  | 'UPDATE_PROFILE'
+export type UserAction = 'CREATE_BOOK' | 'PUBLISH_BOOK' | 'UPLOAD_IMAGE' | 'GENERATE_IMAGE' | 'UPDATE_PROFILE'

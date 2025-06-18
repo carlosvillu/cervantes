@@ -1,10 +1,10 @@
-export { Book, BookValidationSchema } from './Book'
-import type { BookStatus as _BookStatus } from './Book'
+import type {BookStatus as _BookStatus} from './Book'
+export {Book, BookValidationSchema} from './Book'
 export type BookStatus = _BookStatus
-export { BookCover, BookCoverValidationSchema } from './BookCover'
-export { CreateBookRequest, CreateBookRequestValidationSchema } from './CreateBookRequest'
-export { UpdateBookRequest, UpdateBookRequestValidationSchema } from './UpdateBookRequest'
-export { CreateBookCoverRequest, CreateBookCoverRequestValidationSchema } from './CreateBookCoverRequest'
+export {BookCover, BookCoverValidationSchema} from './BookCover'
+export {CreateBookRequest, CreateBookRequestValidationSchema} from './CreateBookRequest'
+export {UpdateBookRequest, UpdateBookRequestValidationSchema} from './UpdateBookRequest'
+export {CreateBookCoverRequest, CreateBookCoverRequestValidationSchema} from './CreateBookCoverRequest'
 
 export interface BookMetadata {
   id: string

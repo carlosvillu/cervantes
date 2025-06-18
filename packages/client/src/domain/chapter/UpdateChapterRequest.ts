@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type UpdateChapterRequestSchema = components['schemas']['UpdateChapterRequest']
 
@@ -20,7 +21,7 @@ export class UpdateChapterRequest extends ValueObject<UpdateChapterRequestSchema
     private readonly summary: string,
     private readonly createdAt: string | number
   ) {
-    super({ id, bookID, title, summary, createdAt })
+    super({id, bookID, title, summary, createdAt})
   }
 
   getId(): string {
@@ -63,7 +64,7 @@ export class UpdateChapterRequest extends ValueObject<UpdateChapterRequestSchema
     return this.title !== originalTitle || this.summary !== originalSummary
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.hasValidTitle()) {
@@ -78,7 +79,7 @@ export class UpdateChapterRequest extends ValueObject<UpdateChapterRequestSchema
       errors.push('Book ID is required')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static fromAPI(data: UpdateChapterRequestSchema): UpdateChapterRequest {

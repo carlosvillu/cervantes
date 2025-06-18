@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { Entity } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {Entity} from '../_kernel/types'
 
 type BookSchema = components['schemas']['Book']
 
@@ -106,7 +107,7 @@ export class Book extends Entity<string> {
     return 'incomplete'
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (this.title.trim().length === 0) {
@@ -121,7 +122,7 @@ export class Book extends Entity<string> {
       errors.push('Summary must be 1000 characters or less')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static fromAPI(data: BookSchema): Book {

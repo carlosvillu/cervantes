@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { Entity } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {Entity} from '../_kernel/types'
 
 type BodySchema = components['schemas']['Body']
 
@@ -27,12 +28,29 @@ export class Body extends Entity<string> {
     super(id)
   }
 
-  getUserID(): string { return this.userID }
-  getBookID(): string { return this.bookID }
-  getChapterID(): string { return this.chapterID }
-  getContent(): string { return this.content }
-  getHash(): string { return this.hash }
-  getCreatedAt(): number { return this.createdAt }
+  getUserID(): string {
+    return this.userID
+  }
+
+  getBookID(): string {
+    return this.bookID
+  }
+
+  getChapterID(): string {
+    return this.chapterID
+  }
+
+  getContent(): string {
+    return this.content
+  }
+
+  getHash(): string {
+    return this.hash
+  }
+
+  getCreatedAt(): number {
+    return this.createdAt
+  }
 
   belongsToUser(userID: string): boolean {
     return this.userID === userID

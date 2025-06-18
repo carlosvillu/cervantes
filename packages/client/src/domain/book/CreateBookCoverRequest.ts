@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type CreateBookCoverRequestSchema = components['schemas']['CreateBookCoverRequest']
 
@@ -11,12 +12,8 @@ export const CreateBookCoverRequestValidationSchema = z.object({
 })
 
 export class CreateBookCoverRequest extends ValueObject<CreateBookCoverRequestSchema> {
-  constructor(
-    private readonly id: string,
-    private readonly bookID: string,
-    private readonly key: string
-  ) {
-    super({ id, bookID, key })
+  constructor(private readonly id: string, private readonly bookID: string, private readonly key: string) {
+    super({id, bookID, key})
   }
 
   getId(): string {
@@ -60,7 +57,7 @@ export class CreateBookCoverRequest extends ValueObject<CreateBookCoverRequestSc
   }
 
   getFileName(): string {
-    return this.key.split('/').pop() || this.key
+    return this.key.split('/').pop() ?? this.key
   }
 
   isFromUpload(): boolean {
@@ -75,7 +72,7 @@ export class CreateBookCoverRequest extends ValueObject<CreateBookCoverRequestSc
     return this.key.length > 0 && this.bookID.length > 0
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isValidImageKey()) {
@@ -94,21 +91,17 @@ export class CreateBookCoverRequest extends ValueObject<CreateBookCoverRequestSc
       errors.push('Book ID cannot be empty')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static create(data: Omit<CreateBookCoverRequestSchema, 'id'>): CreateBookCoverRequest {
     const id = crypto.randomUUID()
-    return CreateBookCoverRequest.fromAPI({ ...data, id })
+    return CreateBookCoverRequest.fromAPI({...data, id})
   }
 
   static fromAPI(data: CreateBookCoverRequestSchema): CreateBookCoverRequest {
     const validated = CreateBookCoverRequestValidationSchema.parse(data)
-    return new CreateBookCoverRequest(
-      validated.id,
-      validated.bookID,
-      validated.key
-    )
+    return new CreateBookCoverRequest(validated.id, validated.bookID, validated.key)
   }
 
   toAPI(): CreateBookCoverRequestSchema {

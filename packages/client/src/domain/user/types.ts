@@ -1,4 +1,4 @@
-export { User, UserValidationSchema, type UserAction } from './User'
+export {User, UserValidationSchema, type UserAction} from './User'
 
 export interface UserProfile {
   id: string

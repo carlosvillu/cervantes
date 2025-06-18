@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { Entity } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {Entity} from '../_kernel/types'
 
 type ValidationTokenSchema = components['schemas']['ValidationToken']
 

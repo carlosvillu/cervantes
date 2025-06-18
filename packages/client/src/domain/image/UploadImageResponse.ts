@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type UploadImageResponseSchema = components['schemas']['UploadImageResponse']
 
@@ -10,10 +11,12 @@ export const UploadImageResponseValidationSchema = z.object({
 
 export class UploadImageResponse extends ValueObject<UploadImageResponseSchema> {
   constructor(private readonly key: string) {
-    super({ key })
+    super({key})
   }
 
-  getKey(): string { return this.key }
+  getKey(): string {
+    return this.key
+  }
 
   static fromAPI(data: UploadImageResponseSchema): UploadImageResponse {
     const validated = UploadImageResponseValidationSchema.parse(data)

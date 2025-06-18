@@ -15,7 +15,7 @@
     "build": "npx tshy",
     "generate:types": "openapi-typescript ../../apps/api/openapi.yaml --output src/generated/api-types.ts",
     "prebuild": "npm run generate:types",
-    "test": "vitest",
+    "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "lint": "eslint src --ext .ts,.tsx",

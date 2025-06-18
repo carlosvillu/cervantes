@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type RefreshRequestSchema = components['schemas']['RefreshRequest']
 
@@ -10,7 +11,7 @@ export const RefreshRequestValidationSchema = z.object({
 
 export class RefreshRequest extends ValueObject<RefreshRequestSchema> {
   constructor(private readonly refresh: string) {
-    super({ refresh })
+    super({refresh})
   }
 
   getRefreshToken(): string {
@@ -21,7 +22,7 @@ export class RefreshRequest extends ValueObject<RefreshRequestSchema> {
     try {
       const parts = this.refresh.split('.')
       if (parts.length !== 3) return false
-      
+
       // Try to decode the payload to validate JWT structure
       const payload = JSON.parse(atob(parts[1]))
       return typeof payload === 'object' && payload !== null
@@ -58,7 +59,7 @@ export class RefreshRequest extends ValueObject<RefreshRequestSchema> {
     }
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isValidJWT()) {
@@ -69,7 +70,7 @@ export class RefreshRequest extends ValueObject<RefreshRequestSchema> {
       errors.push('Refresh token has expired')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static create(refreshToken: string): RefreshRequest {

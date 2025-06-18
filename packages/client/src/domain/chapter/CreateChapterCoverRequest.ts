@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type CreateChapterCoverRequestSchema = components['schemas']['CreateChapterCoverRequest']
 
@@ -18,7 +19,7 @@ export class CreateChapterCoverRequest extends ValueObject<CreateChapterCoverReq
     private readonly chapterID: string,
     private readonly key: string
   ) {
-    super({ id, bookID, chapterID, key })
+    super({id, bookID, chapterID, key})
   }
 
   getId(): string {
@@ -51,7 +52,7 @@ export class CreateChapterCoverRequest extends ValueObject<CreateChapterCoverReq
     return extension ? validExtensions.includes(extension) : false
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isValidImageKey()) {
@@ -66,22 +67,17 @@ export class CreateChapterCoverRequest extends ValueObject<CreateChapterCoverReq
       errors.push('Chapter ID is required')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static create(data: Omit<CreateChapterCoverRequestSchema, 'id'>): CreateChapterCoverRequest {
     const id = crypto.randomUUID()
-    return CreateChapterCoverRequest.fromAPI({ ...data, id })
+    return CreateChapterCoverRequest.fromAPI({...data, id})
   }
 
   static fromAPI(data: CreateChapterCoverRequestSchema): CreateChapterCoverRequest {
     const validated = CreateChapterCoverRequestValidationSchema.parse(data)
-    return new CreateChapterCoverRequest(
-      validated.id,
-      validated.bookID,
-      validated.chapterID,
-      validated.key
-    )
+    return new CreateChapterCoverRequest(validated.id, validated.bookID, validated.chapterID, validated.key)
   }
 
   toAPI(): CreateChapterCoverRequestSchema {

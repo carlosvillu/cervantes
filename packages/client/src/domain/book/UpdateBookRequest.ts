@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type UpdateBookRequestSchema = components['schemas']['UpdateBookRequest']
 
@@ -20,7 +21,7 @@ export class UpdateBookRequest extends ValueObject<UpdateBookRequestSchema> {
     private readonly published: boolean,
     private readonly createdAt: number
   ) {
-    super({ id, title, summary, published, createdAt })
+    super({id, title, summary, published, createdAt})
   }
 
   getId(): string {
@@ -75,7 +76,7 @@ export class UpdateBookRequest extends ValueObject<UpdateBookRequestSchema> {
     return this.title !== originalTitle || this.summary !== originalSummary
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.hasValidTitle()) {
@@ -94,7 +95,7 @@ export class UpdateBookRequest extends ValueObject<UpdateBookRequestSchema> {
       errors.push('Created date cannot be in the future')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static fromAPI(data: UpdateBookRequestSchema): UpdateBookRequest {

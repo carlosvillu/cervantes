@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { Entity } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {Entity} from '../_kernel/types'
 
 type ChapterCoverSchema = components['schemas']['ChapterCover']
 
@@ -69,7 +70,7 @@ export class ChapterCover extends Entity<string> {
   }
 
   getFileName(): string {
-    return this.key.split('/').pop() || this.key
+    return this.key.split('/').pop() ?? this.key
   }
 
   isAIGenerated(): boolean {
@@ -84,7 +85,7 @@ export class ChapterCover extends Entity<string> {
     return true
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isValidImageFormat()) {
@@ -95,17 +96,12 @@ export class ChapterCover extends Entity<string> {
       errors.push('Image key is required')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static fromAPI(data: ChapterCoverSchema): ChapterCover {
     const validated = ChapterCoverValidationSchema.parse(data)
-    return new ChapterCover(
-      validated.id,
-      validated.bookID,
-      validated.chapterID,
-      validated.key
-    )
+    return new ChapterCover(validated.id, validated.bookID, validated.chapterID, validated.key)
   }
 
   toAPI(): ChapterCoverSchema {

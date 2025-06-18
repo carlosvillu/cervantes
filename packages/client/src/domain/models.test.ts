@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { User } from './user/User'
-import { Book } from './book/Book'
-import { AuthTokens } from './auth/AuthTokens'
+import {describe, expect, it} from 'vitest'
+
+import {AuthTokens} from './auth/AuthTokens'
+import {Book} from './book/Book'
+import {User} from './user/User'
 
 describe('Domain Models', () => {
   it('should create User model from API data', () => {
@@ -14,7 +15,7 @@ describe('Domain Models', () => {
     }
 
     const user = User.fromAPI(userData)
-    
+
     expect(user.getId()).toBe('1')
     expect(user.getUsername()).toBe('testuser')
     expect(user.isVerified()).toBe(true)
@@ -34,7 +35,7 @@ describe('Domain Models', () => {
     }
 
     const book = Book.fromAPI(bookData)
-    
+
     expect(book.getTitle()).toBe('Test Book')
     expect(book.isDraft()).toBe(true)
     expect(book.canBePublished()).toBe(false) // No root chapter
@@ -48,7 +49,7 @@ describe('Domain Models', () => {
     }
 
     const tokens = AuthTokens.fromAPI(tokenData)
-    
+
     expect(tokens.getAccessToken()).toBe('access-token')
     expect(tokens.getRefreshToken()).toBe('refresh-token')
   })

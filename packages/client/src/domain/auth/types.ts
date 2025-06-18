@@ -1,8 +1,8 @@
-export { AuthTokens, AuthTokensValidationSchema } from './AuthTokens'
-export { ValidationToken, ValidationTokenValidationSchema } from './ValidationToken'
-export { SignupRequest, SignupRequestValidationSchema } from './SignupRequest'
-export { LoginRequest, LoginRequestValidationSchema } from './LoginRequest'
-export { RefreshRequest, RefreshRequestValidationSchema } from './RefreshRequest'
+export {AuthTokens, AuthTokensValidationSchema} from './AuthTokens'
+export {ValidationToken, ValidationTokenValidationSchema} from './ValidationToken'
+export {SignupRequest, SignupRequestValidationSchema} from './SignupRequest'
+export {LoginRequest, LoginRequestValidationSchema} from './LoginRequest'
+export {RefreshRequest, RefreshRequestValidationSchema} from './RefreshRequest'
 
 export interface AuthenticationError {
   code: 'INVALID_CREDENTIALS' | 'TOKEN_EXPIRED' | 'TOKEN_INVALID' | 'USER_NOT_VERIFIED'

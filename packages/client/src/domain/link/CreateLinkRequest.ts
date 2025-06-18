@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type CreateLinkRequestSchema = components['schemas']['CreateLinkRequest']
 
@@ -22,33 +23,50 @@ export class CreateLinkRequest extends ValueObject<CreateLinkRequestSchema> {
     private readonly body: string,
     private readonly bookID: string
   ) {
-    super({ id, from, to, kind, body, bookID })
+    super({id, from, to, kind, body, bookID})
   }
 
-  getId(): string { return this.id }
-  getFrom(): string { return this.from }
-  getTo(): string { return this.to }
-  getKind(): 'options' | 'direct' { return this.kind }
-  getBody(): string { return this.body }
-  getBookID(): string { return this.bookID }
+  getId(): string {
+    return this.id
+  }
+
+  getFrom(): string {
+    return this.from
+  }
+
+  getTo(): string {
+    return this.to
+  }
+
+  getKind(): 'options' | 'direct' {
+    return this.kind
+  }
+
+  getBody(): string {
+    return this.body
+  }
+
+  getBookID(): string {
+    return this.bookID
+  }
 
   isValidConnection(): boolean {
     return this.from !== this.to && this.from.length > 0 && this.to.length > 0
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isValidConnection()) {
       errors.push('From and to chapters must be different and valid')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static create(data: Omit<CreateLinkRequestSchema, 'id'>): CreateLinkRequest {
     const id = crypto.randomUUID()
-    return CreateLinkRequest.fromAPI({ ...data, id })
+    return CreateLinkRequest.fromAPI({...data, id})
   }
 
   static fromAPI(data: CreateLinkRequestSchema): CreateLinkRequest {

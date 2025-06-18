@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { Entity } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {Entity} from '../_kernel/types'
 
 type LinkSchema = components['schemas']['Link']
 
@@ -29,13 +30,33 @@ export class Link extends Entity<string> {
     super(id)
   }
 
-  getUserID(): string { return this.userID }
-  getBookID(): string { return this.bookID }
-  getFrom(): string { return this.from }
-  getTo(): string { return this.to }
-  getKind(): LinkKind { return this.kind }
-  getBody(): string { return this.body }
-  getCreatedAt(): number { return this.createdAt }
+  getUserID(): string {
+    return this.userID
+  }
+
+  getBookID(): string {
+    return this.bookID
+  }
+
+  getFrom(): string {
+    return this.from
+  }
+
+  getTo(): string {
+    return this.to
+  }
+
+  getKind(): LinkKind {
+    return this.kind
+  }
+
+  getBody(): string {
+    return this.body
+  }
+
+  getCreatedAt(): number {
+    return this.createdAt
+  }
 
   belongsToUser(userID: string): boolean {
     return this.userID === userID
@@ -69,7 +90,7 @@ export class Link extends Entity<string> {
     return true
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (this.isSelfReference()) {
@@ -80,7 +101,7 @@ export class Link extends Entity<string> {
       errors.push('Link kind must be options or direct')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static fromAPI(data: LinkSchema): Link {

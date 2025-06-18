@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type SuccessMessageSchema = components['schemas']['SuccessMessage']
 
@@ -10,10 +11,12 @@ export const SuccessMessageValidationSchema = z.object({
 
 export class SuccessMessage extends ValueObject<SuccessMessageSchema> {
   constructor(private readonly message: string) {
-    super({ message })
+    super({message})
   }
 
-  getMessage(): string { return this.message }
+  getMessage(): string {
+    return this.message
+  }
 
   static fromAPI(data: SuccessMessageSchema): SuccessMessage {
     const validated = SuccessMessageValidationSchema.parse(data)

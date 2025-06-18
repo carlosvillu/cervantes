@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type SignupRequestSchema = components['schemas']['SignupRequest']
 
@@ -18,7 +19,7 @@ export class SignupRequest extends ValueObject<SignupRequestSchema> {
     private readonly password: string,
     private readonly email: string
   ) {
-    super({ id, username, password, email })
+    super({id, username, password, email})
   }
 
   getId(): string {
@@ -48,7 +49,7 @@ export class SignupRequest extends ValueObject<SignupRequestSchema> {
     const hasLowerCase = /[a-z]/.test(this.password)
     const hasNumbers = /\d/.test(this.password)
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(this.password)
-    
+
     return hasMinLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar
   }
 
@@ -57,7 +58,7 @@ export class SignupRequest extends ValueObject<SignupRequestSchema> {
     return usernameRegex.test(this.username)
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isValidUsername()) {
@@ -69,25 +70,22 @@ export class SignupRequest extends ValueObject<SignupRequestSchema> {
     }
 
     if (!this.isStrongPassword()) {
-      errors.push('Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters')
+      errors.push(
+        'Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters'
+      )
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static create(data: Omit<SignupRequestSchema, 'id'>): SignupRequest {
     const id = crypto.randomUUID()
-    return SignupRequest.fromAPI({ ...data, id })
+    return SignupRequest.fromAPI({...data, id})
   }
 
   static fromAPI(data: SignupRequestSchema): SignupRequest {
     const validated = SignupRequestValidationSchema.parse(data)
-    return new SignupRequest(
-      validated.id,
-      validated.username,
-      validated.password,
-      validated.email
-    )
+    return new SignupRequest(validated.id, validated.username, validated.password, validated.email)
   }
 
   toAPI(): SignupRequestSchema {

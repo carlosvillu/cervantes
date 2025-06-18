@@ -1,7 +1,7 @@
-export { Link, LinkValidationSchema } from './Link'
-import type { LinkKind as _LinkKind } from './Link'
+import type {LinkKind as _LinkKind} from './Link'
+export {Link, LinkValidationSchema} from './Link'
 export type LinkKind = _LinkKind
-export { CreateLinkRequest, CreateLinkRequestValidationSchema } from './CreateLinkRequest'
+export {CreateLinkRequest, CreateLinkRequestValidationSchema} from './CreateLinkRequest'
 
 export interface LinkValidation {
   isValid: boolean

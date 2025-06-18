@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type LoginRequestSchema = components['schemas']['LoginRequest']
 
@@ -10,11 +11,8 @@ export const LoginRequestValidationSchema = z.object({
 })
 
 export class LoginRequest extends ValueObject<LoginRequestSchema> {
-  constructor(
-    private readonly email: string,
-    private readonly password: string
-  ) {
-    super({ email, password })
+  constructor(private readonly email: string, private readonly password: string) {
+    super({email, password})
   }
 
   getEmail(): string {
@@ -34,7 +32,7 @@ export class LoginRequest extends ValueObject<LoginRequestSchema> {
     return this.password.length > 0
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isValidEmail()) {
@@ -45,7 +43,7 @@ export class LoginRequest extends ValueObject<LoginRequestSchema> {
       errors.push('Password is required')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static create(email: string, password: string): LoginRequest {

@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type CreateChapterRequestSchema = components['schemas']['CreateChapterRequest']
 
@@ -18,7 +19,7 @@ export class CreateChapterRequest extends ValueObject<CreateChapterRequestSchema
     private readonly title: string,
     private readonly summary: string
   ) {
-    super({ id, bookID, title, summary })
+    super({id, bookID, title, summary})
   }
 
   getId(): string {
@@ -53,7 +54,7 @@ export class CreateChapterRequest extends ValueObject<CreateChapterRequestSchema
     return this.hasValidTitle() && this.hasValidSummary()
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.hasValidTitle()) {
@@ -68,22 +69,17 @@ export class CreateChapterRequest extends ValueObject<CreateChapterRequestSchema
       errors.push('Book ID is required')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static create(data: Omit<CreateChapterRequestSchema, 'id'>): CreateChapterRequest {
     const id = crypto.randomUUID()
-    return CreateChapterRequest.fromAPI({ ...data, id })
+    return CreateChapterRequest.fromAPI({...data, id})
   }
 
   static fromAPI(data: CreateChapterRequestSchema): CreateChapterRequest {
     const validated = CreateChapterRequestValidationSchema.parse(data)
-    return new CreateChapterRequest(
-      validated.id,
-      validated.bookID,
-      validated.title,
-      validated.summary
-    )
+    return new CreateChapterRequest(validated.id, validated.bookID, validated.title, validated.summary)
   }
 
   toAPI(): CreateChapterRequestSchema {

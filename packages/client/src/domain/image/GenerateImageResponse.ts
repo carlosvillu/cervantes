@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type GenerateImageResponseSchema = components['schemas']['GenerateImageResponse']
 
@@ -11,9 +12,17 @@ export class GenerateImageResponse extends ValueObject<GenerateImageResponseSche
     super(imageKeys)
   }
 
-  getImageKeys(): string[] { return this.imageKeys }
-  getImageCount(): number { return this.imageKeys.length }
-  hasImages(): boolean { return this.imageKeys.length > 0 }
+  getImageKeys(): string[] {
+    return this.imageKeys
+  }
+
+  getImageCount(): number {
+    return this.imageKeys.length
+  }
+
+  hasImages(): boolean {
+    return this.imageKeys.length > 0
+  }
 
   static fromAPI(data: GenerateImageResponseSchema): GenerateImageResponse {
     const validated = GenerateImageResponseValidationSchema.parse(data)

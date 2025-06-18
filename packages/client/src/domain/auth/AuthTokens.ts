@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { ValueObject } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {ValueObject} from '../_kernel/types'
 
 type AuthTokensSchema = components['schemas']['AuthTokens']
 
@@ -10,11 +11,8 @@ export const AuthTokensValidationSchema = z.object({
 })
 
 export class AuthTokens extends ValueObject<AuthTokensSchema> {
-  constructor(
-    private readonly access: string,
-    private readonly refresh: string
-  ) {
-    super({ access, refresh })
+  constructor(private readonly access: string, private readonly refresh: string) {
+    super({access, refresh})
   }
 
   getAccessToken(): string {

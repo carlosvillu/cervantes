@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { Entity } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {Entity} from '../_kernel/types'
 
 type ChapterSchema = components['schemas']['Chapter']
 
@@ -93,7 +94,7 @@ export class Chapter extends Entity<string> {
     return this.title.split(/\s+/).filter(word => word.length > 0).length
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (this.title.trim().length === 0) {
@@ -108,7 +109,7 @@ export class Chapter extends Entity<string> {
       errors.push('Summary must be 1000 characters or less')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static fromAPI(data: ChapterSchema): Chapter {

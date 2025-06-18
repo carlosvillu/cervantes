@@ -1,6 +1,7 @@
-import { z } from 'zod'
-import { Entity } from '../_kernel/types'
-import type { components } from '../../generated/api-types'
+import {z} from 'zod'
+
+import type {components} from '../../generated/api-types'
+import {Entity} from '../_kernel/types'
 
 type BookCoverSchema = components['schemas']['BookCover']
 
@@ -11,11 +12,7 @@ export const BookCoverValidationSchema = z.object({
 })
 
 export class BookCover extends Entity<string> {
-  constructor(
-    id: string,
-    private readonly bookID: string,
-    private readonly key: string
-  ) {
+  constructor(id: string, private readonly bookID: string, private readonly key: string) {
     super(id)
   }
 
@@ -60,7 +57,7 @@ export class BookCover extends Entity<string> {
   }
 
   getFileName(): string {
-    return this.key.split('/').pop() || this.key
+    return this.key.split('/').pop() ?? this.key
   }
 
   isAIGenerated(): boolean {
@@ -76,7 +73,7 @@ export class BookCover extends Entity<string> {
     return true // Book covers can always be replaced
   }
 
-  validate(): { isValid: boolean; errors: string[] } {
+  validate(): {isValid: boolean; errors: string[]} {
     const errors: string[] = []
 
     if (!this.isValidImageFormat()) {
@@ -87,16 +84,12 @@ export class BookCover extends Entity<string> {
       errors.push('Image key is required')
     }
 
-    return { isValid: errors.length === 0, errors }
+    return {isValid: errors.length === 0, errors}
   }
 
   static fromAPI(data: BookCoverSchema): BookCover {
     const validated = BookCoverValidationSchema.parse(data)
-    return new BookCover(
-      validated.id,
-      validated.bookID,
-      validated.key
-    )
+    return new BookCover(validated.id, validated.bookID, validated.key)
   }
 
   toAPI(): BookCoverSchema {
