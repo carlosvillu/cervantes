@@ -1,8 +1,8 @@
-export {Chapter, ChapterValidationSchema} from './Chapter'
-export {ChapterCover, ChapterCoverValidationSchema} from './ChapterCover'
-export {CreateChapterRequest, CreateChapterRequestValidationSchema} from './CreateChapterRequest'
-export {UpdateChapterRequest, UpdateChapterRequestValidationSchema} from './UpdateChapterRequest'
-export {CreateChapterCoverRequest, CreateChapterCoverRequestValidationSchema} from './CreateChapterCoverRequest'
+export {Chapter, ChapterValidationSchema} from './Chapter.js'
+export {ChapterCover, ChapterCoverValidationSchema} from './ChapterCover.js'
+export {CreateChapterRequest, CreateChapterRequestValidationSchema} from './CreateChapterRequest.js'
+export {UpdateChapterRequest, UpdateChapterRequestValidationSchema} from './UpdateChapterRequest.js'
+export {CreateChapterCoverRequest, CreateChapterCoverRequestValidationSchema} from './CreateChapterCoverRequest.js'
 
 export interface ChapterMetadata {
   id: string

@@ -1,3 +1,3 @@
-export {GenerateImageRequest, GenerateImageRequestValidationSchema} from './GenerateImageRequest'
-export {GenerateImageResponse, GenerateImageResponseValidationSchema} from './GenerateImageResponse'
-export {UploadImageResponse, UploadImageResponseValidationSchema} from './UploadImageResponse'
+export {GenerateImageRequest, GenerateImageRequestValidationSchema} from './GenerateImageRequest.js'
+export {GenerateImageResponse, GenerateImageResponseValidationSchema} from './GenerateImageResponse.js'
+export {UploadImageResponse, UploadImageResponseValidationSchema} from './UploadImageResponse.js'

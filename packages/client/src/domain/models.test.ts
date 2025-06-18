@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'vitest'
 
-import {AuthTokens} from './auth/AuthTokens'
-import {Book} from './book/Book'
-import {User} from './user/User'
+import {AuthTokens} from './auth/AuthTokens.js'
+import {Book} from './book/Book.js'
+import {User} from './user/User.js'
 
 describe('Domain Models', () => {
   it('should create User model from API data', () => {

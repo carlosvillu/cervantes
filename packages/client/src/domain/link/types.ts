@@ -1,7 +1,7 @@
-import type {LinkKind as _LinkKind} from './Link'
-export {Link, LinkValidationSchema} from './Link'
+import type {LinkKind as _LinkKind} from './Link.js'
+export {Link, LinkValidationSchema} from './Link.js'
 export type LinkKind = _LinkKind
-export {CreateLinkRequest, CreateLinkRequestValidationSchema} from './CreateLinkRequest'
+export {CreateLinkRequest, CreateLinkRequestValidationSchema} from './CreateLinkRequest.js'
 
 export interface LinkValidation {
   isValid: boolean

@@ -1,7 +1,7 @@
 import {z} from 'zod'
 
-import type {components} from '../../generated/api-types'
-import {ValueObject} from '../_kernel/types'
+import type {components} from '../../generated/api-types.js'
+import {ValueObject} from '../_kernel/types.js'
 
 type CreateBookRequestSchema = components['schemas']['CreateBookRequest']
 

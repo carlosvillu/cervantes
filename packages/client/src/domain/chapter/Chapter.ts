@@ -1,7 +1,7 @@
 import {z} from 'zod'
 
-import type {components} from '../../generated/api-types'
-import {Entity} from '../_kernel/types'
+import type {components} from '../../generated/api-types.js'
+import {Entity} from '../_kernel/types.js'
 
 type ChapterSchema = components['schemas']['Chapter']
 
