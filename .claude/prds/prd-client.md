@@ -179,12 +179,17 @@ Establecer la base del cliente con autenticación funcional y arquitectura core.
   - [x] **1.1.3** Configurar CI/CD pipeline (GitHub Actions)
   - [x] **1.1.4** Establecer estructura de directorios Clean Architecture
 
-#### **1.2 Generación de Tipos**
-- [ ] **1.2** Generación de Tipos
-  - [ ] **1.2.1** Integrar openapi-typescript con openapi.yaml
-  - [ ] **1.2.2** Generar tipos automáticos para todos los schemas
-  - [ ] **1.2.3** Crear script de regeneración de tipos
-  - [ ] **1.2.4** Validar tipos generados con casos de test
+#### **1.2 Generación de Tipos y Domain Models**
+- [x] **1.2** Generación de Tipos y Domain Models ✅ **COMPLETADO**
+  - [x] **1.2.1** Integrar openapi-typescript con openapi.yaml
+  - [x] **1.2.2** Generar tipos automáticos para todos los schemas
+  - [x] **1.2.3** Crear script de regeneración de tipos
+  - [x] **1.2.4** Validar tipos generados con casos de test
+  - [x] **1.2.5** Implementar 25 domain models con Clean Architecture
+  - [x] **1.2.6** Crear Entity/ValueObject patterns con validación Zod
+  - [x] **1.2.7** Implementar fromAPI/toAPI methods para serialización
+  - [x] **1.2.8** Establecer shared validation utilities
+  - [x] **1.2.9** Aplicar security fixes y code quality improvements
 
 #### **1.3 HTTP Client Foundation**
 - [ ] **1.3** HTTP Client Foundation
