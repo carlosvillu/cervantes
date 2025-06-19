@@ -6,9 +6,11 @@
  */
 
 import type {ClientConfig} from '../domain/_kernel/types.js'
+import {HTTPClient} from '../infrastructure/http/index.js'
 
 export class CervantesClient {
   private readonly config: Required<ClientConfig>
+  private readonly httpClient: HTTPClient
 
   constructor(config: ClientConfig = {}) {
     // Set default configuration
@@ -19,6 +21,9 @@ export class CervantesClient {
       retries: config.retries ?? 3,
       debug: config.debug ?? false
     }
+
+    // Initialize HTTP client
+    this.httpClient = new HTTPClient(this.config)
 
     if (this.config.debug) {
       console.log('CervantesClient initialized with config:', this.config) // eslint-disable-line no-console
@@ -44,5 +49,33 @@ export class CervantesClient {
    */
   getVersion(): string {
     return '0.1.0'
+  }
+
+  /**
+   * Get the HTTP client instance for advanced usage
+   */
+  getHTTPClient(): HTTPClient {
+    return this.httpClient
+  }
+
+  /**
+   * Set authentication tokens for API requests
+   */
+  setAuthTokens(accessToken: string, refreshToken: string): void {
+    this.httpClient.setAuthTokens(accessToken, refreshToken)
+  }
+
+  /**
+   * Clear authentication tokens
+   */
+  clearAuthTokens(): void {
+    this.httpClient.clearAuthTokens()
+  }
+
+  /**
+   * Check if client has valid authentication tokens
+   */
+  hasValidTokens(): boolean {
+    return this.httpClient.hasValidTokens()
   }
 }
