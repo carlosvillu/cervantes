@@ -73,4 +73,27 @@ describe('CervantesClient', () => {
       expect(config1).not.toBe(config2) // Different object references
     })
   })
+
+  describe('HTTP client integration', () => {
+    it('should provide access to HTTP client', () => {
+      const client = new CervantesClient()
+      const httpClient = client.getHTTPClient()
+
+      expect(httpClient).toBeDefined()
+    })
+  })
+
+  describe('authentication methods', () => {
+    it('should manage auth tokens', () => {
+      const client = new CervantesClient()
+
+      expect(client.hasValidTokens()).toBe(false)
+
+      client.setAuthTokens('access-token', 'refresh-token')
+      expect(client.hasValidTokens()).toBe(true)
+
+      client.clearAuthTokens()
+      expect(client.hasValidTokens()).toBe(false)
+    })
+  })
 })

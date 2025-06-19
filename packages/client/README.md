@@ -21,20 +21,39 @@ pnpm add @cervantes/client
 ```typescript
 import { CervantesClient } from '@cervantes/client'
 
+// Basic client setup
 const client = new CervantesClient({
   baseURL: 'https://api.bookadventur.es',
-  // Configuration options will be documented here
+  timeout: 30000,
+  retries: 3,
+  debug: false
 })
 
-// Usage examples will be added as features are implemented
+// Authentication token management
+client.setAuthTokens('access-token', 'refresh-token')
+console.log(client.hasValidTokens()) // true
+
+// Access HTTP client for advanced usage
+const httpClient = client.getHTTPClient()
+const [error, data] = await httpClient.get('/user/current')
+
+if (error) {
+  console.error('Request failed:', error.message)
+} else {
+  console.log('User data:', data)
+}
 ```
 
-## Features (Planned)
+## Features
 
-- ✅ TypeScript-first with full type safety
-- ✅ Clean Architecture following project patterns
+- ✅ **TypeScript-first** with full type safety
+- ✅ **Clean Architecture** following project patterns  
+- ✅ **HTTP Client Foundation** with Fetch API
+- ✅ **Authentication & Token Management** with automatic refresh
+- ✅ **Error Handling** with domain error mapping
+- ✅ **Retry Logic** with exponential backoff
+- ✅ **Request/Response Interceptors** for auth and debugging
 - ⏳ Complete API coverage (47 endpoints)
-- ⏳ Authentication & token management
 - ⏳ Book and chapter management
 - ⏳ Interactive narrative links
 - ⏳ AI-powered image generation
@@ -64,9 +83,18 @@ npm run lint
 
 This client follows Clean Architecture principles with three main layers:
 
-- **Domain**: Business logic and entities
-- **Infrastructure**: External service implementations (HTTP, cache, storage)
-- **Application**: Public APIs and client interface
+- **Domain**: Business logic and entities (25 domain models implemented)
+- **Infrastructure**: External service implementations (HTTP client, interceptors, error handling)
+- **Application**: Public APIs and client interface (`CervantesClient`)
+
+### HTTP Client Foundation
+
+The HTTP layer includes:
+- **HTTPClient**: Core HTTP client with Fetch API
+- **Interceptors**: Auth token injection and error logging
+- **Error Mapping**: HTTP status codes to domain errors
+- **Retry Logic**: Exponential backoff for recoverable failures
+- **Type Safety**: Zod schema validation for responses
 
 ## License
 

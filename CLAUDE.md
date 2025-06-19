@@ -107,6 +107,17 @@ validate(): {isValid: boolean; errors: string[]}
 - **Business Logic**: Custom validation methods for domain rules
 - **Shared Utilities**: Common validation patterns in `domain/_shared/validation-utils.ts`
 
+#### **HTTP Client Architecture**
+- **HTTPClient**: Core HTTP client with Fetch API support
+- **Interceptors**: Auth token injection, error logging, and debugging
+- **Error Mapping**: HTTP status codes mapped to domain errors:
+  - `NetworkError`: Connection/fetch failures
+  - `AuthenticationError`: 401/403 responses with token refresh
+  - `ValidationError`: 400 responses + Zod validation failures
+  - `ServerError`: 5xx responses with retry logic
+- **Retry Strategy**: Exponential backoff with jitter for recoverable errors
+- **Type Safety**: Zod schema validation for request/response data
+
 #### **Development Workflow**
 1. Update OpenAPI spec in `apps/api/openapi.yaml`
 2. Run `npm run generate:types` to update client types
@@ -133,9 +144,12 @@ validate(): {isValid: boolean; errors: string[]}
 ### Client Package (packages/client)
 - **Language**: TypeScript with strict mode
 - **Build System**: tshy for dual ESM/CommonJS builds
+- **HTTP Client**: Fetch API with interceptors and retry logic
+- **Authentication**: JWT token management with automatic refresh
+- **Error Handling**: Domain error mapping with cause chains
 - **Validation**: Zod for runtime type validation
 - **Type Generation**: openapi-typescript for API types
-- **Testing**: Vitest with TypeScript support
+- **Testing**: Vitest with TypeScript support (27 tests passing)
 - **Code Quality**: ESLint + Prettier with TypeScript rules
 - **Architecture**: Clean Architecture with Domain Models
 
