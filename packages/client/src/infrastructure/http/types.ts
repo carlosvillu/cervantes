@@ -37,6 +37,11 @@ export interface HTTPClient {
     options?: HTTPRequestOptions,
     schema?: AnyZodObject | ZodArray<AnyZodObject>
   ) => Promise<HTTPResponse<T>>
+
+  // Auth token management
+  setAuthTokens: (accessToken: string, refreshToken: string) => void
+  clearAuthTokens: () => void
+  hasValidTokens: () => boolean
 }
 
 // Interceptor types

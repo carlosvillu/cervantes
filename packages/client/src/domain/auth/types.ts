@@ -3,6 +3,7 @@ export {ValidationToken, ValidationTokenValidationSchema} from './ValidationToke
 export {SignupRequest, SignupRequestValidationSchema} from './SignupRequest.js'
 export {LoginRequest, LoginRequestValidationSchema} from './LoginRequest.js'
 export {RefreshRequest, RefreshRequestValidationSchema} from './RefreshRequest.js'
+export type {AuthRepository} from './AuthRepository.js'
 
 export interface AuthenticationError {
   code: 'INVALID_CREDENTIALS' | 'TOKEN_EXPIRED' | 'TOKEN_INVALID' | 'USER_NOT_VERIFIED'
