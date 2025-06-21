@@ -20,6 +20,7 @@ export interface TokenManagerConfig {
   storagePrefix?: string
   autoRefresh?: boolean
   refreshThresholdMs?: number
+  autoRefreshCallback?: (refreshToken: string) => Promise<AuthTokens>
 }
 
 export enum AuthState {
@@ -49,12 +50,14 @@ export class TokenManager {
   private readonly storagePrefix: string
   private readonly autoRefresh: boolean
   private readonly refreshThresholdMs: number
+  private readonly autoRefreshCallback?: (refreshToken: string) => Promise<AuthTokens>
 
   constructor(config: TokenManagerConfig = {}) {
     this.storage = config.storage ?? this.createDefaultStorage()
     this.storagePrefix = config.storagePrefix ?? 'cervantes_auth_'
     this.autoRefresh = config.autoRefresh ?? true
     this.refreshThresholdMs = config.refreshThresholdMs ?? 5 * 60 * 1000 // 5 minutes
+    this.autoRefreshCallback = config.autoRefreshCallback
 
     // Load tokens from storage on initialization
     void this.loadTokensFromStorage()
@@ -200,15 +203,34 @@ export class TokenManager {
 
     if (!this.tokens || !this.autoRefresh) return
 
-    // Simple implementation - check if tokens are going to expire soon
-    const timeUntilRefresh = this.refreshThresholdMs
+    // Calculate actual time until token expiration
+    const expirationTime = this.tokens.getAccessTokenExpiration()
+    if (!expirationTime) return
 
-    if (timeUntilRefresh > 0) {
-      this.refreshTimeoutId = setTimeout(() => {
-        // This would trigger auto-refresh logic if implemented
-        // For now, we just emit an event that tokens need refresh
-        this.notifyStateChange(this.currentState, AuthState.EXPIRED)
-      }, timeUntilRefresh)
+    const now = Date.now()
+    const timeUntilExpiration = expirationTime - now
+    const timeUntilRefresh = timeUntilExpiration - this.refreshThresholdMs
+
+    // Ensure timeout doesn't exceed 32-bit signed integer limit (~24.8 days)
+    const maxTimeout = 2147483647 // 2^31 - 1
+    const safeTimeUntilRefresh = Math.min(timeUntilRefresh, maxTimeout)
+
+    if (safeTimeUntilRefresh > 0) {
+      this.refreshTimeoutId = setTimeout(async (): Promise<void> => {
+        // Attempt auto-refresh if callback is provided
+        if (this.autoRefreshCallback && this.tokens) {
+          try {
+            await this.refreshTokens(this.autoRefreshCallback)
+            // Tokens are already updated by refreshTokens method
+          } catch (error) {
+            // Auto-refresh failed, emit expired state
+            this.notifyStateChange(this.currentState, AuthState.EXPIRED, undefined, error as Error)
+          }
+        } else {
+          // No auto-refresh callback, just emit expired state
+          this.notifyStateChange(this.currentState, AuthState.EXPIRED)
+        }
+      }, safeTimeUntilRefresh)
     }
   }
 

@@ -41,7 +41,6 @@ export class AuthService {
 
   constructor(config: AuthServiceConfig) {
     this.authRepository = config.repository
-    this.tokenManager = new TokenManager(config.tokenManager)
 
     // Initialize Use Cases
     this.signupUseCase = new SignupAuthUseCase(this.authRepository)
@@ -50,6 +49,14 @@ export class AuthService {
     this.logoutUseCase = new LogoutAuthUseCase(this.authRepository)
     this.sendValidationCodeUseCase = new SendValidationCodeAuthUseCase(this.authRepository)
     this.verifyEmailUseCase = new VerifyEmailAuthUseCase(this.authRepository)
+
+    // Initialize TokenManager with auto-refresh callback
+    this.tokenManager = new TokenManager({
+      ...config.tokenManager,
+      autoRefreshCallback: async (refreshToken: string) => {
+        return this.refreshTokenUseCase.execute({refreshToken})
+      }
+    })
 
     // Set up automatic token refresh
     this.setupAutoRefresh()
@@ -182,11 +189,11 @@ export class AuthService {
   }
 
   private setupAutoRefresh(): void {
-    // Listen for token state changes to handle automatic refresh
+    // Listen for token state changes for logging and monitoring
     this.tokenManager.addStateChangeListener(event => {
-      if (event.currentState === AuthState.EXPIRED && event.previousState === AuthState.AUTHENTICATED) {
-        // Tokens have expired - could trigger automatic refresh here
-        // For now, we just log the event
+      if (event.currentState === AuthState.EXPIRED) {
+        // Tokens have expired - auto-refresh is handled by TokenManager
+        // This is mainly for logging and external monitoring
         console.warn('Authentication tokens have expired') // eslint-disable-line no-console
       }
     })
