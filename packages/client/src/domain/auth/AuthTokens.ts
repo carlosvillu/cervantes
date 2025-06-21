@@ -57,6 +57,20 @@ export class AuthTokens extends ValueObject<AuthTokensSchema> {
     return !this.isAccessTokenExpired() && !this.isRefreshTokenExpired()
   }
 
+  /**
+   * Get access token expiration time in milliseconds since epoch
+   * @returns Expiration timestamp or null if token is invalid
+   */
+  getAccessTokenExpiration(): number | null {
+    if (!this.isValidJWT(this.access)) return null
+    try {
+      const payload = JSON.parse(atob(this.access.split('.')[1]))
+      return payload.exp * 1000
+    } catch {
+      return null
+    }
+  }
+
   static fromAPI(data: AuthTokensSchema): AuthTokens {
     const validated = AuthTokensValidationSchema.parse(data)
     return new AuthTokens(validated.access, validated.refresh)
