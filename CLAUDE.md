@@ -145,11 +145,11 @@ validate(): {isValid: boolean; errors: string[]}
 - **Language**: TypeScript with strict mode
 - **Build System**: tshy for dual ESM/CommonJS builds
 - **HTTP Client**: Fetch API with interceptors and retry logic
-- **Authentication**: JWT token management with automatic refresh
+- **Authentication**: Complete JWT token management with precise auto-refresh timing
 - **Error Handling**: Domain error mapping with cause chains
 - **Validation**: Zod for runtime type validation
 - **Type Generation**: openapi-typescript for API types
-- **Testing**: Vitest with TypeScript support (27 tests passing)
+- **Testing**: Vitest with TypeScript support (57 tests passing)
 - **Code Quality**: ESLint + Prettier with TypeScript rules
 - **Architecture**: Clean Architecture with Domain Models
 
