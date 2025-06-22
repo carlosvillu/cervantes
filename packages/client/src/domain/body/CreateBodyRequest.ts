@@ -52,6 +52,47 @@ export class CreateBodyRequest extends ValueObject<CreateBodyRequestSchema> {
     return this.content.split(/\s+/).filter(word => word.length > 0).length
   }
 
+  validate(): {isValid: boolean; errors: string[]} {
+    const errors: string[] = []
+
+    if (!this.bookID?.trim()) {
+      errors.push('Book ID is required')
+    }
+
+    if (!this.userID?.trim()) {
+      errors.push('User ID is required')
+    }
+
+    if (!this.chapterID?.trim()) {
+      errors.push('Chapter ID is required')
+    }
+
+    if (this.content === undefined || this.content === null) {
+      errors.push('Content is required')
+    }
+
+    // Validate UUID format
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+    if (this.bookID && !uuidPattern.test(this.bookID)) {
+      errors.push('Book ID must be a valid UUID')
+    }
+
+    if (this.userID && !uuidPattern.test(this.userID)) {
+      errors.push('User ID must be a valid UUID')
+    }
+
+    if (this.chapterID && !uuidPattern.test(this.chapterID)) {
+      errors.push('Chapter ID must be a valid UUID')
+    }
+
+    if (this.id && !uuidPattern.test(this.id)) {
+      errors.push('Body ID must be a valid UUID')
+    }
+
+    return {isValid: errors.length === 0, errors}
+  }
+
   static create(data: Omit<CreateBodyRequestSchema, 'id'>): CreateBodyRequest {
     const id = crypto.randomUUID()
     return CreateBodyRequest.fromAPI({...data, id})

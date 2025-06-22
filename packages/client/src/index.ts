@@ -33,11 +33,20 @@ export type {
   UpdateBookUseCaseInput
 } from './application/book/index.js'
 
+// Body/Content management types
+export type {
+  CreateBodyUseCaseInput,
+  FindByHashBodyUseCaseInput,
+  FindByIDBodyUseCaseInput,
+  GetAllBodiesUseCaseInput
+} from './application/body/index.js'
+
 // Domain models (for advanced usage)
 export type {AuthTokens} from './domain/auth/AuthTokens.js'
 export type {SuccessMessage} from './domain/_shared/SuccessMessage.js'
 export type {ValidationToken} from './domain/auth/ValidationToken.js'
 export type {Book, BookStatus, BookMetadata, BookValidation, BookPermissions} from './domain/book/types.js'
+export type {Body, CreateBodyRequest, BodyRepository} from './domain/body/types.js'
 
 // Storage adapters (for custom configurations)
 export {LocalStorageAdapter, SessionStorageAdapter} from './infrastructure/storage/index.js'
