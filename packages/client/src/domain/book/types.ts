@@ -5,6 +5,7 @@ export {BookCover, BookCoverValidationSchema} from './BookCover.js'
 export {CreateBookRequest, CreateBookRequestValidationSchema} from './CreateBookRequest.js'
 export {UpdateBookRequest, UpdateBookRequestValidationSchema} from './UpdateBookRequest.js'
 export {CreateBookCoverRequest, CreateBookCoverRequestValidationSchema} from './CreateBookCoverRequest.js'
+export type {BookRepository} from './BookRepository.js'
 
 export interface BookMetadata {
   id: string
