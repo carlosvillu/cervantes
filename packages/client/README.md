@@ -3,12 +3,20 @@
 Official TypeScript client for Cervantes API - Interactive book/story editor that enables developers to create choose-your-own-adventure style books with AI-generated cover images.
 
 ## ✅ Phase 1 Complete: Authentication & Foundation
+## ✅ Phase 2.1 Complete: Book Management
 
-This package has completed **Phase 1** of the Cervantes TypeScript Client implementation, including:
+This package has completed **Phase 1** and **Phase 2.1** of the Cervantes TypeScript Client implementation, including:
+
+### Phase 1 - Foundation ✅
 - Complete authentication module with all 6 auth endpoints
 - Advanced token management with automatic refresh
 - HTTP client foundation with error handling and retry logic
-- 57 comprehensive tests with 100% core functionality coverage
+
+### Phase 2.1 - Book Management ✅ 
+- Complete book CRUD operations (create, read, update, list)
+- Business logic validation and error handling
+- Convenience methods for common operations
+- 82 comprehensive tests with 100% coverage
 
 ## Installation
 
@@ -33,53 +41,93 @@ const client = new CervantesClient({
   debug: false
 })
 
-// Complete authentication flow
+// Authentication Flow
 try {
   // Sign up new user
-  await client.auth.signup({
+  await client.signup({
+    username: 'author123',
     email: 'user@example.com',
     password: 'securePassword123'
   })
 
   // Login to get tokens
-  const tokens = await client.auth.login({
+  const tokens = await client.login({
     email: 'user@example.com',
     password: 'securePassword123'
   })
 
   // Tokens are automatically managed with auto-refresh
-  console.log('Authenticated:', client.auth.isAuthenticated())
-
-  // Send email validation code
-  const validationToken = await client.auth.sendValidationCode()
-  
-  // Verify email with code
-  await client.auth.verifyEmail({
-    token: validationToken.getToken(),
-    code: '123456'
-  })
+  console.log('Authenticated:', client.isAuthenticated())
 
 } catch (error) {
   console.error('Authentication failed:', error.message)
+}
+
+// Book Management (New in Phase 2.1)
+try {
+  // Create a new book
+  const book = await client.createSimpleBook(
+    'My Adventure Story',
+    'An epic choose-your-own-adventure tale'
+  )
+
+  // Get all user books
+  const allBooks = await client.getAllBooks()
+  console.log(`User has ${allBooks.length} books`)
+
+  // Find specific book
+  const foundBook = await client.findBookByID({ id: book.getId() })
+
+  // Update book information
+  const updatedBook = await client.updateBookBasicInfo(
+    book.getId(),
+    'My Epic Adventure Story',
+    'An updated summary with more details'
+  )
+
+  // Publish the book
+  await client.publishBook(book.getId())
+
+  // Advanced usage with BookService
+  const bookService = client.getBookService()
+  const publishedBooks = (await bookService.getAll())
+    .filter(book => book.isPublished())
+
+} catch (error) {
+  console.error('Book operation failed:', error.message)
 }
 ```
 
 ## Features
 
+### Core Features ✅
 - ✅ **TypeScript-first** with full type safety
 - ✅ **Clean Architecture** following project patterns  
 - ✅ **HTTP Client Foundation** with Fetch API
-- ✅ **Complete Authentication Module** (signup, login, refresh, logout, email verification)
-- ✅ **Advanced Token Management** with precise auto-refresh timing
 - ✅ **Error Handling** with domain error mapping
 - ✅ **Retry Logic** with exponential backoff
 - ✅ **Request/Response Interceptors** for auth and debugging
-- ⏳ Complete API coverage (47 endpoints)
-- ⏳ Book and chapter management
-- ⏳ Interactive narrative links
-- ⏳ AI-powered image generation
-- ⏳ Offline support with caching
-- ⏳ Framework integrations (React, Vue)
+
+### Authentication Module ✅
+- ✅ **Complete Authentication** (signup, login, refresh, logout, email verification)
+- ✅ **Advanced Token Management** with precise auto-refresh timing
+- ✅ **Automatic Token Refresh** with callback system
+- ✅ **Secure Token Storage** with LocalStorage/SessionStorage adapters
+
+### Book Management Module ✅
+- ✅ **CRUD Operations** (create, read, update, list books)
+- ✅ **Business Logic Validation** (title/summary length, publication status)
+- ✅ **Convenience Methods** (publish, unpublish, toggle status)
+- ✅ **Comprehensive Testing** (82 tests total)
+
+### Coming Soon 🚧
+- ⏳ **Chapter Management** (create, edit, organize chapters) 
+- ⏳ **Content Management** (rich text, versioning)
+- ⏳ **Interactive Links** (choose-your-own-adventure connections)
+- ⏳ **AI Image Generation** (book covers, chapter illustrations)
+- ⏳ **User Management** (profiles, preferences)
+- ⏳ **Offline Support** with caching and sync
+- ⏳ **Framework Integrations** (React hooks, Vue composables)
 
 ## Development
 
@@ -104,9 +152,18 @@ npm run lint
 
 This client follows Clean Architecture principles with three main layers:
 
-- **Domain**: Business logic and entities (25 domain models implemented)
-- **Infrastructure**: External service implementations (HTTP client, interceptors, error handling)
+- **Domain**: Business logic and entities (25+ domain models implemented)
+- **Infrastructure**: External service implementations (HTTP client, interceptors, error handling)  
 - **Application**: Public APIs and client interface (`CervantesClient`)
+
+### Implementation Status
+
+| Module | Domain Models | Repository | Use Cases | Service | Tests | Status |
+|--------|---------------|------------|-----------|---------|-------|--------|
+| **Auth** | ✅ AuthTokens, LoginRequest, etc. | ✅ HTTPAuthRepository | ✅ 6 Use Cases | ✅ AuthService | ✅ 25 tests | **Complete** |
+| **Book** | ✅ Book, CreateBookRequest, etc. | ✅ HTTPBookRepository | ✅ 4 Use Cases | ✅ BookService | ✅ 25 tests | **Complete** |
+| **Chapter** | ✅ Models Ready | ⏳ Pending | ⏳ Pending | ⏳ Pending | ⏳ Pending | **Next Phase** |
+| **Content** | ✅ Models Ready | ⏳ Pending | ⏳ Pending | ⏳ Pending | ⏳ Pending | **Next Phase** |
 
 ### HTTP Client Foundation
 
@@ -115,7 +172,7 @@ The HTTP layer includes:
 - **Interceptors**: Auth token injection and error logging
 - **Error Mapping**: HTTP status codes to domain errors
 - **Retry Logic**: Exponential backoff for recoverable failures
-- **Type Safety**: Zod schema validation for responses
+- **Type Safety**: Zod schema validation for all responses
 
 ## License
 

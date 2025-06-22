@@ -25,10 +25,19 @@ export type {
   TokenManagerConfig
 } from './application/auth/index.js'
 
+// Book management types
+export type {
+  CreateBookUseCaseInput,
+  FindByIDBookUseCaseInput,
+  GetAllBooksUseCaseInput,
+  UpdateBookUseCaseInput
+} from './application/book/index.js'
+
 // Domain models (for advanced usage)
 export type {AuthTokens} from './domain/auth/AuthTokens.js'
 export type {SuccessMessage} from './domain/_shared/SuccessMessage.js'
 export type {ValidationToken} from './domain/auth/ValidationToken.js'
+export type {Book, BookStatus, BookMetadata, BookValidation, BookPermissions} from './domain/book/types.js'
 
 // Storage adapters (for custom configurations)
 export {LocalStorageAdapter, SessionStorageAdapter} from './infrastructure/storage/index.js'

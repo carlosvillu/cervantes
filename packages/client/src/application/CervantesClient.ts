@@ -9,7 +9,8 @@ import type {ClientConfig} from '../domain/_kernel/types.js'
 import type {SuccessMessage} from '../domain/_shared/SuccessMessage.js'
 import type {AuthTokens} from '../domain/auth/AuthTokens.js'
 import type {ValidationToken} from '../domain/auth/ValidationToken.js'
-import {HTTPAuthRepository, HTTPClient} from '../infrastructure/http/index.js'
+import type {Book} from '../domain/book/Book.js'
+import {HTTPAuthRepository, HTTPBookRepository, HTTPClient} from '../infrastructure/http/index.js'
 import {LocalStorageAdapter} from '../infrastructure/storage/index.js'
 import {
   type AuthStateChangeListener,
@@ -19,11 +20,19 @@ import {
   AuthService,
   AuthState
 } from './auth/index.js'
+import {
+  type CreateBookUseCaseInput,
+  type FindByIDBookUseCaseInput,
+  type GetAllBooksUseCaseInput,
+  type UpdateBookUseCaseInput,
+  BookService
+} from './book/index.js'
 
 export class CervantesClient {
   private readonly config: Required<ClientConfig>
   private readonly httpClient: HTTPClient
   private readonly authService: AuthService
+  private readonly bookService: BookService
 
   constructor(config: ClientConfig = {}) {
     // Set default configuration
@@ -50,6 +59,12 @@ export class CervantesClient {
         autoRefresh: true,
         refreshThresholdMs: 5 * 60 * 1000 // 5 minutes
       }
+    })
+
+    // Initialize Book service
+    const bookRepository = new HTTPBookRepository(this.httpClient)
+    this.bookService = new BookService({
+      repository: bookRepository
     })
 
     if (this.config.debug) {
@@ -206,6 +221,80 @@ export class CervantesClient {
    */
   hasValidTokens(): boolean {
     return this.httpClient.hasValidTokens()
+  }
+
+  // ============================================================================
+  // Book Management Methods
+  // ============================================================================
+
+  /**
+   * Create a new book
+   */
+  async createBook(input: CreateBookUseCaseInput): Promise<Book> {
+    return this.bookService.create(input)
+  }
+
+  /**
+   * Find a book by its ID
+   */
+  async findBookByID(input: FindByIDBookUseCaseInput): Promise<Book> {
+    return this.bookService.findByID(input)
+  }
+
+  /**
+   * Get all books belonging to the authenticated user
+   */
+  async getAllBooks(input: GetAllBooksUseCaseInput = {}): Promise<Book[]> {
+    return this.bookService.getAll(input)
+  }
+
+  /**
+   * Update an existing book
+   */
+  async updateBook(input: UpdateBookUseCaseInput): Promise<Book> {
+    return this.bookService.update(input)
+  }
+
+  /**
+   * Convenience method: Create a new book with minimal input
+   */
+  async createSimpleBook(title: string, summary: string): Promise<Book> {
+    return this.bookService.createSimple(title, summary)
+  }
+
+  /**
+   * Convenience method: Update only title and summary, preserving other fields
+   */
+  async updateBookBasicInfo(bookId: string, title: string, summary: string): Promise<Book> {
+    return this.bookService.updateBasicInfo(bookId, title, summary)
+  }
+
+  /**
+   * Convenience method: Toggle publication status
+   */
+  async toggleBookPublished(bookId: string): Promise<Book> {
+    return this.bookService.togglePublished(bookId)
+  }
+
+  /**
+   * Convenience method: Publish a book
+   */
+  async publishBook(bookId: string): Promise<Book> {
+    return this.bookService.publish(bookId)
+  }
+
+  /**
+   * Convenience method: Unpublish a book
+   */
+  async unpublishBook(bookId: string): Promise<Book> {
+    return this.bookService.unpublish(bookId)
+  }
+
+  /**
+   * Get the BookService instance for advanced usage
+   */
+  getBookService(): BookService {
+    return this.bookService
   }
 
   // ============================================================================
