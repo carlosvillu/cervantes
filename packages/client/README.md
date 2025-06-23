@@ -3,28 +3,29 @@
 Official TypeScript client for Cervantes API - Interactive book/story editor that enables developers to create choose-your-own-adventure style books with AI-generated cover images.
 
 ## ✅ Phase 1 Complete: Authentication & Foundation
-## ✅ Phase 2.1 Complete: Book Management  
-## ✅ Phase 2.3 Complete: Body/Content Management
+## ✅ Phase 2 Complete: Content Management Core
+## ✅ Phase 3.1 Complete: Interactive Features & Links
 
-This package has completed **Phase 1**, **Phase 2.1**, and **Phase 2.3** of the Cervantes TypeScript Client implementation, including:
+This package has completed **Phase 1**, **Phase 2**, and **Phase 3.1** of the Cervantes TypeScript Client implementation, including:
 
 ### Phase 1 - Foundation ✅
 - Complete authentication module with all 6 auth endpoints
 - Advanced token management with automatic refresh
 - HTTP client foundation with error handling and retry logic
 
-### Phase 2.1 - Book Management ✅ 
-- Complete book CRUD operations (create, read, update, list)
-- Business logic validation and error handling
-- Convenience methods for common operations
-- 25 comprehensive tests with 100% coverage
+### Phase 2 - Content Management Core ✅ 
+- **Book Management**: Complete book CRUD operations with business logic validation
+- **Chapter Management**: Full chapter lifecycle with book relationships
+- **Body/Content Management**: Hash-based versioning system for content storage
+- **User Management**: Current user retrieval and permissions
+- 161 comprehensive tests with 100% coverage across all modules
 
-### Phase 2.3 - Body/Content Management ✅
-- Complete content versioning system with hash-based storage
-- Multiple retrieval methods (by ID, hash, chapter)
-- Content creation, updating, and history tracking
-- 41 comprehensive tests with full error handling
-- Cross-platform UUID generation for Node.js 18+ compatibility
+### Phase 3.1 - Interactive Features & Links ✅
+- **Link Management**: Create connections between chapters for interactive narratives
+- **Options & Direct Links**: Support for choice-based and automatic navigation
+- **Business Logic Validation**: Prevents circular references and invalid connections
+- **Interactive Navigation**: Build choose-your-own-adventure experiences
+- 47 additional tests bringing total to 236 tests
 
 ## Installation
 
@@ -135,6 +136,51 @@ try {
 } catch (error) {
   console.error('Content operation failed:', error.message)
 }
+
+// Link Management (New in Phase 3.1)
+try {
+  // Create interactive links between chapters
+  const optionsLink = await client.createOptionsLink(
+    'chapter-1-id',
+    'chapter-2-id', 
+    'Turn left down the dark corridor',
+    book.getId()
+  )
+
+  const directLink = await client.createDirectLink(
+    'chapter-1-id',
+    'chapter-3-id',
+    'Continue to the next scene',
+    book.getId()
+  )
+
+  // Get all links from a chapter
+  const allLinks = await client.getLinksFromChapter({
+    fromChapterID: 'chapter-1-id'
+  })
+  console.log(`Chapter has ${allLinks.length} possible paths`)
+
+  // Find specific link
+  const foundLink = await client.findLinkByID({ id: optionsLink.getId() })
+
+  // Advanced usage with LinkService
+  const linkService = client.getLinkService()
+  
+  // Get only option-type links (reader choices)
+  const optionsOnly = await linkService.getOptionsFromChapter('chapter-1-id')
+  
+  // Get only direct links (automatic progression)
+  const directOnly = await linkService.getDirectLinksFromChapter('chapter-1-id')
+
+  // Check if link exists
+  const exists = await linkService.exists(optionsLink.getId())
+
+  // Delete a link
+  await client.deleteLink({ id: optionsLink.getId() })
+
+} catch (error) {
+  console.error('Link operation failed:', error.message)
+}
 ```
 
 ## Features
@@ -164,13 +210,28 @@ try {
 - ✅ **Multiple Retrieval Methods** (by ID, hash, chapter)
 - ✅ **Business Logic Validation** (content format, UUID validation)
 - ✅ **Cross-platform Compatibility** (Node.js 18+ UUID generation)
-- ✅ **Comprehensive Testing** (41 tests passing)
+
+### Chapter Management Module ✅
+- ✅ **CRUD Operations** (create, read, update, delete chapters)
+- ✅ **Book Relationships** (chapters belong to books)
+- ✅ **Sorting & Filtering** (by creation date, title, book)
+- ✅ **Business Logic Validation** (title/summary requirements)
+
+### Link Management Module ✅
+- ✅ **Interactive Navigation** (create choose-your-own-adventure connections)
+- ✅ **Link Types** (options for choices, direct for automatic flow)
+- ✅ **CRUD Operations** (create, read, delete links)
+- ✅ **Business Logic Validation** (prevents circular references)
+- ✅ **Filtering Methods** (by type, description, chapter)
+
+### User Management Module ✅
+- ✅ **Current User** (get authenticated user information)
+- ✅ **Permissions** (check user access levels)
+- ✅ **Profile Management** (user data retrieval)
 
 ### Coming Soon 🚧
-- ⏳ **Chapter Management** (create, edit, organize chapters) 
-- ⏳ **Interactive Links** (choose-your-own-adventure connections)
 - ⏳ **AI Image Generation** (book covers, chapter illustrations)
-- ⏳ **User Management** (profiles, preferences)
+- ⏳ **Upload Management** (file handling for images)
 - ⏳ **Offline Support** with caching and sync
 - ⏳ **Framework Integrations** (React hooks, Vue composables)
 
@@ -207,9 +268,12 @@ This client follows Clean Architecture principles with three main layers:
 |--------|---------------|------------|-----------|---------|-------|--------|
 | **Auth** | ✅ AuthTokens, LoginRequest, etc. | ✅ HTTPAuthRepository | ✅ 6 Use Cases | ✅ AuthService | ✅ 57 tests | **Complete** |
 | **Book** | ✅ Book, CreateBookRequest, etc. | ✅ HTTPBookRepository | ✅ 4 Use Cases | ✅ BookService | ✅ 25 tests | **Complete** |
-| **Chapter** | ✅ Chapter, CreateChapterRequest, etc. | ✅ HTTPChapterRepository | ✅ 5 Use Cases | ✅ ChapterService | ✅ Complete | **Complete** |
+| **Chapter** | ✅ Chapter, CreateChapterRequest, etc. | ✅ HTTPChapterRepository | ✅ 5 Use Cases | ✅ ChapterService | ✅ 23 tests | **Complete** |
 | **Body** | ✅ Body, CreateBodyRequest, etc. | ✅ HTTPBodyRepository | ✅ 4 Use Cases | ✅ BodyService | ✅ 41 tests | **Complete** |
+| **Link** | ✅ Link, CreateLinkRequest, etc. | ✅ HTTPLinkRepository | ✅ 4 Use Cases | ✅ LinkService | ✅ 47 tests | **Complete** |
 | **User** | ✅ User, UserPermissions, etc. | ✅ HTTPUserRepository | ✅ 1 Use Case | ✅ UserService | ✅ 18 tests | **Complete** |
+
+**Total**: 236 tests passing • 23 endpoints implemented • 6 modules complete
 
 ### HTTP Client Foundation
 

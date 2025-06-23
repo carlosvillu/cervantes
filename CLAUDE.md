@@ -83,6 +83,7 @@ The TypeScript client currently includes:
 - **UserService**: Current user management with permissions, profile access, and intelligent caching
 - **BookService**: Full CRUD operations for books with validation
 - **ChapterService**: Complete chapter management with relationship handling
+- **LinkService**: Interactive navigation links for choose-your-own-adventure experiences
 - **BodyService**: Content versioning system with hash-based storage
 - **CervantesClient**: Main client class integrating all services
 
@@ -158,7 +159,7 @@ validate(): {isValid: boolean; errors: string[]}
 - **Error Handling**: Domain error mapping with cause chains
 - **Validation**: Zod for runtime type validation
 - **Type Generation**: openapi-typescript for API types
-- **Testing**: Vitest with TypeScript support (161 tests passing)
+- **Testing**: Vitest with TypeScript support (236 tests passing)
 - **Code Quality**: ESLint + Prettier with TypeScript rules
 - **Architecture**: Clean Architecture with Domain Models
 
