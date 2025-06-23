@@ -25,7 +25,7 @@ describe('CervantesClient - User Management', () => {
   beforeEach(() => {
     // Reset all mocks
     vi.clearAllMocks()
-    
+
     cervantesClient = new CervantesClient({
       baseURL: 'http://test.example.com',
       debug: false

@@ -51,10 +51,7 @@ export type {
 } from './application/chapter/index.js'
 
 // User management types
-export type {
-  GetCurrentUserUseCaseInput,
-  GetCurrentUserUseCaseOutput
-} from './application/user/index.js'
+export type {GetCurrentUserUseCaseInput, GetCurrentUserUseCaseOutput} from './application/user/index.js'
 
 // Domain models (for advanced usage)
 export type {AuthTokens} from './domain/auth/AuthTokens.js'

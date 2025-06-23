@@ -10,9 +10,7 @@ import type {User} from '../../../domain/user/User.js'
 import type {UserRepository} from '../../../domain/user/UserRepository.js'
 import {ValidationError} from '../../../infrastructure/http/errors/ValidationError.js'
 
-export interface GetCurrentUserUseCaseInput {
-  // No input parameters needed for getting current user
-}
+export type GetCurrentUserUseCaseInput = Record<string, never>
 
 export type GetCurrentUserUseCaseOutput = User
 

@@ -7,10 +7,7 @@
 
 import type {User} from '../../domain/user/User.js'
 import type {UserRepository} from '../../domain/user/UserRepository.js'
-import {
-  type GetCurrentUserUseCaseInput,
-  GetCurrentUserUseCase
-} from './usecases/index.js'
+import {type GetCurrentUserUseCaseInput, GetCurrentUserUseCase} from './usecases/index.js'
 
 export interface UserServiceConfig {
   repository: UserRepository

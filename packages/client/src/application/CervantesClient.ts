@@ -18,8 +18,8 @@ import {
   HTTPBodyRepository,
   HTTPBookRepository,
   HTTPChapterRepository,
-  HTTPUserRepository,
-  HTTPClient
+  HTTPClient,
+  HTTPUserRepository
 } from '../infrastructure/http/index.js'
 import {LocalStorageAdapter} from '../infrastructure/storage/index.js'
 import {
@@ -52,10 +52,7 @@ import {
   type UpdateChapterUseCaseInput,
   ChapterService
 } from './chapter/index.js'
-import {
-  type GetCurrentUserUseCaseInput,
-  UserService
-} from './user/index.js'
+import {type GetCurrentUserUseCaseInput, UserService} from './user/index.js'
 
 export class CervantesClient {
   private readonly config: Required<ClientConfig>
