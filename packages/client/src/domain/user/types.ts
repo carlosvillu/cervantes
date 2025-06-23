@@ -1,4 +1,5 @@
 export {User, UserValidationSchema, type UserAction} from './User.js'
+export type {UserRepository} from './UserRepository.js'
 
 export interface UserProfile {
   id: string

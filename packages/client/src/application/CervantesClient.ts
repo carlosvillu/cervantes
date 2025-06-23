@@ -12,11 +12,13 @@ import type {ValidationToken} from '../domain/auth/ValidationToken.js'
 import type {Body} from '../domain/body/Body.js'
 import type {Book} from '../domain/book/Book.js'
 import type {Chapter} from '../domain/chapter/Chapter.js'
+import type {User} from '../domain/user/User.js'
 import {
   HTTPAuthRepository,
   HTTPBodyRepository,
   HTTPBookRepository,
   HTTPChapterRepository,
+  HTTPUserRepository,
   HTTPClient
 } from '../infrastructure/http/index.js'
 import {LocalStorageAdapter} from '../infrastructure/storage/index.js'
@@ -50,6 +52,10 @@ import {
   type UpdateChapterUseCaseInput,
   ChapterService
 } from './chapter/index.js'
+import {
+  type GetCurrentUserUseCaseInput,
+  UserService
+} from './user/index.js'
 
 export class CervantesClient {
   private readonly config: Required<ClientConfig>
@@ -58,6 +64,7 @@ export class CervantesClient {
   private readonly bookService: BookService
   private readonly bodyService: BodyService
   private readonly chapterService: ChapterService
+  private readonly userService: UserService
 
   constructor(config: ClientConfig = {}) {
     // Set default configuration
@@ -102,6 +109,12 @@ export class CervantesClient {
     const chapterRepository = new HTTPChapterRepository(this.httpClient)
     this.chapterService = new ChapterService({
       repository: chapterRepository
+    })
+
+    // Initialize User service
+    const userRepository = new HTTPUserRepository(this.httpClient)
+    this.userService = new UserService({
+      repository: userRepository
     })
 
     if (this.config.debug) {
@@ -492,6 +505,63 @@ export class CervantesClient {
    */
   getChapterService(): ChapterService {
     return this.chapterService
+  }
+
+  // ============================================================================
+  // User Management Methods
+  // ============================================================================
+
+  /**
+   * Get current authenticated user
+   */
+  async getCurrentUser(input: GetCurrentUserUseCaseInput = {}): Promise<User> {
+    return this.userService.getCurrentUser(input)
+  }
+
+  /**
+   * Convenience method: Get current user information
+   */
+  async getCurrentUserInfo(): Promise<User> {
+    return this.userService.getCurrentUserInfo()
+  }
+
+  /**
+   * Convenience method: Check if current user is verified
+   */
+  async isCurrentUserVerified(): Promise<boolean> {
+    return this.userService.isCurrentUserVerified()
+  }
+
+  /**
+   * Convenience method: Get current user permissions
+   */
+  async getCurrentUserPermissions(): Promise<{
+    canCreateBooks: boolean
+    canPublishBooks: boolean
+    canUploadImages: boolean
+    canGenerateImages: boolean
+  }> {
+    return this.userService.getCurrentUserPermissions()
+  }
+
+  /**
+   * Convenience method: Get user profile information
+   */
+  async getCurrentUserProfile(): Promise<{
+    id: string
+    username: string
+    email: string
+    verified: boolean
+    displayName: string
+  }> {
+    return this.userService.getCurrentUserProfile()
+  }
+
+  /**
+   * Get the UserService instance for advanced usage
+   */
+  getUserService(): UserService {
+    return this.userService
   }
 
   // ============================================================================

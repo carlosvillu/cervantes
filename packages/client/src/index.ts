@@ -50,6 +50,12 @@ export type {
   DeleteChapterUseCaseInput
 } from './application/chapter/index.js'
 
+// User management types
+export type {
+  GetCurrentUserUseCaseInput,
+  GetCurrentUserUseCaseOutput
+} from './application/user/index.js'
+
 // Domain models (for advanced usage)
 export type {AuthTokens} from './domain/auth/AuthTokens.js'
 export type {SuccessMessage} from './domain/_shared/SuccessMessage.js'
@@ -63,6 +69,14 @@ export type {
   ChapterPermissions,
   ChapterRepository
 } from './domain/chapter/types.js'
+export type {
+  User,
+  UserAction,
+  UserProfile,
+  UserValidation,
+  UserPermissions,
+  UserRepository
+} from './domain/user/types.js'
 
 // Storage adapters (for custom configurations)
 export {LocalStorageAdapter, SessionStorageAdapter} from './infrastructure/storage/index.js'
