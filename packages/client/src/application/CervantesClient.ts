@@ -12,6 +12,7 @@ import type {ValidationToken} from '../domain/auth/ValidationToken.js'
 import type {Body} from '../domain/body/Body.js'
 import type {Book} from '../domain/book/Book.js'
 import type {Chapter} from '../domain/chapter/Chapter.js'
+import type {Link} from '../domain/link/Link.js'
 import type {User} from '../domain/user/User.js'
 import {
   HTTPAuthRepository,
@@ -19,6 +20,7 @@ import {
   HTTPBookRepository,
   HTTPChapterRepository,
   HTTPClient,
+  HTTPLinkRepository,
   HTTPUserRepository
 } from '../infrastructure/http/index.js'
 import {LocalStorageAdapter} from '../infrastructure/storage/index.js'
@@ -52,6 +54,13 @@ import {
   type UpdateChapterUseCaseInput,
   ChapterService
 } from './chapter/index.js'
+import {
+  type CreateLinkUseCaseInput,
+  type DeleteLinkUseCaseInput,
+  type FindByIDLinkUseCaseInput,
+  type GetLinksFromChapterUseCaseInput,
+  LinkService
+} from './link/index.js'
 import {type GetCurrentUserUseCaseInput, UserService} from './user/index.js'
 
 export class CervantesClient {
@@ -61,6 +70,7 @@ export class CervantesClient {
   private readonly bookService: BookService
   private readonly bodyService: BodyService
   private readonly chapterService: ChapterService
+  private readonly linkService: LinkService
   private readonly userService: UserService
 
   constructor(config: ClientConfig = {}) {
@@ -106,6 +116,12 @@ export class CervantesClient {
     const chapterRepository = new HTTPChapterRepository(this.httpClient)
     this.chapterService = new ChapterService({
       repository: chapterRepository
+    })
+
+    // Initialize Link service
+    const linkRepository = new HTTPLinkRepository(this.httpClient)
+    this.linkService = new LinkService({
+      repository: linkRepository
     })
 
     // Initialize User service
@@ -502,6 +518,59 @@ export class CervantesClient {
    */
   getChapterService(): ChapterService {
     return this.chapterService
+  }
+
+  // ============================================================================
+  // Link Management Methods
+  // ============================================================================
+
+  /**
+   * Create a new link between chapters
+   */
+  async createLink(input: CreateLinkUseCaseInput): Promise<Link> {
+    return this.linkService.create(input)
+  }
+
+  /**
+   * Find a link by its ID
+   */
+  async findLinkByID(input: FindByIDLinkUseCaseInput): Promise<Link | null> {
+    return this.linkService.findByID(input)
+  }
+
+  /**
+   * Get all links originating from a specific chapter
+   */
+  async getLinksFromChapter(input: GetLinksFromChapterUseCaseInput): Promise<Link[]> {
+    return this.linkService.getLinksFromChapter(input)
+  }
+
+  /**
+   * Delete a link by its ID
+   */
+  async deleteLink(input: DeleteLinkUseCaseInput): Promise<SuccessMessage> {
+    return this.linkService.delete(input)
+  }
+
+  /**
+   * Convenience method: Create a simple options link between chapters
+   */
+  async createOptionsLink(fromChapterID: string, toChapterID: string, linkText: string, bookID: string): Promise<Link> {
+    return this.linkService.createOptionsLink(fromChapterID, toChapterID, linkText, bookID)
+  }
+
+  /**
+   * Convenience method: Create a direct link between chapters
+   */
+  async createDirectLink(fromChapterID: string, toChapterID: string, linkText: string, bookID: string): Promise<Link> {
+    return this.linkService.createDirectLink(fromChapterID, toChapterID, linkText, bookID)
+  }
+
+  /**
+   * Get the LinkService instance for advanced usage
+   */
+  getLinkService(): LinkService {
+    return this.linkService
   }
 
   // ============================================================================
