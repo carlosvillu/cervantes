@@ -149,7 +149,7 @@ validate(): {isValid: boolean; errors: string[]}
 - **Error Handling**: Domain error mapping with cause chains
 - **Validation**: Zod for runtime type validation
 - **Type Generation**: openapi-typescript for API types
-- **Testing**: Vitest with TypeScript support (57 tests passing)
+- **Testing**: Vitest with TypeScript support (123 tests passing)
 - **Code Quality**: ESLint + Prettier with TypeScript rules
 - **Architecture**: Clean Architecture with Domain Models
 

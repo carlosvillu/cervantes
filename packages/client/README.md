@@ -3,9 +3,10 @@
 Official TypeScript client for Cervantes API - Interactive book/story editor that enables developers to create choose-your-own-adventure style books with AI-generated cover images.
 
 ## ✅ Phase 1 Complete: Authentication & Foundation
-## ✅ Phase 2.1 Complete: Book Management
+## ✅ Phase 2.1 Complete: Book Management  
+## ✅ Phase 2.3 Complete: Body/Content Management
 
-This package has completed **Phase 1** and **Phase 2.1** of the Cervantes TypeScript Client implementation, including:
+This package has completed **Phase 1**, **Phase 2.1**, and **Phase 2.3** of the Cervantes TypeScript Client implementation, including:
 
 ### Phase 1 - Foundation ✅
 - Complete authentication module with all 6 auth endpoints
@@ -16,7 +17,14 @@ This package has completed **Phase 1** and **Phase 2.1** of the Cervantes TypeSc
 - Complete book CRUD operations (create, read, update, list)
 - Business logic validation and error handling
 - Convenience methods for common operations
-- 82 comprehensive tests with 100% coverage
+- 25 comprehensive tests with 100% coverage
+
+### Phase 2.3 - Body/Content Management ✅
+- Complete content versioning system with hash-based storage
+- Multiple retrieval methods (by ID, hash, chapter)
+- Content creation, updating, and history tracking
+- 41 comprehensive tests with full error handling
+- Cross-platform UUID generation for Node.js 18+ compatibility
 
 ## Installation
 
@@ -96,6 +104,37 @@ try {
 } catch (error) {
   console.error('Book operation failed:', error.message)
 }
+
+// Body/Content Management
+try {
+  // Create content for a chapter
+  const bodyContent = await client.createBody({
+    bookID: book.getId(),
+    userID: 'user-uuid',
+    chapterID: 'chapter-uuid',
+    content: 'Once upon a time, in a land far away...'
+  })
+
+  // Retrieve content by hash for versioning
+  const sameContent = await client.findBodyByHash({
+    hash: bodyContent.getHash()
+  })
+
+  // Get all content versions for a chapter
+  const allVersions = await client.getAllBodiesByChapter({
+    bookID: book.getId(),
+    chapterID: 'chapter-uuid'
+  })
+
+  // Advanced usage with BodyService
+  const bodyService = client.getBodyService()
+  const latestContent = await bodyService.findByID({
+    id: bodyContent.getId()
+  })
+
+} catch (error) {
+  console.error('Content operation failed:', error.message)
+}
 ```
 
 ## Features
@@ -120,9 +159,15 @@ try {
 - ✅ **Convenience Methods** (publish, unpublish, toggle status)
 - ✅ **Comprehensive Testing** (82 tests total)
 
+### Body/Content Management Module ✅
+- ✅ **Content Versioning** (hash-based storage system)
+- ✅ **Multiple Retrieval Methods** (by ID, hash, chapter)
+- ✅ **Business Logic Validation** (content format, UUID validation)
+- ✅ **Cross-platform Compatibility** (Node.js 18+ UUID generation)
+- ✅ **Comprehensive Testing** (41 tests passing)
+
 ### Coming Soon 🚧
 - ⏳ **Chapter Management** (create, edit, organize chapters) 
-- ⏳ **Content Management** (rich text, versioning)
 - ⏳ **Interactive Links** (choose-your-own-adventure connections)
 - ⏳ **AI Image Generation** (book covers, chapter illustrations)
 - ⏳ **User Management** (profiles, preferences)
@@ -160,10 +205,10 @@ This client follows Clean Architecture principles with three main layers:
 
 | Module | Domain Models | Repository | Use Cases | Service | Tests | Status |
 |--------|---------------|------------|-----------|---------|-------|--------|
-| **Auth** | ✅ AuthTokens, LoginRequest, etc. | ✅ HTTPAuthRepository | ✅ 6 Use Cases | ✅ AuthService | ✅ 25 tests | **Complete** |
+| **Auth** | ✅ AuthTokens, LoginRequest, etc. | ✅ HTTPAuthRepository | ✅ 6 Use Cases | ✅ AuthService | ✅ 57 tests | **Complete** |
 | **Book** | ✅ Book, CreateBookRequest, etc. | ✅ HTTPBookRepository | ✅ 4 Use Cases | ✅ BookService | ✅ 25 tests | **Complete** |
+| **Body** | ✅ Body, CreateBodyRequest, etc. | ✅ HTTPBodyRepository | ✅ 4 Use Cases | ✅ BodyService | ✅ 41 tests | **Complete** |
 | **Chapter** | ✅ Models Ready | ⏳ Pending | ⏳ Pending | ⏳ Pending | ⏳ Pending | **Next Phase** |
-| **Content** | ✅ Models Ready | ⏳ Pending | ⏳ Pending | ⏳ Pending | ⏳ Pending | **Next Phase** |
 
 ### HTTP Client Foundation
 

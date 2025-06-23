@@ -19,6 +19,7 @@ COPY apps/api/package.json apps/api/package.json
 COPY apps/editor/package.json apps/editor/package.json
 
 COPY packages/literals/package.json package/literals/package.json
+COPY packages/client/package.json packages/client/package.json
 
 RUN --mount=type=cache,target=/root/.npm \
     npm ci --include=dev
