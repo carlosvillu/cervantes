@@ -6,6 +6,7 @@
  */
 
 import type {UseCase} from '../../../domain/_kernel/types.js'
+import {ValidationUtils} from '../../../domain/_shared/validation-utils.js'
 import type {Chapter} from '../../../domain/chapter/Chapter.js'
 import type {ChapterRepository} from '../../../domain/chapter/ChapterRepository.js'
 import {UpdateChapterRequest} from '../../../domain/chapter/UpdateChapterRequest.js'
@@ -107,12 +108,12 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
     }
 
     // Validate ID format (basic UUID format check)
-    if (input.id && !this.isValidUUID(input.id)) {
+    if (input.id && !ValidationUtils.isValidUUID(input.id)) {
       errors.push('Chapter ID must be a valid UUID')
     }
 
     // Validate bookID format (basic UUID format check)
-    if (input.bookID && !this.isValidUUID(input.bookID)) {
+    if (input.bookID && !ValidationUtils.isValidUUID(input.bookID)) {
       errors.push('Book ID must be a valid UUID')
     }
 
@@ -123,10 +124,5 @@ export class UpdateChapterUseCase implements UseCase<UpdateChapterUseCaseInput, 
 
   private containsOnlyWhitespace(text: string): boolean {
     return text.trim().length === 0
-  }
-
-  private isValidUUID(uuid: string): boolean {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-    return uuidRegex.test(uuid)
   }
 }

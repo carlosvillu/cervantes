@@ -82,6 +82,15 @@ Cervantes transforms traditional linear storytelling into **interactive experien
 - **Offline Support**: LocalForage for client-side storage
 - **Routing**: React Router for navigation
 
+#### TypeScript Client Package (`packages/client`)
+- **Architecture**: Clean Architecture with Domain-Driven Design
+- **Authentication**: Complete JWT workflow with auto-refresh
+- **API Coverage**: Auth, Books, Chapters, Content versioning
+- **Type Safety**: Auto-generated types from OpenAPI specification
+- **Testing**: 161 tests with comprehensive coverage
+- **Build System**: Dual ESM/CommonJS support with tshy
+- **Validation**: Zod schemas for runtime type validation
+
 #### Development Infrastructure
 - **Containerization**: Docker Compose for development services
 - **Monorepo**: npm workspaces with ultra-runner
@@ -167,6 +176,57 @@ https://api.bookadventur.es
 ```
 
 All endpoints require authentication except for signup, login, and token refresh operations.
+
+## 📦 TypeScript Client Library
+
+Cervantes provides an official TypeScript client library for seamless API integration:
+
+### Features
+- **🔐 Complete Authentication**: Signup, login, token management with automatic refresh
+- **📚 Content Management**: Full CRUD operations for books, chapters, and content
+- **🎯 Type Safety**: Auto-generated types from OpenAPI specification
+- **🏗️ Clean Architecture**: Domain models with UseCase patterns
+- **✅ Well Tested**: 161 comprehensive tests with high coverage
+- **📦 Modern Build**: Dual ESM/CommonJS support
+
+### Installation
+```bash
+npm install @cervantes/client
+```
+
+### Quick Start
+```typescript
+import { CervantesClient } from '@cervantes/client'
+
+const client = new CervantesClient({
+  baseURL: 'https://api.bookadventur.es'
+})
+
+// Authenticate
+const tokens = await client.auth.login({
+  email: 'author@example.com',
+  password: 'secure-password'
+})
+
+// Create a book
+const book = await client.books.create({
+  title: 'My Interactive Story',
+  summary: 'An amazing adventure awaits...'
+})
+
+// Add chapters
+const chapter = await client.chapters.create({
+  bookID: book.id,
+  title: 'The Beginning',
+  summary: 'Our story starts here...'
+})
+```
+
+### Available Services
+- **🔑 AuthService**: Authentication and user management
+- **📖 BookService**: Interactive book creation and management
+- **📝 ChapterService**: Chapter content and structure management
+- **📄 BodyService**: Content versioning and hash-based storage
 
 ## 🚀 Quick Start
 
