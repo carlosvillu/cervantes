@@ -555,24 +555,14 @@ export class CervantesClient {
   /**
    * Convenience method: Create a simple options link between chapters
    */
-  async createOptionsLink(
-    fromChapterID: string,
-    toChapterID: string,
-    linkText: string,
-    bookID: string
-  ): Promise<Link> {
+  async createOptionsLink(fromChapterID: string, toChapterID: string, linkText: string, bookID: string): Promise<Link> {
     return this.linkService.createOptionsLink(fromChapterID, toChapterID, linkText, bookID)
   }
 
   /**
    * Convenience method: Create a direct link between chapters
    */
-  async createDirectLink(
-    fromChapterID: string,
-    toChapterID: string,
-    linkText: string,
-    bookID: string
-  ): Promise<Link> {
+  async createDirectLink(fromChapterID: string, toChapterID: string, linkText: string, bookID: string): Promise<Link> {
     return this.linkService.createDirectLink(fromChapterID, toChapterID, linkText, bookID)
   }
 

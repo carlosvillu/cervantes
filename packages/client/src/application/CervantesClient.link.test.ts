@@ -189,7 +189,12 @@ describe('CervantesClient - Link Management', () => {
       // Assert
       expect(result).toBe(mockCreatedLink)
       expect(result.getKind()).toBe('options')
-      expect(linkService.createOptionsLink).toHaveBeenCalledWith('chapter-1', 'chapter-2', 'Go to next chapter', 'book-1')
+      expect(linkService.createOptionsLink).toHaveBeenCalledWith(
+        'chapter-1',
+        'chapter-2',
+        'Go to next chapter',
+        'book-1'
+      )
     })
   })
 

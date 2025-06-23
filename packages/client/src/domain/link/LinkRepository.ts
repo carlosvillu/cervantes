@@ -6,20 +6,20 @@ export interface LinkRepository {
   /**
    * Create a new link between chapters
    */
-  create(input: CreateLinkRequest): Promise<Link>
+  create: (input: CreateLinkRequest) => Promise<Link>
 
   /**
    * Find link by ID
    */
-  findByID(id: string): Promise<Link | null>
+  findByID: (id: string) => Promise<Link | null>
 
   /**
    * Get all links originating from a specific chapter
    */
-  getLinksFromChapter(fromChapterID: string): Promise<Link[]>
+  getLinksFromChapter: (fromChapterID: string) => Promise<Link[]>
 
   /**
    * Delete a link by ID
    */
-  delete(id: string): Promise<SuccessMessage>
+  delete: (id: string) => Promise<SuccessMessage>
 }

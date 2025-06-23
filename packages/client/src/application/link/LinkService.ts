@@ -73,12 +73,7 @@ export class LinkService {
   /**
    * Convenience method: Create a simple options link between chapters
    */
-  async createOptionsLink(
-    fromChapterID: string,
-    toChapterID: string,
-    linkText: string,
-    bookID: string
-  ): Promise<Link> {
+  async createOptionsLink(fromChapterID: string, toChapterID: string, linkText: string, bookID: string): Promise<Link> {
     return this.create({
       from: fromChapterID,
       to: toChapterID,
@@ -91,12 +86,7 @@ export class LinkService {
   /**
    * Convenience method: Create a direct link between chapters
    */
-  async createDirectLink(
-    fromChapterID: string,
-    toChapterID: string,
-    linkText: string,
-    bookID: string
-  ): Promise<Link> {
+  async createDirectLink(fromChapterID: string, toChapterID: string, linkText: string, bookID: string): Promise<Link> {
     return this.create({
       from: fromChapterID,
       to: toChapterID,

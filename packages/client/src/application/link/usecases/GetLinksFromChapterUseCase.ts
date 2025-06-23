@@ -16,7 +16,9 @@ export interface GetLinksFromChapterUseCaseInput {
 
 export type GetLinksFromChapterUseCaseOutput = Link[]
 
-export class GetLinksFromChapterUseCase implements UseCase<GetLinksFromChapterUseCaseInput, GetLinksFromChapterUseCaseOutput> {
+export class GetLinksFromChapterUseCase
+  implements UseCase<GetLinksFromChapterUseCaseInput, GetLinksFromChapterUseCaseOutput>
+{
   constructor(private readonly linkRepository: LinkRepository) {}
 
   async execute(input: GetLinksFromChapterUseCaseInput): Promise<GetLinksFromChapterUseCaseOutput> {

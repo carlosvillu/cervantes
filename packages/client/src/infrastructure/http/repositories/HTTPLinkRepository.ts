@@ -64,8 +64,8 @@ export class HTTPLinkRepository implements LinkRepository {
 
   async getLinksFromChapter(fromChapterID: string): Promise<Link[]> {
     const [error, data] = await this.httpClient.get(
-      '/link',
-      {params: {from: fromChapterID}},
+      `/link?from=${encodeURIComponent(fromChapterID)}`,
+      {},
       LinkValidationSchema.array() // Validate as array of links
     )
 

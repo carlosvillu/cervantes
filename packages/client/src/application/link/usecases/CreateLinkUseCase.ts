@@ -6,9 +6,9 @@
  */
 
 import type {UseCase} from '../../../domain/_kernel/types.js'
+import {CreateLinkRequest} from '../../../domain/link/CreateLinkRequest.js'
 import type {Link} from '../../../domain/link/Link.js'
 import type {LinkRepository} from '../../../domain/link/LinkRepository.js'
-import {CreateLinkRequest} from '../../../domain/link/CreateLinkRequest.js'
 import {ValidationError} from '../../../infrastructure/http/errors/ValidationError.js'
 
 export interface CreateLinkUseCaseInput {
