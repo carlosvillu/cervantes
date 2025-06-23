@@ -2,6 +2,7 @@ import {z} from 'zod'
 
 import type {components} from '../../generated/api-types.js'
 import {ValueObject} from '../_kernel/types.js'
+import {generateUUID} from '../_shared/validation-utils.js'
 
 type CreateLinkRequestSchema = components['schemas']['CreateLinkRequest']
 
@@ -65,7 +66,7 @@ export class CreateLinkRequest extends ValueObject<CreateLinkRequestSchema> {
   }
 
   static create(data: Omit<CreateLinkRequestSchema, 'id'>): CreateLinkRequest {
-    const id = crypto.randomUUID()
+    const id = generateUUID()
     return CreateLinkRequest.fromAPI({...data, id})
   }
 

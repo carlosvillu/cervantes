@@ -9,8 +9,9 @@ import type {ClientConfig} from '../domain/_kernel/types.js'
 import type {SuccessMessage} from '../domain/_shared/SuccessMessage.js'
 import type {AuthTokens} from '../domain/auth/AuthTokens.js'
 import type {ValidationToken} from '../domain/auth/ValidationToken.js'
+import type {Body} from '../domain/body/Body.js'
 import type {Book} from '../domain/book/Book.js'
-import {HTTPAuthRepository, HTTPBookRepository, HTTPClient} from '../infrastructure/http/index.js'
+import {HTTPAuthRepository, HTTPBodyRepository, HTTPBookRepository, HTTPClient} from '../infrastructure/http/index.js'
 import {LocalStorageAdapter} from '../infrastructure/storage/index.js'
 import {
   type AuthStateChangeListener,
@@ -20,6 +21,13 @@ import {
   AuthService,
   AuthState
 } from './auth/index.js'
+import {
+  type CreateBodyUseCaseInput,
+  type FindByHashBodyUseCaseInput,
+  type FindByIDBodyUseCaseInput,
+  type GetAllBodiesUseCaseInput,
+  BodyService
+} from './body/index.js'
 import {
   type CreateBookUseCaseInput,
   type FindByIDBookUseCaseInput,
@@ -33,6 +41,7 @@ export class CervantesClient {
   private readonly httpClient: HTTPClient
   private readonly authService: AuthService
   private readonly bookService: BookService
+  private readonly bodyService: BodyService
 
   constructor(config: ClientConfig = {}) {
     // Set default configuration
@@ -65,6 +74,12 @@ export class CervantesClient {
     const bookRepository = new HTTPBookRepository(this.httpClient)
     this.bookService = new BookService({
       repository: bookRepository
+    })
+
+    // Initialize Body service
+    const bodyRepository = new HTTPBodyRepository(this.httpClient)
+    this.bodyService = new BodyService({
+      repository: bodyRepository
     })
 
     if (this.config.debug) {
@@ -295,6 +310,57 @@ export class CervantesClient {
    */
   getBookService(): BookService {
     return this.bookService
+  }
+
+  // ============================================================================
+  // Body/Content Management Methods
+  // ============================================================================
+
+  /**
+   * Create a new body/content version for a chapter
+   */
+  async createBody(input: CreateBodyUseCaseInput): Promise<Body> {
+    return this.bodyService.create(input)
+  }
+
+  /**
+   * Find a body by its content hash
+   */
+  async findBodyByHash(input: FindByHashBodyUseCaseInput): Promise<Body> {
+    return this.bodyService.findByHash(input)
+  }
+
+  /**
+   * Find a body by its unique ID
+   */
+  async findBodyByID(input: FindByIDBodyUseCaseInput): Promise<Body> {
+    return this.bodyService.findByID(input)
+  }
+
+  /**
+   * Get all bodies for a specific chapter
+   */
+  async getAllBodiesByChapter(input: GetAllBodiesUseCaseInput): Promise<Body[]> {
+    return this.bodyService.getAllByChapter(input)
+  }
+
+  /**
+   * Convenience method: Create a simple body with minimal input
+   */
+  async createSimpleBody(bookID: string, userID: string, chapterID: string, content: string): Promise<Body> {
+    return this.bodyService.create({
+      bookID,
+      userID,
+      chapterID,
+      content
+    })
+  }
+
+  /**
+   * Get the BodyService instance for advanced usage
+   */
+  getBodyService(): BodyService {
+    return this.bodyService
   }
 
   // ============================================================================
