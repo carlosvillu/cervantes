@@ -51,13 +51,16 @@ describe('GetCurrentUserUseCase', () => {
       await expect(getCurrentUserUseCase.execute({})).rejects.toThrow('Failed to get current user: Repository failed')
     })
 
-    it('should re-throw non-Error instances as-is', async () => {
+    it('should wrap non-Error instances in ValidationError', async () => {
       // Arrange
       const nonErrorObject = {message: 'Not an error instance'}
       vi.mocked(mockUserRepository.getCurrentUser).mockRejectedValue(nonErrorObject)
 
       // Act & Assert
-      await expect(getCurrentUserUseCase.execute({})).rejects.toBe(nonErrorObject)
+      await expect(getCurrentUserUseCase.execute({})).rejects.toThrow(ValidationError)
+      await expect(getCurrentUserUseCase.execute({})).rejects.toThrow(
+        'Failed to get current user: Unknown error occurred'
+      )
     })
   })
 

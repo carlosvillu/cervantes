@@ -29,7 +29,8 @@ export class GetCurrentUserUseCase implements UseCase<GetCurrentUserUseCaseInput
       if (error instanceof Error) {
         throw new ValidationError(`Failed to get current user: ${error.message}`, error)
       }
-      throw error
+      // Wrap unknown errors in ValidationError for consistency
+      throw new ValidationError('Failed to get current user: Unknown error occurred', error as Error)
     }
   }
 
@@ -38,6 +39,9 @@ export class GetCurrentUserUseCase implements UseCase<GetCurrentUserUseCaseInput
     // The input object is mainly for consistency with other use cases
     if (input === null || input === undefined) {
       throw new ValidationError('Input cannot be null or undefined')
+    }
+    if (typeof input !== 'object') {
+      throw new ValidationError('Input must be an object')
     }
   }
 }

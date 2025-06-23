@@ -19,14 +19,12 @@ export class HTTPUserRepository implements UserRepository {
       throw error
     }
 
-    return User.fromAPI(
-      data as {
-        id: string
-        username: string
-        email: string
-        password: string
-        verified: boolean
-      }
-    )
+    // Use Zod validation to ensure type safety
+    const validationResult = UserValidationSchema.safeParse(data)
+    if (!validationResult.success) {
+      throw new Error(`Invalid user data from API: ${validationResult.error.message}`)
+    }
+
+    return User.fromAPI(validationResult.data)
   }
 }

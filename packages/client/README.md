@@ -207,8 +207,9 @@ This client follows Clean Architecture principles with three main layers:
 |--------|---------------|------------|-----------|---------|-------|--------|
 | **Auth** | ✅ AuthTokens, LoginRequest, etc. | ✅ HTTPAuthRepository | ✅ 6 Use Cases | ✅ AuthService | ✅ 57 tests | **Complete** |
 | **Book** | ✅ Book, CreateBookRequest, etc. | ✅ HTTPBookRepository | ✅ 4 Use Cases | ✅ BookService | ✅ 25 tests | **Complete** |
+| **Chapter** | ✅ Chapter, CreateChapterRequest, etc. | ✅ HTTPChapterRepository | ✅ 5 Use Cases | ✅ ChapterService | ✅ Complete | **Complete** |
 | **Body** | ✅ Body, CreateBodyRequest, etc. | ✅ HTTPBodyRepository | ✅ 4 Use Cases | ✅ BodyService | ✅ 41 tests | **Complete** |
-| **Chapter** | ✅ Models Ready | ⏳ Pending | ⏳ Pending | ⏳ Pending | ⏳ Pending | **Next Phase** |
+| **User** | ✅ User, UserPermissions, etc. | ✅ HTTPUserRepository | ✅ 1 Use Case | ✅ UserService | ✅ 18 tests | **Complete** |
 
 ### HTTP Client Foundation
 
