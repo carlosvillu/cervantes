@@ -10,7 +10,7 @@ export const ChapterValidationSchema = z.object({
   userID: z.string().min(1),
   bookID: z.string().min(1),
   title: z.string().min(1).max(200),
-  summary: z.string().max(1000),
+  summary: z.string().min(1).max(1000),
   createdAt: z.number(),
   updatedAt: z.number()
 })
@@ -103,6 +103,10 @@ export class Chapter extends Entity<string> {
 
     if (this.title.length > 200) {
       errors.push('Title must be 200 characters or less')
+    }
+
+    if (this.summary.trim().length === 0) {
+      errors.push('Summary is required')
     }
 
     if (this.summary.length > 1000) {

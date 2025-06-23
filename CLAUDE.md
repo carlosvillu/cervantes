@@ -77,6 +77,14 @@ Code is organized around business domains:
 - **Image**: AI-generated covers via Fooocus service
 - **Statics**: File uploads to AWS S3
 
+#### **Client Package Implemented Modules**
+The TypeScript client currently includes:
+- **AuthService**: Complete authentication workflow (signup, login, token management)
+- **BookService**: Full CRUD operations for books with validation
+- **ChapterService**: Complete chapter management with relationship handling
+- **BodyService**: Content versioning system with hash-based storage
+- **CervantesClient**: Main client class integrating all services
+
 ### Client Package Architecture (`packages/client`)
 TypeScript client library implementing Clean Architecture patterns:
 
@@ -149,7 +157,7 @@ validate(): {isValid: boolean; errors: string[]}
 - **Error Handling**: Domain error mapping with cause chains
 - **Validation**: Zod for runtime type validation
 - **Type Generation**: openapi-typescript for API types
-- **Testing**: Vitest with TypeScript support (123 tests passing)
+- **Testing**: Vitest with TypeScript support (161 tests passing)
 - **Code Quality**: ESLint + Prettier with TypeScript rules
 - **Architecture**: Clean Architecture with Domain Models
 
