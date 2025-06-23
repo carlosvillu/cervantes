@@ -2,6 +2,7 @@ import {z} from 'zod'
 
 import type {components} from '../../generated/api-types.js'
 import {ValueObject} from '../_kernel/types.js'
+import {generateUUID} from '../_shared/validation-utils.js'
 
 type CreateBookRequestSchema = components['schemas']['CreateBookRequest']
 
@@ -67,7 +68,7 @@ export class CreateBookRequest extends ValueObject<CreateBookRequestSchema> {
   }
 
   static create(data: Omit<CreateBookRequestSchema, 'id'>): CreateBookRequest {
-    const id = crypto.randomUUID()
+    const id = generateUUID()
     return CreateBookRequest.fromAPI({...data, id})
   }
 

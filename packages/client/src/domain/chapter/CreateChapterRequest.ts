@@ -2,6 +2,7 @@ import {z} from 'zod'
 
 import type {components} from '../../generated/api-types.js'
 import {ValueObject} from '../_kernel/types.js'
+import {generateUUID} from '../_shared/validation-utils.js'
 
 type CreateChapterRequestSchema = components['schemas']['CreateChapterRequest']
 
@@ -73,7 +74,7 @@ export class CreateChapterRequest extends ValueObject<CreateChapterRequestSchema
   }
 
   static create(data: Omit<CreateChapterRequestSchema, 'id'>): CreateChapterRequest {
-    const id = crypto.randomUUID()
+    const id = generateUUID()
     return CreateChapterRequest.fromAPI({...data, id})
   }
 

@@ -2,6 +2,7 @@ import {z} from 'zod'
 
 import type {components} from '../../generated/api-types.js'
 import {ValueObject} from '../_kernel/types.js'
+import {generateUUID} from '../_shared/validation-utils.js'
 
 type CreateBodyRequestSchema = components['schemas']['CreateBodyRequest']
 
@@ -94,7 +95,7 @@ export class CreateBodyRequest extends ValueObject<CreateBodyRequestSchema> {
   }
 
   static create(data: Omit<CreateBodyRequestSchema, 'id'>): CreateBodyRequest {
-    const id = crypto.randomUUID()
+    const id = generateUUID()
     return CreateBodyRequest.fromAPI({...data, id})
   }
 
