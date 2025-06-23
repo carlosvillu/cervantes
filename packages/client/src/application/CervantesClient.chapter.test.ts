@@ -138,9 +138,7 @@ describe('CervantesClient - Chapter Management', () => {
     })
 
     it('should validate find chapter by ID input', async () => {
-      await expect(client.findChapterByID({id: 'invalid-uuid'})).rejects.toThrow(
-        'Chapter ID must be a valid UUID'
-      )
+      await expect(client.findChapterByID({id: 'invalid-uuid'})).rejects.toThrow('Chapter ID must be a valid UUID')
     })
 
     it('should validate get all chapters by book ID input', async () => {
@@ -150,9 +148,7 @@ describe('CervantesClient - Chapter Management', () => {
     })
 
     it('should validate delete chapter input', async () => {
-      await expect(client.deleteChapter({id: 'invalid-uuid'})).rejects.toThrow(
-        'Chapter ID must be a valid UUID'
-      )
+      await expect(client.deleteChapter({id: 'invalid-uuid'})).rejects.toThrow('Chapter ID must be a valid UUID')
     })
   })
 })

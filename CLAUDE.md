@@ -80,6 +80,7 @@ Code is organized around business domains:
 #### **Client Package Implemented Modules**
 The TypeScript client currently includes:
 - **AuthService**: Complete authentication workflow (signup, login, token management)
+- **UserService**: Current user management with permissions, profile access, and intelligent caching
 - **BookService**: Full CRUD operations for books with validation
 - **ChapterService**: Complete chapter management with relationship handling
 - **BodyService**: Content versioning system with hash-based storage
