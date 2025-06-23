@@ -3,6 +3,7 @@ export {ChapterCover, ChapterCoverValidationSchema} from './ChapterCover.js'
 export {CreateChapterRequest, CreateChapterRequestValidationSchema} from './CreateChapterRequest.js'
 export {UpdateChapterRequest, UpdateChapterRequestValidationSchema} from './UpdateChapterRequest.js'
 export {CreateChapterCoverRequest, CreateChapterCoverRequestValidationSchema} from './CreateChapterCoverRequest.js'
+export type {ChapterRepository} from './ChapterRepository.js'
 
 export interface ChapterMetadata {
   id: string

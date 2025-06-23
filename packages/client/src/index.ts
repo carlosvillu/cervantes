@@ -41,12 +41,28 @@ export type {
   GetAllBodiesUseCaseInput
 } from './application/body/index.js'
 
+// Chapter management types
+export type {
+  CreateChapterUseCaseInput,
+  FindByIDChapterUseCaseInput,
+  GetAllChaptersUseCaseInput,
+  UpdateChapterUseCaseInput,
+  DeleteChapterUseCaseInput
+} from './application/chapter/index.js'
+
 // Domain models (for advanced usage)
 export type {AuthTokens} from './domain/auth/AuthTokens.js'
 export type {SuccessMessage} from './domain/_shared/SuccessMessage.js'
 export type {ValidationToken} from './domain/auth/ValidationToken.js'
 export type {Book, BookStatus, BookMetadata, BookValidation, BookPermissions} from './domain/book/types.js'
 export type {Body, CreateBodyRequest, BodyRepository} from './domain/body/types.js'
+export type {
+  Chapter,
+  ChapterMetadata,
+  ChapterValidation,
+  ChapterPermissions,
+  ChapterRepository
+} from './domain/chapter/types.js'
 
 // Storage adapters (for custom configurations)
 export {LocalStorageAdapter, SessionStorageAdapter} from './infrastructure/storage/index.js'

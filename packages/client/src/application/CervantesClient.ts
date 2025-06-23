@@ -11,7 +11,14 @@ import type {AuthTokens} from '../domain/auth/AuthTokens.js'
 import type {ValidationToken} from '../domain/auth/ValidationToken.js'
 import type {Body} from '../domain/body/Body.js'
 import type {Book} from '../domain/book/Book.js'
-import {HTTPAuthRepository, HTTPBodyRepository, HTTPBookRepository, HTTPClient} from '../infrastructure/http/index.js'
+import type {Chapter} from '../domain/chapter/Chapter.js'
+import {
+  HTTPAuthRepository,
+  HTTPBodyRepository,
+  HTTPBookRepository,
+  HTTPChapterRepository,
+  HTTPClient
+} from '../infrastructure/http/index.js'
 import {LocalStorageAdapter} from '../infrastructure/storage/index.js'
 import {
   type AuthStateChangeListener,
@@ -35,6 +42,14 @@ import {
   type UpdateBookUseCaseInput,
   BookService
 } from './book/index.js'
+import {
+  type CreateChapterUseCaseInput,
+  type DeleteChapterUseCaseInput,
+  type FindByIDChapterUseCaseInput,
+  type GetAllChaptersUseCaseInput,
+  type UpdateChapterUseCaseInput,
+  ChapterService
+} from './chapter/index.js'
 
 export class CervantesClient {
   private readonly config: Required<ClientConfig>
@@ -42,6 +57,7 @@ export class CervantesClient {
   private readonly authService: AuthService
   private readonly bookService: BookService
   private readonly bodyService: BodyService
+  private readonly chapterService: ChapterService
 
   constructor(config: ClientConfig = {}) {
     // Set default configuration
@@ -80,6 +96,12 @@ export class CervantesClient {
     const bodyRepository = new HTTPBodyRepository(this.httpClient)
     this.bodyService = new BodyService({
       repository: bodyRepository
+    })
+
+    // Initialize Chapter service
+    const chapterRepository = new HTTPChapterRepository(this.httpClient)
+    this.chapterService = new ChapterService({
+      repository: chapterRepository
     })
 
     if (this.config.debug) {
@@ -361,6 +383,115 @@ export class CervantesClient {
    */
   getBodyService(): BodyService {
     return this.bodyService
+  }
+
+  // ============================================================================
+  // Chapter Management Methods
+  // ============================================================================
+
+  /**
+   * Create a new chapter
+   */
+  async createChapter(input: CreateChapterUseCaseInput): Promise<Chapter> {
+    return this.chapterService.create(input)
+  }
+
+  /**
+   * Find a chapter by its ID
+   */
+  async findChapterByID(input: FindByIDChapterUseCaseInput): Promise<Chapter> {
+    return this.chapterService.findByID(input)
+  }
+
+  /**
+   * Get all chapters for a specific book
+   */
+  async getAllChaptersByBookId(input: GetAllChaptersUseCaseInput): Promise<Chapter[]> {
+    return this.chapterService.getAllByBookId(input)
+  }
+
+  /**
+   * Update an existing chapter
+   */
+  async updateChapter(input: UpdateChapterUseCaseInput): Promise<Chapter> {
+    return this.chapterService.update(input)
+  }
+
+  /**
+   * Delete a chapter by its ID
+   */
+  async deleteChapter(input: DeleteChapterUseCaseInput): Promise<void> {
+    return this.chapterService.delete(input)
+  }
+
+  /**
+   * Convenience method: Create a new chapter with minimal input
+   */
+  async createSimpleChapter(title: string, summary: string, bookID: string): Promise<Chapter> {
+    return this.chapterService.createSimple(title, summary, bookID)
+  }
+
+  /**
+   * Convenience method: Update only title and summary
+   */
+  async updateChapterBasicInfo(chapterId: string, title: string, summary: string): Promise<Chapter> {
+    return this.chapterService.updateBasicInfo(chapterId, title, summary)
+  }
+
+  /**
+   * Convenience method: Get all chapters for a book by book ID (string only)
+   */
+  async getChaptersByBookId(bookId: string): Promise<Chapter[]> {
+    return this.chapterService.getChaptersByBookId(bookId)
+  }
+
+  /**
+   * Convenience method: Find chapter by ID (string only)
+   */
+  async getChapterById(chapterId: string): Promise<Chapter> {
+    return this.chapterService.getChapterById(chapterId)
+  }
+
+  /**
+   * Convenience method: Delete chapter by ID (string only)
+   */
+  async deleteChapterById(chapterId: string): Promise<void> {
+    return this.chapterService.deleteChapterById(chapterId)
+  }
+
+  /**
+   * Utility method: Count chapters for a book
+   */
+  async getChapterCountForBook(bookId: string): Promise<number> {
+    return this.chapterService.getChapterCountForBook(bookId)
+  }
+
+  /**
+   * Utility method: Get the most recently updated chapter for a book
+   */
+  async getMostRecentChapterForBook(bookId: string): Promise<Chapter | null> {
+    return this.chapterService.getMostRecentChapterForBook(bookId)
+  }
+
+  /**
+   * Utility method: Get chapters sorted by creation date
+   */
+  async getChaptersSortedByDate(bookId: string, ascending = true): Promise<Chapter[]> {
+    return this.chapterService.getChaptersSortedByDate(bookId, ascending)
+  }
+
+  /**
+   * Utility method: Get chapters sorted by title
+   */
+  async getChaptersSortedByTitle(bookId: string, ascending = true): Promise<Chapter[]> {
+    return this.chapterService.getChaptersSortedByTitle(bookId, ascending)
+  }
+
+  /**
+   * Get the ChapterService instance for advanced usage
+   */
+  getChapterService(): ChapterService {
+    return this.chapterService
   }
 
   // ============================================================================
