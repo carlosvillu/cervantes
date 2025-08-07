@@ -7,4 +7,6 @@ export interface BookRepository {
   update: (book: Book) => Promise<Book>
   findAll: (userID: ID) => Promise<Books>
   findByID: (id: ID, userID: ID) => Promise<Book>
+  findAllPublished: () => Promise<Books>
+  findPublishedByID: (id: ID) => Promise<Book>
 }

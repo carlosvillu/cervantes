@@ -25,6 +25,7 @@ import {router as chapterRouter} from './routes/chapter/index.js'
 import {router as imageRouter} from './routes/image/index.js'
 import {router as linkRouter} from './routes/link/index.js'
 import {router as uploadRouter} from './routes/upload/index.js'
+import {router as publicRouter} from './routes/public/index.js'
 import {router as userRouter} from './routes/user/index.js'
 
 const {PORT, HOST, STAGE} = process.env
@@ -85,6 +86,7 @@ app.use('/chapter', chapterRouter)
 app.use('/link', linkRouter)
 app.use('/body', bodyRouter)
 app.use('/image', imageRouter)
+app.use('/public', publicRouter)
 
 const server = app.listen(+PORT!, HOST!, () => log('app Listen in:', `http://${HOST!}:${PORT!}`)) // eslint-disable-line
 

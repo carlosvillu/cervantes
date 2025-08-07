@@ -1,0 +1,9 @@
+
+> @cervantes/public-reader@0.0.0 dev
+> VITE_DEBUG=true vite --host --port 3002
+
+
+  VITE v5.4.19  ready in 228 ms
+
+  ➜  Local:   http://localhost:3002/
+  ➜  Network: http://192.168.0.2:3002/

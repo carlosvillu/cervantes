@@ -91,6 +91,52 @@ export class RedisBookRepository implements BookRepository {
     })
   }
 
+  async findAllPublished(): Promise<Books> {
+    await this.#createIndex()
+
+    const booksRecords = (await this.#bookRepository
+      ?.search()
+      .where('published')
+      .equal(true)
+      .return.all()) as BookRecord[]
+
+    if (booksRecords === null || booksRecords === undefined) return Books.empty()
+
+    return Books.create({
+      books: booksRecords.map(record =>
+        Book.create({
+          id: ID.create({value: record[EntityId] as string}),
+          title: Title.create({value: record.title}),
+          summary: Summary.create({value: record.summary}),
+          published: PublishStatus.create({value: record.published ?? false}),
+          createdAt: TimeStamp.create({value: record.createdAt}),
+          userID: ID.create({value: record.userID}),
+          rootChapterID: record.rootChapterID ? ID.create({value: record.rootChapterID}) : ID.empty(),
+          ...(record.updaedAt && {updatedAt: TimeStamp.create({value: record.updatedAt})})
+        })
+      )
+    })
+  }
+
+  async findPublishedByID(id: ID): Promise<Book> {
+    await this.#createIndex()
+
+    const bookRecord = (await this.#bookRepository?.fetch(id.value)) as BookRecord
+
+    if (bookRecord === null || bookRecord === undefined || bookRecord.published === false) return Book.empty()
+
+    return Book.create({
+      id: ID.create({value: bookRecord[EntityId] as string}),
+      summary: Summary.create({value: bookRecord.summary}),
+      published: PublishStatus.create({value: bookRecord.published ?? false}),
+      title: Title.create({value: bookRecord.title}),
+      userID: ID.create({value: bookRecord.userID}),
+      rootChapterID: bookRecord.rootChapterID ? ID.create({value: record.rootChapterID}) : ID.empty(),
+      createdAt: TimeStamp.create({value: bookRecord.createdAt}),
+      ...(bookRecord.updaedAt && {updatedAt: TimeStamp.create({value: bookRecord.updatedAt})})
+    })
+  }
+
   async #createIndex() {
     if (this.#indexCreated) return
 

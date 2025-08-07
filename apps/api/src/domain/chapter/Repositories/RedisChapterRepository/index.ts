@@ -87,6 +87,25 @@ export class RedisChapterRepository implements ChapterRepository {
     })
   }
 
+  async findPublishedByID(id: ID, bookID: ID): Promise<Chapter> {
+    await this.#createIndex()
+
+    const chapterRecord = (await this.#chapterRepository?.fetch(id.value)) as ChapterRecord
+
+    if (chapterRecord === null || chapterRecord === undefined) return Chapter.empty()
+    if (chapterRecord.bookID !== bookID.value) return Chapter.empty()
+
+    return Chapter.create({
+      id: ID.create({value: chapterRecord[EntityId] as string}),
+      summary: Summary.create({value: chapterRecord.summary}),
+      title: Title.create({value: chapterRecord.title}),
+      userID: ID.create({value: chapterRecord.userID}),
+      bookID: ID.create({value: chapterRecord.bookID}),
+      createdAt: TimeStamp.create({value: chapterRecord.createdAt}),
+      ...(chapterRecord.updatedAt && {updatedAt: TimeStamp.create({value: chapterRecord.updatedAt})})
+    })
+  }
+
   async removeByID(chapterID: ID, userID: ID): Promise<Chapter> {
     await this.#createIndex()
 

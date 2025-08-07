@@ -103,6 +103,33 @@ export class RedisLinkRepository implements LinkRepository {
     return Link.empty()
   }
 
+  async findAllPublished(from: ID): Promise<Links> {
+    await this.#createIndex()
+
+    const linksRecords = (await this.#linkRepository
+      ?.search()
+      .where('from')
+      .equal(from.value)
+      .return.all()) as LinkRecord[]
+
+    if (linksRecords === null || linksRecords === undefined) return Links.empty()
+
+    return Links.create({
+      links: linksRecords.map(linkRecord =>
+        Link.create({
+          id: ID.create({value: linkRecord[EntityId] as string}),
+          body: Body.create({value: linkRecord.body}),
+          from: ID.create({value: linkRecord.from}),
+          to: ID.create({value: linkRecord.to}),
+          kind: linkRecord.kind,
+          userID: ID.create({value: linkRecord.userID}),
+          bookID: ID.create({value: linkRecord.bookID}),
+          createdAt: TimeStamp.create({value: linkRecord.createdAt})
+        })
+      )
+    })
+  }
+
   async removeByChapterID(id: ID, userID: ID): Promise<Links> {
     await this.#createIndex()
 
