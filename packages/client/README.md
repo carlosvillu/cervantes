@@ -40,14 +40,26 @@ pnpm add @cervantes/client
 ## Usage
 
 ```typescript
-import { CervantesClient } from '@cervantes/client'
+import { CervantesClient, ConsoleLogger, NoOpLogger } from '@cervantes/client'
 
-// Initialize client
+// Initialize client with default settings
 const client = new CervantesClient({
   baseURL: 'https://api.bookadventur.es',
   timeout: 30000,
   retries: 3,
-  debug: false
+  debug: false  // Uses NoOpLogger by default for production
+})
+
+// Or enable logging for development
+const devClient = new CervantesClient({
+  baseURL: 'https://api.bookadventur.es',
+  debug: true  // Uses ConsoleLogger when debug is true
+})
+
+// Or provide a custom logger
+const customClient = new CervantesClient({
+  baseURL: 'https://api.bookadventur.es',
+  logger: new ConsoleLogger()  // Explicit logger override
 })
 
 // Authentication Flow
@@ -229,11 +241,60 @@ try {
 - ✅ **Permissions** (check user access levels)
 - ✅ **Profile Management** (user data retrieval)
 
+### Logging & Observability ✅
+- ✅ **Configurable Logger** (custom logging integration)
+- ✅ **Built-in Loggers** (ConsoleLogger, NoOpLogger)
+- ✅ **Production-safe defaults** (no console pollution)
+- ✅ **Debug mode** (detailed logging for development)
+
 ### Coming Soon 🚧
 - ⏳ **AI Image Generation** (book covers, chapter illustrations)
 - ⏳ **Upload Management** (file handling for images)
 - ⏳ **Offline Support** with caching and sync
 - ⏳ **Framework Integrations** (React hooks, Vue composables)
+
+## Advanced Configuration
+
+### Custom Logger Integration
+
+The client supports custom logger integration for integration with your application's logging system (Winston, Pino, etc.):
+
+```typescript
+import { CervantesClient, type Logger } from '@cervantes/client'
+
+// Integrate with your logging system
+class CustomLogger implements Logger {
+  debug(message: string, context?: unknown): void {
+    myAppLogger.debug(message, context)
+  }
+
+  info(message: string, context?: unknown): void {
+    myAppLogger.info(message, context)
+  }
+
+  warn(message: string, context?: unknown): void {
+    myAppLogger.warn(message, context)
+  }
+
+  error(message: string, error?: Error | unknown): void {
+    myAppLogger.error(message, error)
+  }
+}
+
+const client = new CervantesClient({
+  baseURL: 'https://api.bookadventur.es',
+  logger: new CustomLogger()
+})
+```
+
+**Built-in Loggers:**
+- `ConsoleLogger` - Uses console.log/error/warn/debug for output
+- `NoOpLogger` - Discards all log messages (production default)
+
+**Default Behavior:**
+- `debug: false` (default) → Uses `NoOpLogger` (no output)
+- `debug: true` → Uses `ConsoleLogger` (logs to console)
+- `logger: customLogger` → Uses your custom logger (overrides debug setting)
 
 ## Development
 

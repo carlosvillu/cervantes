@@ -6,6 +6,8 @@
  */
 
 import type {ClientConfig} from '../domain/_kernel/types.js'
+import type {Logger} from '../domain/_kernel/logger.js'
+import {ConsoleLogger, createDefaultLogger} from '../domain/_kernel/logger.js'
 import type {SuccessMessage} from '../domain/_shared/SuccessMessage.js'
 import type {AuthTokens} from '../domain/auth/AuthTokens.js'
 import type {ValidationToken} from '../domain/auth/ValidationToken.js'
@@ -65,6 +67,7 @@ import {type GetCurrentUserUseCaseInput, UserService} from './user/index.js'
 
 export class CervantesClient {
   private readonly config: Required<ClientConfig>
+  private readonly logger: Logger
   private readonly httpClient: HTTPClient
   private readonly authService: AuthService
   private readonly bookService: BookService
@@ -80,8 +83,12 @@ export class CervantesClient {
       apiKey: config.apiKey ?? '',
       timeout: config.timeout ?? 30000,
       retries: config.retries ?? 3,
-      debug: config.debug ?? false
+      debug: config.debug ?? false,
+      logger: config.logger ?? (config.debug ? new ConsoleLogger() : createDefaultLogger())
     }
+
+    // Initialize logger
+    this.logger = this.config.logger
 
     // Initialize HTTP client
     this.httpClient = new HTTPClient(this.config)
@@ -96,7 +103,8 @@ export class CervantesClient {
         storage: storage.isStorageAvailable() ? storage : undefined,
         storagePrefix: 'cervantes_auth_',
         autoRefresh: true,
-        refreshThresholdMs: 5 * 60 * 1000 // 5 minutes
+        refreshThresholdMs: 5 * 60 * 1000, // 5 minutes
+        logger: this.logger
       }
     })
 
@@ -130,9 +138,8 @@ export class CervantesClient {
       repository: userRepository
     })
 
-    if (this.config.debug) {
-      console.log('CervantesClient initialized with config:', this.config) // eslint-disable-line no-console
-    }
+    // Log initialization if debug mode is enabled
+    this.logger.debug('CervantesClient initialized', {config: this.config})
   }
 
   /**

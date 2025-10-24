@@ -3,6 +3,8 @@
  * Following Clean Architecture patterns from the main project
  */
 
+import type {Logger} from './logger.js'
+
 // Base domain primitives
 export interface UseCase<Input = unknown, Output = unknown> {
   execute: (input: Input) => Promise<Output>
@@ -58,4 +60,5 @@ export interface ClientConfig {
   timeout?: number
   retries?: number
   debug?: boolean
+  logger?: Logger
 }

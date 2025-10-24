@@ -1,5 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 
+import type {Logger} from '../../domain/_kernel/logger.js'
 import {AuthTokens} from '../../domain/auth/AuthTokens.js'
 import {type TokenStorage, AuthState, TokenManager} from './TokenManager.js'
 
@@ -209,28 +210,40 @@ describe('TokenManager', () => {
 
     it('should handle listener errors gracefully', async () => {
       // Arrange
+      const mockLogger: Logger = {
+        debug: vi.fn(),
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn()
+      }
+
+      // Create a new TokenManager with mock logger
+      const tmWithLogger = new TokenManager({
+        storage: mockStorage,
+        storagePrefix: 'test_',
+        autoRefresh: false,
+        logger: mockLogger
+      })
+
       const faultyListener = vi.fn().mockImplementation(() => {
         throw new Error('Listener error')
       })
       const goodListener = vi.fn()
 
-      tokenManager.addStateChangeListener(faultyListener)
-      tokenManager.addStateChangeListener(goodListener)
-
-      // Mock console.error to verify error handling
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      tmWithLogger.addStateChangeListener(faultyListener)
+      tmWithLogger.addStateChangeListener(goodListener)
 
       // Act
       const tokens = createTestAuthTokens('access', 'refresh')
-      await tokenManager.setTokens(tokens)
+      await tmWithLogger.setTokens(tokens)
 
       // Assert
       expect(faultyListener).toHaveBeenCalled()
       expect(goodListener).toHaveBeenCalled()
-      expect(consoleSpy).toHaveBeenCalledWith('Error in auth state change listener:', expect.any(Error))
+      expect(mockLogger.error).toHaveBeenCalledWith('Error in auth state change listener', expect.any(Error))
 
       // Cleanup
-      consoleSpy.mockRestore()
+      tmWithLogger.dispose()
     })
   })
 

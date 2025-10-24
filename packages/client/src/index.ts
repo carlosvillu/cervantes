@@ -12,6 +12,8 @@ export {CervantesClient} from './application/CervantesClient.js'
 
 // Core types
 export type {ClientConfig, UseCase, Repository, DomainError} from './domain/_kernel/types.js'
+export type {Logger} from './domain/_kernel/logger.js'
+export {ConsoleLogger, NoOpLogger} from './domain/_kernel/logger.js'
 
 // Authentication types and enums
 export {AuthState} from './application/auth/index.js'

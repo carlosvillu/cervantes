@@ -1,19 +1,24 @@
+import type {Logger} from '../../../domain/_kernel/logger.js'
+import {createDefaultLogger} from '../../../domain/_kernel/logger.js'
 import {AuthenticationError, ServerError, ValidationError} from '../errors/index.js'
 import type {ResponseInterceptor} from '../types.js'
 
 export class ErrorInterceptor {
-  constructor(private readonly debug: boolean = false) {}
+  private readonly logger: Logger
+
+  constructor(private readonly debug: boolean = false, logger?: Logger) {
+    this.logger = logger ?? createDefaultLogger()
+  }
 
   getResponseInterceptor(): ResponseInterceptor {
     return (response: Response, data?: unknown): void => {
       if (this.debug) {
-        console.log(`ErrorInterceptor: Response ${response.status} for ${response.url}`) // eslint-disable-line no-console
+        this.logger.debug(`Response ${response.status} for ${response.url}`)
       }
 
       // Log error responses for debugging
       if (!response.ok && this.debug) {
-        console.log(`ErrorInterceptor: Error response`, {
-          // eslint-disable-line no-console
+        this.logger.debug('Error response', {
           status: response.status,
           statusText: response.statusText,
           url: response.url,

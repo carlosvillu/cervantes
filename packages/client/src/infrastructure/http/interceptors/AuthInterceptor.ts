@@ -1,11 +1,15 @@
+import type {Logger} from '../../../domain/_kernel/logger.js'
 import type {ClientConfig} from '../../../domain/_kernel/types.js'
 import type {HTTPRequestOptions, RequestInterceptor, ResponseInterceptor} from '../types.js'
 
 export class AuthInterceptor {
   private accessToken?: string
   private refreshToken?: string
+  private readonly logger: Logger
 
-  constructor(private readonly config: Required<ClientConfig>) {}
+  constructor(private readonly config: Required<ClientConfig>) {
+    this.logger = config.logger
+  }
 
   setTokens(accessToken: string, refreshToken: string): void {
     this.accessToken = accessToken
@@ -62,24 +66,18 @@ export class AuthInterceptor {
         const tokens = await response.json()
         this.setTokens(tokens.access, tokens.refresh)
 
-        if (this.config.debug) {
-          console.log('AuthInterceptor: Tokens refreshed successfully') // eslint-disable-line no-console
-        }
+        this.logger.debug('Tokens refreshed successfully')
       } else {
         // Refresh failed, clear tokens
         this.clearTokens()
 
-        if (this.config.debug) {
-          console.log('AuthInterceptor: Token refresh failed, clearing tokens') // eslint-disable-line no-console
-        }
+        this.logger.debug('Token refresh failed, clearing tokens')
       }
     } catch (error) {
       // Network error during refresh, clear tokens
       this.clearTokens()
 
-      if (this.config.debug) {
-        console.log('AuthInterceptor: Token refresh network error, clearing tokens', error) // eslint-disable-line no-console
-      }
+      this.logger.debug('Token refresh network error, clearing tokens', error)
     }
   }
 

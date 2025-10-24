@@ -20,7 +20,7 @@ export class HTTPClientImpl implements HTTPClient {
 
   constructor(private readonly config: Required<ClientConfig>) {
     this.authInterceptor = new AuthInterceptor(config)
-    this.errorInterceptor = new ErrorInterceptor(config.debug)
+    this.errorInterceptor = new ErrorInterceptor(config.debug, config.logger)
 
     // Default retry configuration
     this.retryConfig = {

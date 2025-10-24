@@ -6,6 +6,8 @@
  * for all authentication-related state in the client.
  */
 
+import type {Logger} from '../../domain/_kernel/logger.js'
+import {createDefaultLogger} from '../../domain/_kernel/logger.js'
 import type {AuthTokens} from '../../domain/auth/AuthTokens.js'
 import {AuthTokens as AuthTokensModel} from '../../domain/auth/AuthTokens.js'
 
@@ -21,6 +23,7 @@ export interface TokenManagerConfig {
   autoRefresh?: boolean
   refreshThresholdMs?: number
   autoRefreshCallback?: (refreshToken: string) => Promise<AuthTokens>
+  logger?: Logger
 }
 
 export enum AuthState {
@@ -51,6 +54,7 @@ export class TokenManager {
   private readonly autoRefresh: boolean
   private readonly refreshThresholdMs: number
   private readonly autoRefreshCallback?: (refreshToken: string) => Promise<AuthTokens>
+  private readonly logger: Logger
 
   constructor(config: TokenManagerConfig = {}) {
     this.storage = config.storage ?? this.createDefaultStorage()
@@ -58,6 +62,7 @@ export class TokenManager {
     this.autoRefresh = config.autoRefresh ?? true
     this.refreshThresholdMs = config.refreshThresholdMs ?? 5 * 60 * 1000 // 5 minutes
     this.autoRefreshCallback = config.autoRefreshCallback
+    this.logger = config.logger ?? createDefaultLogger()
 
     // Load tokens from storage on initialization
     void this.loadTokensFromStorage()
@@ -258,7 +263,7 @@ export class TokenManager {
       try {
         listener(event)
       } catch (listenerError) {
-        console.error('Error in auth state change listener:', listenerError) // eslint-disable-line no-console
+        this.logger.error('Error in auth state change listener', listenerError)
       }
     })
   }
@@ -284,7 +289,7 @@ export class TokenManager {
         }
       }
     } catch (error) {
-      console.error('Error loading tokens from storage:', error) // eslint-disable-line no-console
+      this.logger.error('Error loading tokens from storage', error)
       await this.clearTokensFromStorage()
     }
   }
@@ -294,7 +299,7 @@ export class TokenManager {
       const tokenData = JSON.stringify(tokens.toAPI())
       await this.storage.setItem(`${this.storagePrefix}tokens`, tokenData)
     } catch (error) {
-      console.error('Error storing tokens:', error) // eslint-disable-line no-console
+      this.logger.error('Error storing tokens', error)
     }
   }
 
@@ -302,7 +307,7 @@ export class TokenManager {
     try {
       await this.storage.removeItem(`${this.storagePrefix}tokens`)
     } catch (error) {
-      console.error('Error clearing tokens from storage:', error) // eslint-disable-line no-console
+      this.logger.error('Error clearing tokens from storage', error)
     }
   }
 

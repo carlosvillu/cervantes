@@ -1,6 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {z} from 'zod'
 
+import {NoOpLogger} from '../../domain/_kernel/logger.js'
 import {AuthenticationError, NetworkError, ServerError, ValidationError} from './errors/index.js'
 import {HTTPClientImpl} from './HTTPClient.js'
 
@@ -15,7 +16,8 @@ describe('HTTPClient', () => {
     apiKey: 'test-key',
     timeout: 5000,
     retries: 3,
-    debug: false
+    debug: false,
+    logger: new NoOpLogger()
   }
 
   beforeEach(() => {

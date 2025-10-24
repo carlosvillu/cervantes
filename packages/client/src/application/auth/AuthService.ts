@@ -5,6 +5,8 @@
  * It coordinates between Use Cases, TokenManager, and Repository implementations.
  */
 
+import type {Logger} from '../../domain/_kernel/logger.js'
+import {createDefaultLogger} from '../../domain/_kernel/logger.js'
 import type {SuccessMessage} from '../../domain/_shared/SuccessMessage.js'
 import type {AuthRepository} from '../../domain/auth/AuthRepository.js'
 import type {AuthTokens} from '../../domain/auth/AuthTokens.js'
@@ -30,6 +32,7 @@ export interface AuthServiceConfig {
 export class AuthService {
   private readonly authRepository: AuthRepository
   private readonly tokenManager: TokenManager
+  private readonly logger: Logger
 
   // Use Cases
   private readonly signupUseCase: SignupAuthUseCase
@@ -41,6 +44,7 @@ export class AuthService {
 
   constructor(config: AuthServiceConfig) {
     this.authRepository = config.repository
+    this.logger = config.tokenManager?.logger ?? createDefaultLogger()
 
     // Initialize Use Cases
     this.signupUseCase = new SignupAuthUseCase(this.authRepository)
@@ -194,7 +198,7 @@ export class AuthService {
       if (event.currentState === AuthState.EXPIRED) {
         // Tokens have expired - auto-refresh is handled by TokenManager
         // This is mainly for logging and external monitoring
-        console.warn('Authentication tokens have expired') // eslint-disable-line no-console
+        this.logger.warn('Authentication tokens have expired')
       }
     })
   }
